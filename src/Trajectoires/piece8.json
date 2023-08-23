@@ -1,0 +1,91 @@
+{
+  "py/object": "trajectory_lib.Trajectory",
+  "name": "piece8",
+  "trajectory": [
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "START",
+      "config": "P0",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -4.49,
+          "y": 369.3,
+          "z": 180,
+          "a": 91.97,
+          "b": -180,
+          "c": 1.97
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -94.12,
+          "y": 12.78,
+          "z": 1.74,
+          "a": 0,
+          "b": -135,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "CIRCULAR",
+      "config": "PA",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 150.74,
+          "y": 54.47,
+          "z": -42.35,
+          "a": 0,
+          "b": -180,
+          "c": 0
+        },
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -87.74,
+          "y": 12.78,
+          "z": -24.8,
+          "a": 0,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -87.74,
+          "y": 12.78,
+          "z": -24.8,
+          "a": 0,
+          "b": 0,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    }
+  ]
+}

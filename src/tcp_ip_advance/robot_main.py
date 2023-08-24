@@ -38,9 +38,7 @@ while True:
         elif msg[0] == "gotoj":
             computer.gotoj(msg[1:])
         elif msg[0] == "gotoc":
-            tp_log(str(msg))
-            positions = msg.split(",")[1:]
-            computer.gotoc(positions[:6], positions[6:])
+            computer.gotoc(msg[1:7], msg[7:13])
         elif msg[0] == "get_current_posj":
             computer.get_posj()
         elif msg[0] == "get_current_rotm":

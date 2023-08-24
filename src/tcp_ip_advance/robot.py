@@ -121,7 +121,7 @@ class TCPServer:
         tp_log("debug " + "gotoc")
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
-        movec(p1,p2,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
+        movec(p1,p2,vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
         self.write("gotoc,done")
 
     def gotoj(self, msg_posj, vel, acc, mod):

@@ -125,7 +125,7 @@ class TCPClient():
         if response == "goto,done":
             return True
 
-    def gotoc(self, pos1, pos2):
+    def gotoc(self, pos1, pos2, vel, acc, app_type, ref, mod):
         """
         Tell the robot to move from pos1 to pos2, both positions expressed in meters and radians
         Return:\n
@@ -148,7 +148,13 @@ class TCPClient():
         pos2_ry = math.degrees(pos2_ry)
         pos2_rz = math.degrees(pos2_rz)
         
-        msg = f"gotoc,{pos1_x},{pos1_y},{pos1_z},{pos1_rx},{pos1_ry},{pos1_rz},{pos2_x},{pos2_y},{pos2_z},{pos2_rx},{pos2_ry},{pos2_rz}"
+        vel = str(vel)
+        acc = str(acc)
+        app_type = str(app_type)
+        ref = str(ref)
+        mod = str(mod)
+        
+        msg = f"gotoc,{pos1_x},{pos1_y},{pos1_z},{pos1_rx},{pos1_ry},{pos1_rz},{pos2_x},{pos2_y},{pos2_z},{pos2_rx},{pos2_ry},{pos2_rz},{vel},{acc},{app_type},{ref},{mod}"
         print("Send '{0}' to the robot".format(msg))
         self.send(msg)
         time.sleep(0.1)

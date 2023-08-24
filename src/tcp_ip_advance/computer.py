@@ -294,9 +294,16 @@ if __name__ == "__main__":
     print("Response to get_current_posx:", str(posx))
     
     pos_init = robot.gotoj(90,0,90,0,90,0)
-    print("Response to goto: ", str(pos_init))"""
+    print("Response to goto: ", str(pos_init))
     
-    move1 = robot.goto(0,0.368,0.150,math.radians(100.87),math.radians(-180),math.radians(10.88))
-    print("Response to goto: ", str(move1))
+    while True:
+        print(robot.get_digital_input(1))"""
 
+    #move1 = robot.goto(0,0.368,0.150,math.radians(100.87),math.radians(-180),math.radians(10.88))
+    #print("Response to goto: ", str(move1))
+
+    pos1 = [0,0.41134,0.13123,math.radians(97.82),math.radians(180),math.radians(0)]
+    pos2 = [0,0.40317,0.12237,math.radians(97.82),math.radians(180),math.radians(0)]
+    move2 = robot.gotoc(pos1,pos2,30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+    
     robot.close_socket()

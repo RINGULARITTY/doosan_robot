@@ -109,26 +109,26 @@ class TCPServer:
             tp_log("info" + "Sending {0} command ok".format(msg))
         return res
 
-    def goto(self, msg_pos):
+    def goto(self, msg_pos, vel, acc, app_type, ref, mod):
         """ goto """
         tp_log("debug " + "goto")
         p = [float(elem) for elem in msg_pos]
-        movel(p, vel=80, acc=50)
+        movel(p,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
         self.write("goto,done")
         
-    def gotoc(self, msg_pos1, msg_pos2):
+    def gotoc(self, msg_pos1, msg_pos2, vel, acc, app_type, ref, mod):
         """ gotoc """
         tp_log("debug " + "gotoc")
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
-        movec(p1,p2 vel=80, acc=50)
+        movec(p1,p2,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
         self.write("gotoc,done")
 
-    def gotoj(self, msg_posj):
+    def gotoj(self, msg_posj, vel, acc, mod):
         """ gotoj """
         tp_log("debug " + "gotoj")
         p = [float(elem) for elem in msg_posj]
-        movej(p, vel=80, acc=50)
+        movej(p, vel=vel, acc=acc, mod=mod)
         self.write("gotoj,done")
 
     def get_posj(self):

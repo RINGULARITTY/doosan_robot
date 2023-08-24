@@ -37,11 +37,17 @@ while True:
             computer.goto(msg[1:])
         elif msg[0] == "gotoj":
             computer.gotoj(msg[1:])
+        elif msg[0] == "gotoc":
+            positions = msg[1:].split(",")
+            computer.gotoc(positions[:6], positions[6:])
         elif msg[0] == "get_current_posj":
             computer.get_posj()
         elif msg[0] == "get_current_rotm":
             computer.get_rotm()
         elif msg[0] == "get_current_posx":
             computer.get_posx()
+        elif msg[0] == "get_digital_input":
+            input_number = int(msg[1])
+            computer.get_d_input(input_number)
 
 computer.close_socket()

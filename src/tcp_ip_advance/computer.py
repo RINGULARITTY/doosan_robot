@@ -125,7 +125,38 @@ class TCPClient():
         if response == "goto,done":
             return True
 
-        return None
+    def gotoc(self, pos1, pos2):
+        """
+        Tell the robot to move from pos1 to pos2, both positions expressed in meters and radians
+        Return:\n
+            - 'done': True if the movement is completed, None otherwise
+        """
+        pos1_x, pos1_y, pos1_z, pos1_rx, pos1_ry, pos1_rz = pos1
+        pos2_x, pos2_y, pos2_z, pos2_rx, pos2_ry, pos2_rz = pos2
+        
+        pos1_x = pos1_x * 1000
+        pos1_y = pos1_y * 1000
+        pos1_z = pos1_z * 1000
+        pos1_rx = math.degrees(pos1_rx)
+        pos1_ry = math.degrees(pos1_ry)
+        pos1_rz = math.degrees(pos1_rz)
+        
+        pos2_x = pos2_x * 1000
+        pos2_y = pos2_y * 1000
+        pos2_z = pos2_z * 1000
+        pos2_rx = math.degrees(pos2_rx)
+        pos2_ry = math.degrees(pos2_ry)
+        pos2_rz = math.degrees(pos2_rz)
+        
+        msg = f"gotoc,{pos1_x},{pos1_y},{pos1_z},{pos1_rx},{pos1_ry},{pos1_rz},{pos2_x},{pos2_y},{pos2_z},{pos2_rx},{pos2_ry},{pos2_rz}"
+        print("Send '{0}' to the robot".format(msg))
+        self.send(msg)
+        time.sleep(0.1)
+        response = self.recv()
+        print("response", response)
+        if response == "gotoc,done":
+            return True
+        return None   
 
     def gotoj(self,j1,j2,j3,j4,j5,j6):
         """
@@ -208,6 +239,19 @@ class TCPClient():
             else:
                 print("response don't start with 'posx'")
         return None, None
+    
+    def get_digital_input(self, input_number):
+        msg = "get_digital_input," + str(input_number)
+        print("Send '{0}' to the robot".format(msg))
+        self.send(msg)
+        time.sleep(0.1)
+        response = self.recv()
+        if response != None:
+            response = response.split(",")
+            if response[0] == "input":
+                input_status = response[1]
+                return input_status
+        return None
 
     
     def send_mission(self, mission_name):
@@ -229,18 +273,30 @@ class TCPClient():
 
 if __name__ == "__main__":
     # Example:
-    robot = TCPClient(ip="192.168.137.100", port=20002)
+    robot = TCPClient(ip="192.168.127.100", port=20002)
     print("Send 'Hello' to the robot")
     robot.send("Hello")
     response = robot.recv()
     print("Response to 'Hello': ", response)
 
-    done = robot.goto(0.500,0.500,0.500,0,math.radians(90),0)
+    """done = robot.goto(0.500,0.500,0.500,0,math.radians(90),0)
     print("Response to goto: ", str(done))
 
     posj = robot.get_current_posj()
     print("Response to get_current_posj:", str(posj))
     
+    input_status = robot.get_digital_input(1)
+    if input_status == "ON":
+        print("L'entrée numérique 1 est activée")
+
+    
+    posx = robot.get_current_posx()
+    print("Response to get_current_posx:", str(posx))
+    
+    pos_init = robot.gotoj(90,0,90,0,90,0)
+    print("Response to goto: ", str(pos_init))"""
+    
+    move1 = robot.goto(0,0.368,0.150,math.radians(100.87),math.radians(-180),math.radians(10.88))
+    print("Response to goto: ", str(move1))
+
     robot.close_socket()
-
-

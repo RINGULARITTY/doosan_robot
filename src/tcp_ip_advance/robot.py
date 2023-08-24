@@ -115,6 +115,14 @@ class TCPServer:
         p = [float(elem) for elem in msg_pos]
         movel(p, vel=80, acc=50)
         self.write("goto,done")
+        
+    def gotoc(self, msg_pos1, msg_pos2):
+        """ gotoc """
+        tp_log("debug " + "gotoc")
+        p1 = [float(elem) for elem in msg_pos1]
+        p2 = [float(elem) for elem in msg_pos2]
+        movec(p1,p2 vel=80, acc=50)
+        self.write("gotoc,done")
 
     def gotoj(self, msg_posj):
         """ gotoj """
@@ -135,4 +143,11 @@ class TCPServer:
         tp_log("debug " + "get_posx")
         posx, sol_space = get_current_posx()
         msg = "posx," + str(posx).replace(']','').replace('[','') + ',' + str(sol_space)
+        self.write(msg)
+        
+    def get_d_input(self, msg_input_number):
+        """ get_digital_input """
+        tp_log("debug " + "get_digital_input")
+        input_status = get_digital_input(msg_input_number)
+        msg = "input," + str(input_status)
         self.write(msg)

@@ -123,6 +123,26 @@ class TCPServer:
         p2 = [float(elem) for elem in msg_pos2]
         movec(p1,p2,vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
         self.write("gotoc,done")
+        
+    def gotooffset(self, msg_pos, vel, acc, ref, mod):
+        """ gotooffset """
+        tp_log("debug " + "gotooffset")
+        p = [float(elem) for elem in msg_pos]
+        movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+        self.write("gotooffset,done")
+        
+    def gotop(self, msg_posx,vel, acc, app_type, ref, mod):
+        """ gotop """
+        tp_log("debug " + "gotop")
+        p = [float(elem) for elem in msg_posx]
+        offset = coord_transform(p, DR_BASE, DR_TOOL)
+        tp_log("debug " + "offset: " + str(offset))
+        offset[2]-=50
+        tp_log("debug " + "offset: " + str(offset))
+        p2 = coord_transform(offset, DR_TOOL, DR_BASE)
+        movel(p2, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+        movel(p, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+        self.write("gotop,done")
 
     def gotoj(self, msg_posj, vel, acc, mod):
         """ gotoj """

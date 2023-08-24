@@ -127,7 +127,7 @@ class TCPClient():
 
     def gotoc(self, pos1, pos2, vel, acc, app_type, ref, mod):
         """
-        Tell the robot to move from pos1 to pos2, both positions expressed in meters and radians
+        Tell the robot to move from pos1 to pos2 with movec, both positions expressed in meters and radians
         Return:\n
             - 'done': True if the movement is completed, None otherwise
         """
@@ -164,6 +164,50 @@ class TCPClient():
             return True
         return None   
 
+    def gotooffset(self,z, vel, acc, ref, mod):
+        """
+        Tell the robot to go to the current position to the offset position in z in reference to the tool and the mode relative
+        """
+        x = 0
+        y = 0
+        z = z * 1000
+        rx = 0
+        ry = 0
+        rz = 0
+        vel = str(vel)
+        acc = str(acc)
+        ref = "DR_TOOL"
+        mod = "DR_MV_MOD_REL"
+        
+        msg = f"gotooffset,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{ref},{mod}"
+        print("Send '{0}' to the robot".format(msg))
+        self.send(msg)
+        time.sleep(0.1)
+        response = self.recv()
+        print("response", response)
+        if response == "gotooffset,done":
+            return True
+        return None
+        
+    def gotop(self,x,y,z,rx,ry,rz, vel, acc, app_type, ref, mod):
+        x *= 1000
+        y *= 1000
+        z *= 1000
+        rx = math.degrees(rx)
+        ry = math.degrees(ry)
+        rz = math.degrees(rz)
+        
+        self.gotooffset(-0.050, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")
+        msg = f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{app_type},{ref},{mod}"
+        print("Send '{0}' to the robot".format(msg))
+        self.send(msg)
+        time.sleep(0.1)
+        response = self.recv()
+        print("response", response)
+        if response == "coord_transform,done":
+            return True
+        return None
+    
     def gotoj(self,j1,j2,j3,j4,j5,j6):
         """
         Tell the robot to reach j1,j2,j3,j4,j5,j6 position expressed in radians
@@ -304,12 +348,7 @@ if __name__ == "__main__":
     
     while True:
         print(robot.get_digital_input(1))"""
-
-    #move1 = robot.goto(0,0.368,0.150,math.radians(100.87),math.radians(-180),math.radians(10.88))
-    #print("Response to goto: ", str(move1))
-
-    pos1 = [0,0.41134,0.13123,math.radians(97.82),math.radians(180),math.radians(0)]
-    pos2 = [0,0.40317,0.12237,math.radians(97.82),math.radians(180),math.radians(0)]
-    move2 = robot.gotoc(pos1,pos2,30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+    
+    move = robot.gotop(0.063,0.403,0.035,math.radians(97.82),math.radians(180),math.radians(0),30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
     
     robot.close_socket()

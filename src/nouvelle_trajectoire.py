@@ -125,6 +125,9 @@ class NewTrajectory(ctk.CTk):
                     nature_choice = "Passage"
                     break
             
+            if self.stop_thread_flag or not self._is_window_alive():
+                break
+            
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2) or self.robot.get_digital_input(3):
                 pass
             
@@ -135,6 +138,9 @@ class NewTrajectory(ctk.CTk):
             self.robot.wait_manual_guide()
             while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
+                
+            if self.stop_thread_flag or not self._is_window_alive():
+                break
             while self.robot.get_digital_input(1):
                 pass
 
@@ -146,6 +152,9 @@ class NewTrajectory(ctk.CTk):
                 self.robot.wait_manual_guide()
                 while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
+                    
+                if self.stop_thread_flag or not self._is_window_alive():
+                    break
                 while self.robot.get_digital_input(1):
                     pass
                 point2 = Coordinate(*self.robot.get_current_posx()[0])
@@ -162,11 +171,13 @@ class NewTrajectory(ctk.CTk):
                 elif self.robot.get_digital_input(2):
                     configuration_choice = "PB"
                     break
-
-            wield_width = 0
             
+            if self.stop_thread_flag or not self._is_window_alive():
+                break
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
+            
+            wield_width = 0
             
             if nature_choice == "Circulaire":
                 self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
@@ -185,6 +196,8 @@ class NewTrajectory(ctk.CTk):
                     confirm_choice = False
                     break
             
+            if self.stop_thread_flag or not self._is_window_alive():
+                break
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
 

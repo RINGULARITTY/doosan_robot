@@ -158,7 +158,7 @@ class TCPServer:
             self.write("gotooffset,{}".format(ex))
         self.write("gotooffset,done")
         
-    def gotop(self, msg_posx,vel, acc, app_type, ref, mod):
+    def gotop(self, msg_posx,vel, acc, ref, mod):
         self.robot_log("debug " + "gotop")
         p = [float(elem) for elem in msg_posx]
         
@@ -177,8 +177,8 @@ class TCPServer:
             self.write("gotop,{}".format(ex))
 
         try:
-            movel(p2, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
-            movel(p, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+            movel(p2, vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+            movel(p, vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("gotop,{}".format(ex))
         self.write("gotop,done")

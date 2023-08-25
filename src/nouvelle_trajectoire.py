@@ -194,6 +194,8 @@ class NewTrajectory(ctk.CTk):
             else:
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1]))
             
+            self.trajectory.compile()
+            
             self.refresh_listbox()
             
             self.add_text(f"Enregistré")

@@ -14,8 +14,11 @@ class Coordinate:
         self.b: float = b
         self.c: float = c
     
+    def get_as_array(self):
+        return [self.x, self.y, self.z, self.a, self.b, self.c]
+    
     def get_with_index(self, index):
-        return [self.x, self.y, self.z, self.a, self.b, self.c][index]
+        return self.get_as_array()[index]
     
     def to_posx(self):
         return f"posx{self.x, self.y, self.z, self.a, self.b, self.c}"
@@ -90,11 +93,11 @@ class Trajectory:
         self.trajectory: List[Movement] = trajectory
 
     def save(self, directory) -> bool:
-        if os.path.exists(os.path.join(directory, self.name_entry.get() + ".json")):
+        if os.path.exists(os.path.join(directory, self.name + ".json")):
             messagebox.showerror(
                 title="Erreur", 
                 icon="error", 
-                message=f"Une trajectoire au nom de {self.name_entry.get()} existe déjà"
+                message=f"Une trajectoire au nom de {self.name.get()} existe déjà"
             )
             return False
         with open(os.path.join(directory, self.name + ".json"), 'w') as f:

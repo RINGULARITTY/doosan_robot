@@ -120,12 +120,12 @@ class TCPClient():
     def gotooffset(self, z, vel, acc, ref, mod) -> bool:       
         response = self.send_and_receive(f"gotooffset,0,0,{z},0,0,0,{vel},{acc},{ref},{mod}")
         return response == "gotooffset,done"
-        
-    def gotop(self, x, y, z, rx, ry, rz, vel, acc, app_type, ref, mod) -> bool:       
-        if not self.gotooffset(-0.050, 30, 20, "DR_TOOL", "DR_MV_MOD_REL"):
+
+    def gotop(self, x, y, z, rx, ry, rz, vel, acc, ref, mod) -> bool:       
+        if not self.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL"):
             return False
 
-        response = self.send_and_receive(f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{app_type},{ref},{mod}")
+        response = self.send_and_receive(f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},DR_MV_APP_NONE,{ref},{mod}")
         return response == "gotop,done"
     
     def gotoj(self, j1, j2, j3, j4, j5, j6) -> bool:

@@ -42,11 +42,11 @@ while True:
     elif msg[0] == "gotoj":
         computer.gotoj(msg[1:])
     elif msg[0] == "gotoc":
-        computer.gotoc(msg[1:7], msg[7:13], 30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+        computer.gotoc(msg[1:8], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
     elif msg[0] == "gotooffset":
-        computer.gotooffset(msg[1:7],30,20,"DR_TOOL","DR_MV_MOD_REL")
+        computer.gotooffset(msg[1:7], msg[17], msg[8], msg[9], msg[10])
     elif msg[0] == "gotop":
-        computer.gotop(msg[1:7],30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+        computer.gotop(msg[1:7], msg[17], msg[8], msg[9], msg[10])
     elif msg[0] == "get_current_posj":
         computer.get_posj()
     elif msg[0] == "get_current_rotm":

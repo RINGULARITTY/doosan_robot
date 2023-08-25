@@ -164,10 +164,10 @@ class NewTrajectory(ctk.CTk):
                 pass
             
             if nature_choice == "Circulaire":
-                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, {point1.str_pos()}, {point2.str_pos()}")
+                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
             else:
-                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, {point1.str_pos()}")
-            
+                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}")
+
             confirm_choice = False
             self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)", end=" ")
             while not self.stop_thread_flag and self._is_window_alive():
@@ -197,8 +197,6 @@ class NewTrajectory(ctk.CTk):
             self.refresh_listbox()
             
             self.add_text(f"Enregistré")
-            
-        robot.end_wait_manual_guide()
 
     def kill_thread(self):
         self.thread.join()

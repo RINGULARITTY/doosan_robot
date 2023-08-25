@@ -31,10 +31,12 @@ class TCPServer:
         Params:\n
             - 'port': port of the TCP connection
         """
-
+        
+        self.display_logs = False
+        
         try:
             self.socket = server_socket_open(port)
-            tp_log("Connection ok!")
+            self.log("Connection ok!")
         except Exception as e:
             tp_popup("Socket connection failed. Error {0}".format(str(e)), DR_PM_ALARM)
             raise e
@@ -43,10 +45,14 @@ class TCPServer:
         """ Close the network socket"""
         try:
             server_socket_close(self.socket)
-            tp_log("Close the socket")
+            self.log("Close the socket")
         except Exception as e:
-            tp_log("Socket connection was not closed. Error: {0}".format(str(e)))
+            self.log("Socket connection was not closed. Error: {0}".format(str(e)))
             raise e
+
+    def log(self, msg):
+        if self.display_logs:
+            tp_log(msg)
 
     def read(self, length=-1, timeout=-1):
         """
@@ -64,16 +70,16 @@ class TCPServer:
 
         # Check res value
         if res == -1:
-            tp_log("error " + 
+            self.log("error " + 
                 "Error during a socket read: Server not connected")
         elif res == -2:
-            tp_log("error " + "Error during a socket read: Socket error")
+            self.log("error " + "Error during a socket read: Socket error")
         elif res == -3:
-            tp_log("error " + 
+            self.log("error " + 
                 "Error during a socket read: Waiting time has expired")
         elif res > 0:
             if rx_data != "":
-                tp_log("info" + 
+                self.log("info" + 
                     "Read res = {0} and rx_data = {1}".format(res, rx_data))
                 rx_data = rx_data[:-1]
                 rx_data = rx_data.decode()
@@ -101,17 +107,21 @@ class TCPServer:
 
         # Check res value
         if res == -1:
-            tp_log("error " + 
+            self.log("error " + 
                 "Error during a socket write: Server not connected")
         elif res == -2:
-            tp_log("error " + "Error during a socket write: Socket error")
+            self.log("error " + "Error during a socket write: Socket error")
         elif res == 0:
-            tp_log("info" + "Sending {0} command ok".format(msg))
+            self.log("info" + "Sending {0} command ok".format(msg))
         return res
 
     def hi(self):
-        tp_log("debug " + "hi")
+        self.log("debug " + "hi")
         self.write("hi,done")
+
+    def display_logs(self, value):
+        self.display_logs = bool(value)
+        self.write("display_logs,done")
 
     def wait_manual_guide_robot(self):
         try:
@@ -121,7 +131,7 @@ class TCPServer:
         self.write("wait_manual_guide,done")
 
     def goto(self, msg_pos, vel, acc, app_type, ref, mod):
-        tp_log("debug " + "goto")
+        self.log("debug " + "goto")
         p = [float(elem) for elem in msg_pos]
         try:
             movel(p,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
@@ -130,7 +140,7 @@ class TCPServer:
         self.write("goto,done")
         
     def gotoc(self, msg_pos1, msg_pos2, vel, acc, app_type, ref, mod):
-        tp_log("debug " + "gotoc")
+        self.log("debug " + "gotoc")
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
         try:
@@ -140,7 +150,7 @@ class TCPServer:
         self.write("gotoc,done")
         
     def gotooffset(self, msg_pos, vel, acc, ref, mod):
-        tp_log("debug " + "gotooffset")
+        self.log("debug " + "gotooffset")
         p = [float(elem) for elem in msg_pos]
         try:
             movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
@@ -149,7 +159,7 @@ class TCPServer:
         self.write("gotooffset,done")
         
     def gotop(self, msg_posx,vel, acc, app_type, ref, mod):
-        tp_log("debug " + "gotop")
+        self.log("debug " + "gotop")
         p = [float(elem) for elem in msg_posx]
         
         try:
@@ -157,9 +167,9 @@ class TCPServer:
         except Exception as ex:
             self.write("gotop,{}".format(ex))
 
-        tp_log("debug " + "offset: " + str(offset))
+        self.log("debug " + "offset: " + str(offset))
         offset[2] -= 50
-        tp_log("debug " + "offset: " + str(offset))
+        self.log("debug " + "offset: " + str(offset))
 
         try:
             p2 = coord_transform(offset, DR_TOOL, DR_BASE)
@@ -174,7 +184,7 @@ class TCPServer:
         self.write("gotop,done")
 
     def gotoj(self, msg_posj, vel, acc, mod):
-        tp_log("debug " + "gotoj")
+        self.log("debug " + "gotoj")
         p = [float(elem) for elem in msg_posj]
         
         try:
@@ -184,7 +194,7 @@ class TCPServer:
         self.write("gotoj,done")
 
     def get_posj(self):
-        tp_log("debug " + "get_posj")
+        self.log("debug " + "get_posj")
         
         try:
             current_posj = get_current_posj()
@@ -195,7 +205,7 @@ class TCPServer:
         self.write(msg)
 
     def get_posx(self):
-        tp_log("debug " + "get_posx")
+        self.log("debug " + "get_posx")
         
         try:
             posx, sol_space = get_current_posx()
@@ -206,7 +216,7 @@ class TCPServer:
         self.write(msg)
         
     def get_d_input(self, input_id):
-        tp_log("debug " + "get_digital_input")
+        self.log("debug " + "get_digital_input")
         
         try:
             input_status = get_digital_input(input_id)
@@ -216,7 +226,7 @@ class TCPServer:
         self.write(msg)
     
     def app_weld_enable_digital_robot(self):
-        tp_log("debug " + "app_weld_enable_digital")
+        self.log("debug " + "app_weld_enable_digital")
         
         try:
             app_weld_enable_digital()
@@ -227,7 +237,7 @@ class TCPServer:
         self.write(msg)
     
     def app_weld_set_weld_cond_digital_robot(self, flag_dry_run, vel_target, vel_min, vel_max, welding_mode, s_2t, pulse_mode, wm_opt1, simulation, ts_opt1, ts_opt2, job_num, synergic_id, r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1, r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8, r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15):
-        tp_log("debug " + "app_weld_set_weld_cond_digital")
+        self.log("debug " + "app_weld_set_weld_cond_digital")
         try:
             app_weld_set_weld_cond_digital(flag_dry_run, vel_target, vel_min,
                 vel_max, welding_mode, s_2t, pulse_mode, wm_opt1,
@@ -241,7 +251,7 @@ class TCPServer:
         self.write(msg)
     
     def app_weld_adj_welding_cond_digital_robot(self, vel_target, job_number, synergic_id):
-        tp_log("debug " + "app_weld_adj_welding_cond_digital")
+        self.log("debug " + "app_weld_adj_welding_cond_digital")
         try:
             app_weld_adj_welding_cond_digital(vel_target=vel_target, job_number=job_number, synergic_id=synergic_id)
         except Exception as ex:
@@ -251,7 +261,7 @@ class TCPServer:
         self.write(msg)
     
     def reset_weld_cond_robot(self, flag_reset):
-        tp_log("debug " + "reset_weld_cond")
+        self.log("debug " + "reset_weld_cond")
         try:
             reset_weld_cond(flag_reset=flag_reset)
         except Exception as ex:
@@ -260,7 +270,7 @@ class TCPServer:
         self.write(msg)
     
     def app_weld_disable_digital_robot(self):
-        tp_log("debug " + "app_weld_disable_digital")
+        self.log("debug " + "app_weld_disable_digital")
         try:
             app_weld_disable_digital()
         except Exception as ex:

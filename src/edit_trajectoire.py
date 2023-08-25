@@ -58,7 +58,7 @@ class EditMovement(ctk.CTkToplevel):
         self.hand_change = ctk.CTkButton(self.frame3, text="A la main", command=self.on_hand_change, font=("Arial", 14))
         self.hand_change.pack(side="left", padx=10)
         
-        self.save = ctk.CTkButton(self, text="Savegarder", command=self.on_save, font=("Arial", 14))
+        self.save = ctk.CTkButton(self, text="Sauvegarder", command=self.on_save, font=("Arial", 14))
         self.save.pack(pady=10)
       
     def on_new_take(self):

@@ -90,7 +90,7 @@ class Trajectory:
         self.trajectory: List[Movement] = trajectory
 
     def save(self, directory) -> bool:
-        if os.path.exists(os.path.join(self.folder_path, self.name_entry.get() + ".json")):
+        if os.path.exists(os.path.join(directory, self.name_entry.get() + ".json")):
             messagebox.showerror(
                 title="Erreur", 
                 icon="error", 

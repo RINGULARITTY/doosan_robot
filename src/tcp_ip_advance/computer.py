@@ -30,23 +30,28 @@ class TCPClient():
         self.ip = ip
         self.port = port
         self._socket = None
+        self.display_log = False
 
-        print(f"Connecting to robot at {self.ip}:{self.port}")
-        print("Waiting the server...")
+        self.log(f"Connecting to robot at {self.ip}:{self.port}")
+        self.log("Waiting the server...")
         try:
             self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._socket.connect((self.ip, self.port))
         except Exception as e:
-            print(f"Socket connection failed. Error: {e}")
+            self.log(f"Socket connection failed. Error: {e}")
             raise e
 
         self._socket.settimeout(30)
 
-        print(f"Connection on {port}")
+        self.log(f"Connection on {port}")
+
+    def log(self, msg):
+        if self.display_log:
+            print(msg)
 
     def close_socket(self):
         self._socket.close()
-        print("Close robot socket")
+        self.log("Close robot socket")
         
     def __del__(self):
         self.close_socket()
@@ -58,12 +63,12 @@ class TCPClient():
             try:
                 data = self._socket.recv(bufsize)
             except socket.timeout as e:
-                print(e)
+                self.log(e)
             except Exception as e:
-                print(f"Socket connection failed. Error: {e}")
+                self.log(f"Socket connection failed. Error: {e}")
                 raise e
             if data:
-                print("data", data)
+                self.log("data", data)
                 response += data
                 if b"\r" in data:
                     response = response[:-1]
@@ -75,20 +80,20 @@ class TCPClient():
         cmd += "\r"
         bytes_sent = self._socket.send((cmd).encode())
         if len(cmd) != bytes_sent:
-            print(f"Error during sending commande {cmd}, bytes_sent = {bytes_sent}")
+            self.log(f"Error during sending commande {cmd}, bytes_sent = {bytes_sent}")
             return False
         return True
 
     def send_and_receive(self, msg, log=True) -> str:
         if log:
-            print(f"Send '{msg}' to the robot")
+            self.log(f"Send '{msg}' to the robot")
         self.send(msg)
 
         time.sleep(TCPClient.ANSWER_WAIT_TIME)
 
         response = self.recv()
         if log:
-            print(f"Received '{response}' from the robot")
+            self.log(f"Received '{response}' from the robot")
 
         return response
 
@@ -96,6 +101,10 @@ class TCPClient():
         response = self.send_and_receive("hi")
         return response == "hi,done"
     
+    def set_machine_display_log(self, status):
+        response = self.send_and_receive(f"display_logs,{status}")
+        return response == "display_logs,done"
+
     def wait_manual_guide(self):
         response = self.send_and_receive("wait_manual_guide")
         return response == "wait_manual_guide,done"
@@ -128,11 +137,11 @@ class TCPClient():
 
         if response != None:
             response = response.split(",")
-            print(f"response split: {response}")
+            self.log(f"response split: {response}")
             if response[0] == "posj": 
                 return response[1:]
 
-            print("response don't start with 'posj'")
+            self.log("response don't start with 'posj'")
 
         return None
 
@@ -141,10 +150,10 @@ class TCPClient():
 
         if response != None:
             response = response.split(",")
-            print("response split:", response)
+            self.log("response split:", response)
             if response[0] == "posx": 
                 return [float(r) for r in response[1:-1]], response[-1]
-            print("response don't start with 'posx'")
+            self.log("response don't start with 'posx'")
         return None, None
     
     def get_digital_input(self, input_id: int) -> bool:
@@ -179,10 +188,3 @@ class TCPClient():
     def send_mission(self, mission_name) -> bool:
         response = self.send_and_receive(mission_name)
         return response == f"{mission_name},done"
-
-if __name__ == "__main__":
-    robot = TCPClient(ip="192.168.127.100", port=20002)
-    print("Send 'Hello' to the robot")
-    robot.send("Hello")
-    response = robot.recv()
-    robot.close_socket()

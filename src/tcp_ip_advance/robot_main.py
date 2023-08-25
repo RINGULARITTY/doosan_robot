@@ -28,11 +28,13 @@ while True:
     if res <= 0 or msg == "":
         continue
 
-    tp_log("Message from computer: " + str(msg))
+    computer.log("Message from computer: " + str(msg))
     msg = msg.split(",")
     
     if msg[0] == "hi":
         computer.hi()
+    elif msg[0] == "display_logs":
+        computer.goto(msg[1])
     elif msg[0] == "wait_manual_guide":
         computer.wait_manual_guide_robot()
     elif msg[0] == "goto":

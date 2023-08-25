@@ -32,6 +32,8 @@ class TCPServer:
             - 'port': port of the TCP connection
         """
 
+        self.thread_id = -1
+
         try:
             self.socket = server_socket_open(port)
             tp_log("Connection ok!")
@@ -113,89 +115,157 @@ class TCPServer:
         tp_log("debug " + "hi")
         self.write("hi,done")
 
+    def wait_manual_guide_robot(self):
+        try:
+            wait_manual_guide()
+        except Exception as ex:
+            self.write(f"wait_manual_guide,{ex}")
+        self.write(f"wait_manual_guide,done")
+
     def goto(self, msg_pos, vel, acc, app_type, ref, mod):
         tp_log("debug " + "goto")
         p = [float(elem) for elem in msg_pos]
-        movel(p,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
+        try:
+            movel(p,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
+        except Exception as ex:
+            self.write(f"goto,{ex}")
         self.write("goto,done")
         
     def gotoc(self, msg_pos1, msg_pos2, vel, acc, app_type, ref, mod):
         tp_log("debug " + "gotoc")
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
-        movec(p1,p2,vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+        try:
+            movec(p1,p2,vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+        except Exception as ex:
+            self.write(f"gotoc,{ex}")
         self.write("gotoc,done")
         
     def gotooffset(self, msg_pos, vel, acc, ref, mod):
         tp_log("debug " + "gotooffset")
         p = [float(elem) for elem in msg_pos]
-        movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+        try:
+            movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+        except Exception as ex:
+            self.write(f"gotooffset,{ex}")
         self.write("gotooffset,done")
         
     def gotop(self, msg_posx,vel, acc, app_type, ref, mod):
         tp_log("debug " + "gotop")
         p = [float(elem) for elem in msg_posx]
-        offset = coord_transform(p, DR_BASE, DR_TOOL)
+        
+        try:
+            offset = coord_transform(p, DR_BASE, DR_TOOL)
+        except Exception as ex:
+            self.write(f"gotop,{ex}")
+
         tp_log("debug " + "offset: " + str(offset))
-        offset[2]-=50
+        offset[2] -= 50
         tp_log("debug " + "offset: " + str(offset))
-        p2 = coord_transform(offset, DR_TOOL, DR_BASE)
-        movel(p2, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
-        movel(p, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+
+        try:
+            p2 = coord_transform(offset, DR_TOOL, DR_BASE)
+        except Exception as ex:
+            self.write(f"gotop,{ex}")
+
+        try:
+            movel(p2, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+            movel(p, vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+        except Exception as ex:
+            self.write(f"gotop,{ex}")
         self.write("gotop,done")
 
     def gotoj(self, msg_posj, vel, acc, mod):
         tp_log("debug " + "gotoj")
         p = [float(elem) for elem in msg_posj]
-        movej(p, vel=vel, acc=acc, mod=mod)
+        
+        try:
+            movej(p, vel=vel, acc=acc, mod=mod)
+        except Exception as ex:
+            self.write(f"gotoj,{ex}")
         self.write("gotoj,done")
 
     def get_posj(self):
         tp_log("debug " + "get_posj")
-        current_posj = get_current_posj()
+        
+        try:
+            current_posj = get_current_posj()
+        except Exception as ex:
+            self.write(f"get_posj,{ex}")
+
         msg = "posj," + str(current_posj).replace(']','').replace('[','')
         self.write(msg)
 
     def get_posx(self):
         tp_log("debug " + "get_posx")
-        posx, sol_space = get_current_posx()
+        
+        try:
+            posx, sol_space = get_current_posx()
+        except Exception as ex:
+            self.write(f"get_current_posx,{ex}")
+
         msg = "posx," + str(posx).replace(']','').replace('[','') + ',' + str(sol_space)
         self.write(msg)
         
     def get_d_input(self, msg_input_number):
         tp_log("debug " + "get_digital_input")
-        input_status = get_digital_input(msg_input_number)
+        
+        try:
+            input_status = get_digital_input(msg_input_number)
+        except Exception as ex:
+            self.write(f"get_digital_input,{ex}")
         msg = "input," + str(input_status)
         self.write(msg)
     
     def app_weld_enable_digital_robot(self):
         tp_log("debug " + "app_weld_enable_digital")
-        app_weld_enable_digital()
+        
+        try:
+            app_weld_enable_digital()
+        except Exception as ex:
+            self.write(f"app_weld_enable_digital,{ex}")
+
         msg = "app_weld_enable_digital,done"
         self.write(msg)
     
     def app_weld_set_weld_cond_digital_robot(self, flag_dry_run, vel_target, vel_min, vel_max, welding_mode, s_2t, pulse_mode, wm_opt1, simulation, ts_opt1, ts_opt2, job_num, synergic_id, r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1, r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8, r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15):
-        app_weld_set_weld_cond_digital(flag_dry_run, vel_target, vel_min,
-            vel_max, welding_mode, s_2t, pulse_mode, wm_opt1,
-            simulation, ts_opt1, ts_opt2, job_num, synergic_id,
-            r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1,
-            r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8,
-            r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15)
+        tp_log("debug " + "app_weld_set_weld_cond_digital")
+        try:
+            app_weld_set_weld_cond_digital(flag_dry_run, vel_target, vel_min,
+                vel_max, welding_mode, s_2t, pulse_mode, wm_opt1,
+                simulation, ts_opt1, ts_opt2, job_num, synergic_id,
+                r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1,
+                r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8,
+                r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15)
+        except Exception as ex:
+            self.write(f"app_weld_set_weld_cond_digital,{ex}")
         msg = "app_weld_set_weld_cond_digital,done"
         self.write(msg)
     
     def app_weld_adj_welding_cond_digital_robot(self, vel_target, job_number, synergic_id):
-        app_weld_adj_welding_cond_digital(vel_target=vel_target, job_number=job_number, synergic_id=synergic_id)
+        tp_log("debug " + "app_weld_adj_welding_cond_digital")
+        try:
+            app_weld_adj_welding_cond_digital(vel_target=vel_target, job_number=job_number, synergic_id=synergic_id)
+        except Exception as ex:
+            self.write(f"app_weld_adj_welding_cond_digital,{ex}")
+
         msg = "app_weld_adj_welding_cond_digital,done"
         self.write(msg)
     
     def reset_weld_cond_robot(self, flag_reset):
-        reset_weld_cond(flag_reset=flag_reset)
-        msg = "app_weld_adj_welding_cond_digital,done"
+        tp_log("debug " + "reset_weld_cond")
+        try:
+            reset_weld_cond(flag_reset=flag_reset)
+        except Exception as ex:
+            self.write(f"reset_weld_cond,{ex}")
+        msg = "reset_weld_cond,done"
         self.write(msg)
     
     def app_weld_disable_digital_robot(self):
         tp_log("debug " + "app_weld_disable_digital")
-        app_weld_disable_digital()
+        try:
+            app_weld_disable_digital()
+        except Exception as ex:
+            self.write(f"app_weld_disable_digital,{ex}")
         msg = "app_weld_disable_digital,done"
         self.write(msg)

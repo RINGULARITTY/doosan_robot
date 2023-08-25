@@ -102,16 +102,16 @@ class NewTrajectory(ctk.CTk):
             return
         self.add_text(f"Ok")
         
-        ACTUALIZATION_TIME = 1
+        ACTUALIZATION_TIME = 0.5
         
-        while robot.get_digital_input(1) or not self.stop_thread_flag:
+        while not self.stop_thread_flag and self._is_window_alive():
             self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
-            while robot.get_digital_input(1) or not self.stop_thread_flag or not self._is_window_alive():
+            while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
             
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
-            while not self.stop_thread_flag or not self._is_window_alive():
+            while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
                 
                 if robot.get_digital_input(1):
@@ -127,21 +127,23 @@ class NewTrajectory(ctk.CTk):
             self.add_text(f"Choix : {nature_choice}")
 
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
-            while not self.stop_thread_flag or not self._is_window_alive() or not robot.get_digital_input(1):
+            robot.wait_manual_guide_robot()
+            while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
             point1 = Coordinate(*robot.get_current_posx())
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
             if nature_choice == "Circulaire":
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
-                while not self.stop_thread_flag or not self._is_window_alive() or not robot.get_digital_input(1):
+                robot.wait_manual_guide_robot()
+                while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
                 point2 = Coordinate(*robot.get_current_posx())
                 self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
             
             configuration_choice = 0
-            self.add_text("- Choisissez une configuration (vert = PA, bleu = PB)")
-            while not self.stop_thread_flag or not self._is_window_alive():
+            self.add_text("- Choisissez une configuration (vert = PA, bleu1 = PB)")
+            while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
 
                 if robot.get_digital_input(1):
@@ -159,8 +161,8 @@ class NewTrajectory(ctk.CTk):
                 self.add_text(f"Mouvement créé : {movement_choice}, {configuration_choice}, {point1}")
             
             confirm_choice = False
-            self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu = non)")
-            while not self.stop_thread_flag or not self._is_window_alive():
+            self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)")
+            while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
 
                 if robot.get_digital_input(1):

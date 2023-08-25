@@ -95,6 +95,10 @@ class TCPClient():
     def hi(self):
         response = self.send_and_receive("hi")
         return response == "hi,done"
+    
+    def wait_manual_guide_robot(self):
+        response = self.send_and_receive("wait_manual_guide_robot")
+        return response == "wait_manual_guide_robot,done"
 
     def goto(self, x, y, z, rx, ry, rz, vel, acc, app_type, ref, mod) -> bool:
         response = self.send_and_receive(f"goto,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{app_type},{ref},{mod}")

@@ -96,13 +96,9 @@ class TCPClient():
         response = self.send_and_receive("hi")
         return response == "hi,done"
     
-    def start_wait_manual_guide(self):
-        response = self.send_and_receive("start_wait_manual_guide")
-        return response == "start_wait_manual_guide,done"
-
-    def end_wait_manual_guide(self):
-        response = self.send_and_receive("end_wait_manual_guide")
-        return response == "end_wait_manual_guide,done"
+    def wait_manual_guide(self):
+        response = self.send_and_receive("wait_manual_guide")
+        return response == "wait_manual_guide,done"
 
     def goto(self, x, y, z, rx, ry, rz, vel, acc, app_type, ref, mod) -> bool:
         response = self.send_and_receive(f"goto,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{app_type},{ref},{mod}")

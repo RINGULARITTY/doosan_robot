@@ -100,7 +100,7 @@ class NewTrajectory(ctk.CTk):
         if not response:
             self.add_text(f"\nErreur, réponse : {response}")
             return
-        self.add_text(f"Ok")
+        self.add_text(f"Ok\n")
         
         ACTUALIZATION_TIME = 0.25
         
@@ -109,10 +109,8 @@ class NewTrajectory(ctk.CTk):
             time.sleep(ACTUALIZATION_TIME)
 
         while not self.stop_thread_flag and self._is_window_alive():
-            robot.start_wait_manual_guide()
-
             nature_choice = 0
-            self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
+            self.add_text("\n- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
                 
@@ -133,17 +131,22 @@ class NewTrajectory(ctk.CTk):
 
 
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
+            robot.wait_manual_guide()
             while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
             while robot.get_digital_input(1):
                 pass
+
             point1 = Coordinate(*robot.get_current_posx()[0])
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
             if nature_choice == "Circulaire":
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
+                robot.wait_manual_guide()
                 while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
+                while robot.get_digital_input(1):
+                    pass
                 point2 = Coordinate(*robot.get_current_posx()[0])
                 self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
             
@@ -161,23 +164,29 @@ class NewTrajectory(ctk.CTk):
 
             wield_width = 0
             
+            while robot.get_digital_input(1) or robot.get_digital_input(2):
+                pass
+            
             if movement_choice == "Circulaire":
                 self.add_text(f"Mouvement créé : {movement_choice}, {configuration_choice}, {point1}, {point2}")
             else:
                 self.add_text(f"Mouvement créé : {movement_choice}, {configuration_choice}, {point1}")
             
             confirm_choice = False
-            self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)")
+            self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)", end=" ")
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
 
                 if robot.get_digital_input(1):
-                    confirm_choice = False
-                    break
-                elif robot.get_digital_input(2):
                     confirm_choice = True
                     break
+                elif robot.get_digital_input(2):
+                    confirm_choice = False
+                    break
             
+            while robot.get_digital_input(1) or robot.get_digital_input(2):
+                pass
+
             if not confirm_choice:
                 continue
                 
@@ -190,6 +199,8 @@ class NewTrajectory(ctk.CTk):
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1]))
             
             self.refresh_listbox()
+            
+            self.add_text(f"Enregistré")
             
         robot.end_wait_manual_guide()
 

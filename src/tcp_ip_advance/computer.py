@@ -153,7 +153,7 @@ class TCPClient():
         if response != None:
             response = response.split(",")
             if response[0] == "input":
-                return bool(response[1])
+                return bool(int(response[1]))
         return False
 
     def app_weld_enable_digital(self) -> bool:

@@ -52,8 +52,7 @@ while True:
     elif msg[0] == "get_current_posx":
         computer.get_posx()
     elif msg[0] == "get_digital_input":
-        input_number = int(msg[1])
-        computer.get_d_input(input_number)
+        computer.get_d_input(int(msg[1]))
     elif msg[0] == "app_weld_enable_digital":
         computer.app_weld_enable_digital_robot()
     elif msg[0] == "app_weld_disable_digital":

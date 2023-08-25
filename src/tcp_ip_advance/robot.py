@@ -207,11 +207,11 @@ class TCPServer:
         msg = "posx," + str(posx).replace(']','').replace('[','') + ',' + str(sol_space)
         self.write(msg)
         
-    def get_d_input(self, msg_input_number):
+    def get_d_input(self, input_id):
         tp_log("debug " + "get_digital_input")
         
         try:
-            input_status = get_digital_input(msg_input_number)
+            input_status = get_digital_input(input_id)
         except Exception as ex:
             self.write("get_digital_input,{}".format(ex))
         msg = "input," + str(input_status)

@@ -19,10 +19,12 @@ limitations under the License.
 What does this example: Use the TCPServer class to communicate with an computer
 """
 from robot import TCPServer
+import time
 
 computer = TCPServer()
 
 while True:
+    time.sleep(0.05)
     res, msg = computer.read()
     if res <= 0 or msg == "":
         continue
@@ -30,35 +32,34 @@ while True:
     tp_log("Message from computer: " + str(msg))
     msg = msg.split(",")
     
-    match msg[0]:
-        case "hi":
-            computer.hi()
-        case "goto":
-            computer.goto(msg[1:])
-        case "gotoj":
-            computer.gotoj(msg[1:])
-        case "gotoc":
-            computer.gotoc(msg[1:7], msg[7:13], 30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
-        case "gotooffset":
-            computer.gotooffset(msg[1:7],30,20,"DR_TOOL","DR_MV_MOD_REL")
-        case "gotop":
-            computer.gotop(msg[1:7],30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
-        case "get_current_posj":
-            computer.get_posj()
-        case "get_current_rotm":
-            computer.get_rotm()
-        case "get_current_posx":
-            computer.get_posx()
-        case "get_digital_input":
-            input_number = int(msg[1])
-            computer.get_d_input(input_number)
-        case "app_weld_enable_digital":
-            computer.app_weld_enable_digital_robot()
-        case "app_weld_disable_digital":
-            computer.app_weld_disable_digital_robot()
-        case "app_weld_set_weld_cond_digital":
-            computer.app_weld_set_weld_cond_digital_robot(*msg[1:32])
-        case "app_weld_adj_welding_cond_digital":
-            computer.app_weld_adj_welding_cond_digital_robot(*msg[1:4])
-        case "reset_weld_cond":
-            computer.reset_weld_cond_robot(msg[1])
+    if msg[0] == "hi":
+        computer.hi()
+    elif msg[0] == "goto":
+        computer.goto(msg[1:])
+    elif msg[0] == "gotoj":
+        computer.gotoj(msg[1:])
+    elif msg[0] == "gotoc":
+        computer.gotoc(msg[1:7], msg[7:13], 30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+    elif msg[0] == "gotooffset":
+        computer.gotooffset(msg[1:7],30,20,"DR_TOOL","DR_MV_MOD_REL")
+    elif msg[0] == "gotop":
+        computer.gotop(msg[1:7],30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
+    elif msg[0] == "get_current_posj":
+        computer.get_posj()
+    elif msg[0] == "get_current_rotm":
+        computer.get_rotm()
+    elif msg[0] == "get_current_posx":
+        computer.get_posx()
+    elif msg[0] == "get_digital_input":
+        input_number = int(msg[1])
+        computer.get_d_input(input_number)
+    elif msg[0] == "app_weld_enable_digital":
+        computer.app_weld_enable_digital_robot()
+    elif msg[0] == "app_weld_disable_digital":
+        computer.app_weld_disable_digital_robot()
+    elif msg[0] == "app_weld_set_weld_cond_digital":
+        computer.app_weld_set_weld_cond_digital_robot(*msg[1:32])
+    elif msg[0] == "app_weld_adj_welding_cond_digital":
+        computer.app_weld_adj_welding_cond_digital_robot(*msg[1:4])
+    elif msg[0] == "reset_weld_cond":
+        computer.reset_weld_cond_robot(msg[1])

@@ -109,7 +109,7 @@ class NewTrajectory(ctk.CTk):
             time.sleep(ACTUALIZATION_TIME)
 
         while not self.stop_thread_flag and self._is_window_alive():
-            threading.Thread(target=robot.wait_manual_guide_robot)
+            threading.Thread(target=robot.wait_manual_guide_robot).start()
 
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")

@@ -106,9 +106,10 @@ class NewTrajectory(ctk.CTk):
         
         while not self.stop_thread_flag and self._is_window_alive():
             self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
+            print(robot.get_digital_input(1))
             while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
-            
+
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
             while not self.stop_thread_flag and self._is_window_alive():
@@ -209,7 +210,7 @@ class NewTrajectory(ctk.CTk):
         pass
 
     def on_button1_click(self):
-        run_window = Run(self)
+        run_window = Run(self, self.trajectory)
         run_window.mainloop()
         pass
 

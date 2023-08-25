@@ -18,7 +18,6 @@ limitations under the License.
 
 What does this example: Use the TCPServer class to communicate with an computer
 """
-from robot import TCPServer
 import time
 
 computer = TCPServer()

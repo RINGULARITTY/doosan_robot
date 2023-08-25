@@ -40,7 +40,7 @@ class TCPClient():
             print(f"Socket connection failed. Error: {e}")
             raise e
 
-        self._socket.settimeout(15)
+        self._socket.settimeout(30)
 
         print(f"Connection on {port}")
 

@@ -227,6 +227,8 @@ class NewTrajectory(ctk.CTk):
         pass
 
     def test_trajectory(self):
+        self.stop_thread_flag = True
+        time.sleep(2)
         self.robot.close_socket()
         time.sleep(2)
         self.stop_thread_flag = True

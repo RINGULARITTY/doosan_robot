@@ -97,7 +97,7 @@ class Trajectory:
             messagebox.showerror(
                 title="Erreur", 
                 icon="error", 
-                message=f"Une trajectoire au nom de {self.name.get()} existe déjà"
+                message=f"Une trajectoire au nom de {self.name} existe déjà"
             )
             return False
         with open(os.path.join(directory, self.name + ".json"), 'w') as f:

@@ -1,10 +1,6 @@
-import customtkinter as ctk
 import os
-import re
-from CTkListbox import CTkListbox
 from math import sqrt, atan, pi
 from typing import List, Dict
-from machine_api import *
 import jsonpickle
 
 
@@ -87,7 +83,7 @@ class Movement:
 
 class Trajectory:
     def __init__(self, name, trajectory=[
-        Movement(Movement.START, "P0", [Movement.START_POS])
+        Movement(Movement.START, "P0", 0, [Movement.START_POS])
     ]):
         self.name: str = name
         self.trajectory: List[Movement] = trajectory

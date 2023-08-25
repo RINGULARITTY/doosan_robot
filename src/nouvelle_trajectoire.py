@@ -12,10 +12,12 @@ def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
 
 class NewTrajectory(ctk.CTk):
-    def __init__(self, master, directory):
+    def __init__(self, master, callback, directory):
         super().__init__()
         self.title("Ajouter un élément")
         self.center_window(700, 850)
+
+        self.callback = callback
 
         self.trajectory: Trajectory = Trajectory("")
         self.directory = directory
@@ -205,6 +207,7 @@ class NewTrajectory(ctk.CTk):
         self.destroy()
 
     def on_closing(self):
+        self.callback()
         self.stop_thread_flag = True
         self.after(1000, self.kill_thread)
     
@@ -219,7 +222,7 @@ class NewTrajectory(ctk.CTk):
         pass
 
     def test_trajectory(self):
-        run_window = Run(self, self.trajectory)
+        run_window = Run(self, self.trajectory, 1)
         run_window.mainloop()
         pass
 
@@ -228,6 +231,7 @@ class NewTrajectory(ctk.CTk):
             self.trajectory.name = name_entry.get()
             if self.trajectory.save(self.directory):
                 popup.destroy()
+                self.on_closing()
             else:
                 return
 

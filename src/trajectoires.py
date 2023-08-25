@@ -50,18 +50,17 @@ class MainWindow(ctk.CTk):
         self.geometry(f"{width}x{height}+{int(x)}+{int(y)}")
 
     def open_trajectory_edit(self, _):
-        edit_trajectory_window = EditTrajectory(self, self.call_back_trajectory_edit, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
+        edit_trajectory_window = EditTrajectory(self, self.call_back_refresh, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
         self.grab_set()
         edit_trajectory_window.mainloop()
         self.grab_release()
-        
-
-    def call_back_trajectory_edit(self):
-        self.refresh_listbox()
 
     def on_add_button_click(self):
-        add_window = NewTrajectory(self, self.folder_path)
+        add_window = NewTrajectory(self, self.call_back_refresh, self.folder_path)
         add_window.mainloop()
+    
+    def call_back_refresh(self):
+        self.refresh_listbox()
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")

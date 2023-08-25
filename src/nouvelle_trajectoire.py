@@ -12,11 +12,12 @@ def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
 
 class NewTrajectory(ctk.CTk):
-    def __init__(self, master, callback, directory):
+    def __init__(self, master, robot, callback, directory):
         super().__init__()
         self.title("Ajouter un élément")
         self.center_window(700, 850)
 
+        self.robot = robot
         self.callback = callback
 
         self.trajectory: Trajectory = Trajectory("")
@@ -49,8 +50,6 @@ class NewTrajectory(ctk.CTk):
         self.button2.pack(pady=10)
         
         self.stop_thread_flag = False
-        
-        self.robot = None
         self.start_thread()
 
     def refresh_listbox(self):
@@ -87,21 +86,6 @@ class NewTrajectory(ctk.CTk):
         self.textbox.configure(state='normal')
         self.textbox.delete('1.0', "end")
         self.textbox.configure(state='disabled')
-        
-        ip, port = "192.168.127.100", 20002
-        self.add_text(f"Connexion au robot {ip}:{port}...", end=" ")
-        try:
-            self.robot = TCPClient(ip, port)
-        except Exception as ex:
-            self.add_text(f"\nErreur : {ex}")
-            return
-        self.add_text(f"Ok")
-        self.add_text(f"Dialogue avec le robot...", end=" ")
-        response = self.robot.hi()
-        if not response:
-            self.add_text(f"\nErreur, réponse : {response}")
-            return
-        self.add_text(f"Ok\n")
         
         ACTUALIZATION_TIME = 0.25
         
@@ -217,8 +201,6 @@ class NewTrajectory(ctk.CTk):
             self.refresh_listbox()
             
             self.add_text(f"Enregistré")
-        
-        self.robot.close_socket()
 
     def kill_thread(self):
         self.thread.join()
@@ -241,11 +223,7 @@ class NewTrajectory(ctk.CTk):
 
     def test_trajectory(self):
         self.stop_thread_flag = True
-        time.sleep(2)
-        self.robot.close_socket()
-        time.sleep(2)
-        self.stop_thread_flag = True
-        time.sleep(1)
+        time.sleep(1.5)
         run_window = Run(self, self.trajectory, 1, self.start_thread)
         run_window.mainloop()
         pass

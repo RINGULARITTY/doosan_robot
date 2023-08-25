@@ -7,12 +7,13 @@ from tkinter import messagebox
 from lancement import Run
 
 class EditMovement(ctk.CTkToplevel):
-    def __init__(self, master, callback, trajectory: Trajectory, movement_index):
+    def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
         super().__init__()
 
         self.title("Editeur Mouvement")
         self.geometry("700x350")
         
+        self.robot = robot
         self.callback = callback
         
         self.trajectory = trajectory
@@ -85,11 +86,12 @@ class EditMovement(ctk.CTkToplevel):
         self.after(250, self.destroy)
 
 class EditTrajectory(ctk.CTkToplevel):
-    def __init__(self, master, callback, selected_index, folder_path, trajectories):
+    def __init__(self, master, robot, callback, selected_index, folder_path, trajectories):
         super().__init__()
         
-        self.folder_path = folder_path
+        self.robot = robot
         self.callback = callback
+        self.folder_path = folder_path
         
         self.title("Editeur Trajectoire")
         self.geometry("775x575")
@@ -122,7 +124,7 @@ class EditTrajectory(ctk.CTkToplevel):
             self.listbox.insert("END", f"{translations[m.nature]}, {m.config}, {m.str_coords_pos()}")
 
     def on_list_click(self, _):
-        edit_move = EditMovement(self, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())
+        edit_move = EditMovement(self, self.robot, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())
         edit_move.mainloop()
         self.slaves(edit_move)
     

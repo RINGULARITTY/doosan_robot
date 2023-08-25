@@ -4,11 +4,12 @@ import time
 from tcp_ip_advance.computer import TCPClient
 
 class Run(ctk.CTkToplevel):
-    def __init__(self, master, trajectory, pieces_amount=-1, callback=lambda: 0):
+    def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
         self.title("Ajouter un élément")
         self.geometry("450x700")
         
+        self.robot = robot
         self.callback = callback
         
         self.trajectory: Trajectory = trajectory
@@ -86,21 +87,6 @@ class Run(ctk.CTkToplevel):
             Movement.CIRCULAR: "Circulaire",
             Movement.PASS: "Passage"
         }
-
-        ip, port = "192.168.127.100", 20002
-        self.add_text(f"Connexion au robot {ip}:{port}...", end=" ")
-        try:
-            robot = TCPClient(ip, port)
-        except Exception as ex:
-            self.add_text(f"\nErreur : {ex}")
-            return
-        self.add_text(f"Ok")
-        self.add_text(f"Dialogue avec le robot...", end=" ")
-        response = robot.hi()
-        if not response:
-            self.add_text(f"\nErreur, réponse : {response}")
-            return
-        self.add_text(f"Ok\n")
         
         times = []
         for i in range(self.pieces_amount):
@@ -112,25 +98,24 @@ class Run(ctk.CTkToplevel):
                 try:
                     match m.nature:
                         case Movement.START:
-                            robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS")
+                            self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS")
                         case Movement.LINEAR:
-                            robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
+                            self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
                         case Movement.CIRCULAR:
-                            robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
+                            self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
                         case Movement.PASS:
-                            robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+                            self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
                 except Exception as ex:
                     self.add_text("end", f"Erreur : {ex}")
-                    robot.close_socket()
-                
+                    return
                 self.add_text("end", "Ok")
                 
             self.add_text(f"Lancement de \"Fin d'execution\" : ", end=" ")
             try:
-                robot.gotooffset(-50, m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+                self.robot.gotooffset(-50, m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
             except Exception as ex:
                 self.add_text(f"Erreur : {ex}")
-                robot.close_socket()
+                return
             self.add_text("Ok\n")
             
             times.append(time.time() - landmark)
@@ -141,4 +126,3 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"{'-'*20}")
 
         self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
-        robot.close_socket()

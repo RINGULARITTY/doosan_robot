@@ -68,7 +68,7 @@ class TCPClient():
                 self.log(f"Socket connection failed. Error: {e}")
                 raise e
             if data:
-                self.log("data", data)
+                self.log(f"data {data}")
                 response += data
                 if b"\r" in data:
                     response = response[:-1]
@@ -150,7 +150,7 @@ class TCPClient():
 
         if response != None:
             response = response.split(",")
-            self.log("response split:", response)
+            self.log(f"response split:{response}")
             if response[0] == "posx": 
                 return [float(r) for r in response[1:-1]], response[-1]
             self.log("response don't start with 'posx'")

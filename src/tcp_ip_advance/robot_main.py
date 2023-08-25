@@ -28,7 +28,7 @@ while True:
     if res <= 0 or msg == "":
         continue
 
-    computer.log("Message from computer: " + str(msg))
+    computer.log_robot("Message from computer: " + str(msg))
     msg = msg.split(",")
     
     if msg[0] == "hi":

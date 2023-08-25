@@ -34,7 +34,7 @@ while True:
     if msg[0] == "hi":
         computer.hi()
     elif msg[0] == "display_logs":
-        computer.goto(msg[1])
+        computer.display_logs(msg[1])
     elif msg[0] == "wait_manual_guide":
         computer.wait_manual_guide_robot()
     elif msg[0] == "goto":

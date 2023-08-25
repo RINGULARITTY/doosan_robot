@@ -4,10 +4,12 @@ import time
 from tcp_ip_advance.computer import TCPClient
 
 class Run(ctk.CTkToplevel):
-    def __init__(self, master, trajectory, pieces_amount=-1):
+    def __init__(self, master, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
         self.title("Ajouter un élément")
         self.geometry("450x700")
+        
+        self.callback = callback
         
         self.trajectory: Trajectory = trajectory
         self.pieces_amount = pieces_amount
@@ -33,10 +35,12 @@ class Run(ctk.CTkToplevel):
         
         self.textbox = ctk.CTkTextbox(self, state='disabled', height=200, font=("Arial", 14))
         self.textbox.pack(padx=5, fill="both", expand=True)
-        self.textbox.configure(state='normal')
         
-        self.textbox.configure(state='disabled')
-        
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    def on_closing(self):
+        self.callback()
+        self.after(250, self.destroy())
         
     def combobox_callback(self):
         pass

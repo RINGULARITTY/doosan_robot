@@ -11,7 +11,7 @@ class EditMovement(ctk.CTkToplevel):
         super().__init__()
 
         self.title("Editeur Mouvement")
-        self.geometry("600x350")
+        self.geometry("700x350")
         
         self.callback = callback
         
@@ -23,7 +23,7 @@ class EditMovement(ctk.CTkToplevel):
         
         movement = self.trajectory.trajectory[self.movement_index]
         
-        self.frames, self.titles, self.labels, self.coords = [], [], [], []
+        self.frames, self.titles, self.labels, self.coords, self.change_coord = [], [], [], [], []
         for i, c in enumerate(movement.coords):
             self.frames.append(ctk.CTkFrame(self))
             self.frames[-1].pack()
@@ -43,25 +43,24 @@ class EditMovement(ctk.CTkToplevel):
             
             self.labels.append(ls)
             self.coords.append(fs)
+            
+            self.change_coord.append(ctk.CTkButton(self.frames[-1], text="Nouvelle prise", command=lambda: self.on_new_take(i), font=("Arial", 14)))
+            self.change_coord[-1].pack(side="left", padx=10)
         
         self.space = ctk.CTkLabel(self, text="", font=("Arial", 14))
         self.space.pack()
             
         self.change_coord = ctk.CTkLabel(self, text="Changer les coordonées", font=("Arial", 14))
         self.change_coord.pack(pady=5)
-        
-        self.frame3 = ctk.CTkFrame(self)
-        self.frame3.pack(pady=10)
-        self.new_take = ctk.CTkButton(self.frame3, text="Nouvelle prise", command=self.on_new_take, font=("Arial", 14))
-        self.new_take.pack(side="left", padx=10)
 
-        self.hand_change = ctk.CTkButton(self.frame3, text="A la main", command=self.on_hand_change, font=("Arial", 14))
-        self.hand_change.pack(side="left", padx=10)
+
+        self.hand_change = ctk.CTkButton(self, text="A la main", command=self.on_hand_change, font=("Arial", 14))
+        self.hand_change.pack(padx=10)
         
         self.save = ctk.CTkButton(self, text="Sauvegarder", command=self.on_save, font=("Arial", 14))
         self.save.pack(pady=10)
       
-    def on_new_take(self):
+    def on_new_take(self, index):
         pass
     
     def on_hand_change(self):

@@ -49,6 +49,8 @@ class NewTrajectory(ctk.CTk):
         self.button2.pack(pady=10)
         
         self.stop_thread_flag = False
+        
+        self.robot = None
         self.start_thread()
 
     def refresh_listbox(self):
@@ -70,6 +72,7 @@ class NewTrajectory(ctk.CTk):
         self.geometry(f"{width}x{height}+{int(x)}+{int(y)}")
 
     def start_thread(self):
+        self.stop_thread_flag = False
         self.thread = threading.Thread(target=self.start_taking_movements)
         self.thread.start()
         self.check_thread()
@@ -88,13 +91,13 @@ class NewTrajectory(ctk.CTk):
         ip, port = "192.168.127.100", 20002
         self.add_text(f"Connexion au robot {ip}:{port}...", end=" ")
         try:
-            robot = TCPClient(ip, port)
+            self.robot = TCPClient(ip, port)
         except Exception as ex:
             self.add_text(f"\nErreur : {ex}")
             return
         self.add_text(f"Ok")
         self.add_text(f"Dialogue avec le robot...", end=" ")
-        response = robot.hi()
+        response = self.robot.hi()
         if not response:
             self.add_text(f"\nErreur, réponse : {response}")
             return
@@ -103,7 +106,7 @@ class NewTrajectory(ctk.CTk):
         ACTUALIZATION_TIME = 0.25
         
         self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
-        while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
+        while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
             time.sleep(ACTUALIZATION_TIME)
 
         while not self.stop_thread_flag and self._is_window_alive():
@@ -112,40 +115,40 @@ class NewTrajectory(ctk.CTk):
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
                 
-                if robot.get_digital_input(1):
+                if self.robot.get_digital_input(1):
                     nature_choice = "Linéaire"
                     break
-                elif robot.get_digital_input(2):
+                elif self.robot.get_digital_input(2):
                     nature_choice = "Circulaire"
                     break
-                elif robot.get_digital_input(3):
+                elif self.robot.get_digital_input(3):
                     nature_choice = "Passage"
                     break
             
-            while robot.get_digital_input(1) or robot.get_digital_input(2) or robot.get_digital_input(3):
+            while self.robot.get_digital_input(1) or self.robot.get_digital_input(2) or self.robot.get_digital_input(3):
                 pass
             
             self.add_text(f"Choix : {nature_choice}")
 
 
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
-            robot.wait_manual_guide()
-            while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
+            self.robot.wait_manual_guide()
+            while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
-            while robot.get_digital_input(1):
+            while self.robot.get_digital_input(1):
                 pass
 
-            point1 = Coordinate(*robot.get_current_posx()[0])
+            point1 = Coordinate(*self.robot.get_current_posx()[0])
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
             if nature_choice == "Circulaire":
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
-                robot.wait_manual_guide()
-                while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
+                self.robot.wait_manual_guide()
+                while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
-                while robot.get_digital_input(1):
+                while self.robot.get_digital_input(1):
                     pass
-                point2 = Coordinate(*robot.get_current_posx()[0])
+                point2 = Coordinate(*self.robot.get_current_posx()[0])
                 self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
             
             configuration_choice = 0
@@ -153,16 +156,16 @@ class NewTrajectory(ctk.CTk):
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
 
-                if robot.get_digital_input(1):
+                if self.robot.get_digital_input(1):
                     configuration_choice = "PA"
                     break
-                elif robot.get_digital_input(2):
+                elif self.robot.get_digital_input(2):
                     configuration_choice = "PB"
                     break
 
             wield_width = 0
             
-            while robot.get_digital_input(1) or robot.get_digital_input(2):
+            while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
             
             if nature_choice == "Circulaire":
@@ -175,14 +178,14 @@ class NewTrajectory(ctk.CTk):
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
 
-                if robot.get_digital_input(1):
+                if self.robot.get_digital_input(1):
                     confirm_choice = True
                     break
-                elif robot.get_digital_input(2):
+                elif self.robot.get_digital_input(2):
                     confirm_choice = False
                     break
             
-            while robot.get_digital_input(1) or robot.get_digital_input(2):
+            while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
 
             if not confirm_choice:
@@ -222,7 +225,9 @@ class NewTrajectory(ctk.CTk):
         pass
 
     def test_trajectory(self):
-        run_window = Run(self, self.trajectory, 1)
+        self.robot.close_socket()
+        self.stop_thread_flag = True
+        run_window = Run(self, self.trajectory, 1, self.start_thread)
         run_window.mainloop()
         pass
 

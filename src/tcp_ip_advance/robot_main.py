@@ -18,39 +18,47 @@ limitations under the License.
 
 What does this example: Use the TCPServer class to communicate with an computer
 """
+from robot import TCPServer
+
 computer = TCPServer()
-res, msg = computer.read()
-if res > 0:
-    tp_log("Message from computer: " + str(msg))
-else:
-    tp_log("Not able to read the message")
-
-computer.write("Hi")
-
 
 while True:
     res, msg = computer.read()
-    if res > 0 and msg != "":
-        tp_log("Message from computer: " + str(msg))
-        msg = msg.split(",")
-        if msg[0] == "goto":
+    if res <= 0 or msg == "":
+        continue
+
+    tp_log("Message from computer: " + str(msg))
+    msg = msg.split(",")
+    
+    match msg[0]:
+        case "hi":
+            computer.hi()
+        case "goto":
             computer.goto(msg[1:])
-        elif msg[0] == "gotoj":
+        case "gotoj":
             computer.gotoj(msg[1:])
-        elif msg[0] == "gotoc":
+        case "gotoc":
             computer.gotoc(msg[1:7], msg[7:13], 30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
-        elif msg[0] == "gotooffset":
+        case "gotooffset":
             computer.gotooffset(msg[1:7],30,20,"DR_TOOL","DR_MV_MOD_REL")
-        elif msg[0] == "gotop":
+        case "gotop":
             computer.gotop(msg[1:7],30,20,"DR_MV_APP_NONE","DR_BASE","DR_MV_MOD_ABS")
-        elif msg[0] == "get_current_posj":
+        case "get_current_posj":
             computer.get_posj()
-        elif msg[0] == "get_current_rotm":
+        case "get_current_rotm":
             computer.get_rotm()
-        elif msg[0] == "get_current_posx":
+        case "get_current_posx":
             computer.get_posx()
-        elif msg[0] == "get_digital_input":
+        case "get_digital_input":
             input_number = int(msg[1])
             computer.get_d_input(input_number)
-
-computer.close_socket()
+        case "app_weld_enable_digital":
+            computer.app_weld_enable_digital_robot()
+        case "app_weld_disable_digital":
+            computer.app_weld_disable_digital_robot()
+        case "app_weld_set_weld_cond_digital":
+            computer.app_weld_set_weld_cond_digital_robot(*msg[1:32])
+        case "app_weld_adj_welding_cond_digital":
+            computer.app_weld_adj_welding_cond_digital_robot(*msg[1:4])
+        case "reset_weld_cond":
+            computer.reset_weld_cond_robot(msg[1])

@@ -109,15 +109,17 @@ class TCPServer:
             tp_log("info" + "Sending {0} command ok".format(msg))
         return res
 
+    def hi(self):
+        tp_log("debug " + "hi")
+        self.write("hi,done")
+
     def goto(self, msg_pos, vel, acc, app_type, ref, mod):
-        """ goto """
         tp_log("debug " + "goto")
         p = [float(elem) for elem in msg_pos]
         movel(p,vel=vel,acc=acc,app_type=app_type,ref=ref,mod=mod)
         self.write("goto,done")
         
     def gotoc(self, msg_pos1, msg_pos2, vel, acc, app_type, ref, mod):
-        """ gotoc """
         tp_log("debug " + "gotoc")
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
@@ -125,14 +127,12 @@ class TCPServer:
         self.write("gotoc,done")
         
     def gotooffset(self, msg_pos, vel, acc, ref, mod):
-        """ gotooffset """
         tp_log("debug " + "gotooffset")
         p = [float(elem) for elem in msg_pos]
         movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
         self.write("gotooffset,done")
         
     def gotop(self, msg_posx,vel, acc, app_type, ref, mod):
-        """ gotop """
         tp_log("debug " + "gotop")
         p = [float(elem) for elem in msg_posx]
         offset = coord_transform(p, DR_BASE, DR_TOOL)
@@ -145,29 +145,57 @@ class TCPServer:
         self.write("gotop,done")
 
     def gotoj(self, msg_posj, vel, acc, mod):
-        """ gotoj """
         tp_log("debug " + "gotoj")
         p = [float(elem) for elem in msg_posj]
         movej(p, vel=vel, acc=acc, mod=mod)
         self.write("gotoj,done")
 
     def get_posj(self):
-        """ get_posj """
         tp_log("debug " + "get_posj")
         current_posj = get_current_posj()
         msg = "posj," + str(current_posj).replace(']','').replace('[','')
         self.write(msg)
 
     def get_posx(self):
-        """ get_posx """
         tp_log("debug " + "get_posx")
         posx, sol_space = get_current_posx()
         msg = "posx," + str(posx).replace(']','').replace('[','') + ',' + str(sol_space)
         self.write(msg)
         
     def get_d_input(self, msg_input_number):
-        """ get_digital_input """
         tp_log("debug " + "get_digital_input")
         input_status = get_digital_input(msg_input_number)
         msg = "input," + str(input_status)
+        self.write(msg)
+    
+    def app_weld_enable_digital_robot(self):
+        tp_log("debug " + "app_weld_enable_digital")
+        app_weld_enable_digital()
+        msg = "app_weld_enable_digital,done"
+        self.write(msg)
+    
+    def app_weld_set_weld_cond_digital_robot(self, flag_dry_run, vel_target, vel_min, vel_max, welding_mode, s_2t, pulse_mode, wm_opt1, simulation, ts_opt1, ts_opt2, job_num, synergic_id, r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1, r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8, r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15):
+        app_weld_set_weld_cond_digital(flag_dry_run, vel_target, vel_min,
+            vel_max, welding_mode, s_2t, pulse_mode, wm_opt1,
+            simulation, ts_opt1, ts_opt2, job_num, synergic_id,
+            r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1,
+            r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8,
+            r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15)
+        msg = "app_weld_set_weld_cond_digital,done"
+        self.write(msg)
+    
+    def app_weld_adj_welding_cond_digital_robot(self, vel_target, job_number, synergic_id):
+        app_weld_adj_welding_cond_digital(vel_target=vel_target, job_number=job_number, synergic_id=synergic_id)
+        msg = "app_weld_adj_welding_cond_digital,done"
+        self.write(msg)
+    
+    def reset_weld_cond_robot(self, flag_reset):
+        reset_weld_cond(flag_reset=flag_reset)
+        msg = "app_weld_adj_welding_cond_digital,done"
+        self.write(msg)
+    
+    def app_weld_disable_digital_robot(self):
+        tp_log("debug " + "app_weld_disable_digital")
+        app_weld_disable_digital()
+        msg = "app_weld_disable_digital,done"
         self.write(msg)

@@ -6,7 +6,7 @@ from trajectory_lib import Trajectory, Movement, Coordinate
 import time
 import threading
 from tkinter import TclError
-from machine import Machine
+from tcp_ip_advance.computer import TCPClient
 
 def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
@@ -33,8 +33,7 @@ class NewTrajectory(ctk.CTk):
 
         self.listbox = CTkListbox(self, command=self.on_list_click, height=75)
         self.listbox.pack(fill="both", expand=True, padx=10, pady=10)
-
-        self.listbox.insert("END", f"Linéaire, (41.45, 68.74, -96.97), PB")
+        self.refresh_listbox()
 
         self.label4 = ctk.CTkLabel(self, text="3 - Testez la trajectoire", font=("Arial", 14))
         self.label4.pack(pady=5)
@@ -52,8 +51,13 @@ class NewTrajectory(ctk.CTk):
         self.button2.pack(pady=10)
         
         self.stop_thread_flag = False
-        self.machine = Machine()
         self.start_thread()
+
+    def refresh_listbox(self):
+        self.listbox.delete("all")
+        translations = {"START": "Début", "LINEAR": "Linéaire", "CIRCULAR": "Circulaire", "PASS": "Passage"}
+        for m in self.trajectory.trajectory:
+            self.listbox.insert("END", f"{translations[m.nature]}, {m.config}, {m.str_coords_pos()}")
 
     def center_window(self, width=None, height=None):
         screen_width = self.winfo_screenwidth()
@@ -71,60 +75,82 @@ class NewTrajectory(ctk.CTk):
         self.thread = threading.Thread(target=self.start_taking_movements)
         self.thread.start()
         self.check_thread()
+    
+    def add_text(self, text, end="\n"):
+        self.textbox.configure(state='normal')
+        self.textbox.insert("end", f"{text}{end}")
+        self.textbox.configure(state='disabled')
+        self.textbox.see("end")
 
     def start_taking_movements(self):
         self.textbox.configure(state='normal')
         self.textbox.delete('1.0', "end")
         self.textbox.configure(state='disabled')
         
-        while self.machine.get_digital_input(1) or not self.stop_thread_flag:
+        ip, port = "192.168.127.100", 20002
+        self.add_text(f"Connexion au robot {ip}:{port}...", end=" ")
+        try:
+            robot = TCPClient(ip, port)
+        except Exception as ex:
+            self.add_text(f"\nErreur : {ex}")
+            return
+        self.add_text(f"Ok")
+        self.add_text(f"Dialogue avec le robot...", end=" ")
+        response = robot.hi()
+        if not response:
+            self.add_text(f"\nErreur, réponse : {response}")
+            return
+        self.add_text(f"Ok")
+        
+        ACTUALIZATION_TIME = 1
+        
+        while robot.get_digital_input(1) or not self.stop_thread_flag:
             self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
-            while self.machine.get_digital_input(1) or not self.stop_thread_flag or not self._is_window_alive():
-                time.sleep(2)
+            while robot.get_digital_input(1) or not self.stop_thread_flag or not self._is_window_alive():
+                time.sleep(ACTUALIZATION_TIME)
             
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
             while not self.stop_thread_flag or not self._is_window_alive():
-                time.sleep(2)
+                time.sleep(ACTUALIZATION_TIME)
                 
-                if self.machine.get_digital_input(1):
+                if robot.get_digital_input(1):
                     nature_choice = "Linéaire"
                     break
-                elif self.machine.get_digital_input(2):
+                elif robot.get_digital_input(2):
                     nature_choice = "Circulaire"
                     break
-                elif self.machine.get_digital_input(3):
+                elif robot.get_digital_input(3):
                     nature_choice = "Passage"
                     break
             
             self.add_text(f"Choix : {nature_choice}")
 
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
-            while not self.stop_thread_flag or not self._is_window_alive() or not self.machine.get_digital_input(1):
-                time.sleep(2)
-            point1 = Coordinate(*self.machine.get_current_posx())
+            while not self.stop_thread_flag or not self._is_window_alive() or not robot.get_digital_input(1):
+                time.sleep(ACTUALIZATION_TIME)
+            point1 = Coordinate(*robot.get_current_posx())
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
             if nature_choice == "Circulaire":
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
-                while not self.stop_thread_flag or not self._is_window_alive() or not self.machine.get_digital_input(1):
-                    time.sleep(2)
-                point2 = Coordinate(*self.machine.get_current_posx())
+                while not self.stop_thread_flag or not self._is_window_alive() or not robot.get_digital_input(1):
+                    time.sleep(ACTUALIZATION_TIME)
+                point2 = Coordinate(*robot.get_current_posx())
                 self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
             
             configuration_choice = 0
             self.add_text("- Choisissez une configuration (vert = PA, bleu = PB)")
             while not self.stop_thread_flag or not self._is_window_alive():
-                time.sleep(2)
+                time.sleep(ACTUALIZATION_TIME)
 
-                if self.machine.get_digital_input(1):
+                if robot.get_digital_input(1):
                     movement_choice = "PA"
                     break
-                elif self.machine.get_digital_input(2):
+                elif robot.get_digital_input(2):
                     movement_choice = "PB"
                     break
-            
-            # Taille du cordon
+
             wield_width = 0
             
             if movement_choice == "Circulaire":
@@ -135,12 +161,12 @@ class NewTrajectory(ctk.CTk):
             confirm_choice = False
             self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu = non)")
             while not self.stop_thread_flag or not self._is_window_alive():
-                time.sleep(2)
+                time.sleep(ACTUALIZATION_TIME)
 
-                if self.machine.get_digital_input(1):
+                if robot.get_digital_input(1):
                     confirm_choice = False
                     break
-                elif self.machine.get_digital_input(2):
+                elif robot.get_digital_input(2):
                     confirm_choice = True
                     break
             
@@ -154,12 +180,8 @@ class NewTrajectory(ctk.CTk):
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1, point2]))
             else:
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1]))
-
-    def add_text(self, text):
-        self.textbox.configure(state='normal')
-        self.textbox.insert("end", f"{text}\n")
-        self.textbox.configure(state='disabled')
-        self.textbox.see("end")
+            
+            self.refresh_listbox()
 
     def kill_thread(self):
         self.thread.join()

@@ -117,7 +117,7 @@ class TCPServer:
         self.write("hi,done")
 
     def start_wait_manual_guide_robot(self):
-        if self.thread_id != None:
+        if self.thread != None:
             self.write("wait_manual_guide,thread_already_running")
             return 
         try:
@@ -128,7 +128,7 @@ class TCPServer:
         self.write("wait_manual_guide,done")
 
     def end_wait_manual_guide_robot(self):
-        if self.thread_id == None:
+        if self.thread == None:
             self.write("wait_manual_guide,thread_not_running")
             return 
         try:

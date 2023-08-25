@@ -204,6 +204,8 @@ class NewTrajectory(ctk.CTk):
             self.refresh_listbox()
             
             self.add_text(f"Enregistré")
+        
+        self.robot.close_socket()
 
     def kill_thread(self):
         self.thread.join()
@@ -226,7 +228,9 @@ class NewTrajectory(ctk.CTk):
 
     def test_trajectory(self):
         self.robot.close_socket()
+        time.sleep(2)
         self.stop_thread_flag = True
+        time.sleep(1)
         run_window = Run(self, self.trajectory, 1, self.start_thread)
         run_window.mainloop()
         pass
@@ -257,7 +261,7 @@ class NewTrajectory(ctk.CTk):
         response = messagebox.askyesno(
             title="Confirmation", 
             icon="warning", 
-            message="Êtes-vous sûr de vouloir supprimer la trajectoire ?"
+            message="Êtes-vous sûr de ne pas vouloir convercer la trajectoire créée ?"
         )
         if response:
             pass

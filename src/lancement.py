@@ -141,3 +141,4 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"{'-'*20}")
 
         self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
+        robot.close_socket()

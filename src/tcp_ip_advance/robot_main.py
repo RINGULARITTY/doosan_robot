@@ -33,8 +33,10 @@ while True:
     
     if msg[0] == "hi":
         computer.hi()
-    elif msg[0] == "wait_manual_guide_robot":
-        computer.wait_manual_guide_robot()
+    elif msg[0] == "start_wait_manual_guide":
+        computer.start_wait_manual_guide_robot()
+    elif msg[0] == "end_wait_manual_guide":
+        computer.end_wait_manual_guide_robot()
     elif msg[0] == "goto":
         computer.goto(msg[1:])
     elif msg[0] == "gotoj":

@@ -102,14 +102,14 @@ class NewTrajectory(ctk.CTk):
             return
         self.add_text(f"Ok")
         
-        ACTUALIZATION_TIME = 0.5
+        ACTUALIZATION_TIME = 0.25
         
         self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
         while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
             time.sleep(ACTUALIZATION_TIME)
 
         while not self.stop_thread_flag and self._is_window_alive():
-            threading.Thread(target=robot.wait_manual_guide_robot).start()
+            robot.start_wait_manual_guide()
 
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
@@ -142,7 +142,6 @@ class NewTrajectory(ctk.CTk):
 
             if nature_choice == "Circulaire":
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
-                robot.wait_manual_guide_robot()
                 while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
                 point2 = Coordinate(*robot.get_current_posx()[0])
@@ -191,6 +190,8 @@ class NewTrajectory(ctk.CTk):
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1]))
             
             self.refresh_listbox()
+            
+        robot.end_wait_manual_guide()
 
     def kill_thread(self):
         self.thread.join()

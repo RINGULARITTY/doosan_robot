@@ -115,9 +115,27 @@ class TCPServer:
         tp_log("debug " + "hi")
         self.write("hi,done")
 
-    def wait_manual_guide_robot(self):
+    def fake_process(self):
+        while True:
+            time.sleep(0.25)
+
+    def start_wait_manual_guide_robot(self):
+        if self.thread_id != -1:
+            self.write("wait_manual_guide,thread_already_running")
+            return 
         try:
-            wait_manual_guide()
+            self.thread_id = thread_run(wait_manual_guide(), loop=True)
+        except Exception as ex:
+            self.write("wait_manual_guide,{}".format(ex))
+        self.write("wait_manual_guide,done")
+
+    def end_wait_manual_guide_robot(self):
+        if self.thread_id == -1:
+            self.write("wait_manual_guide,thread_not_running")
+            return 
+        try:
+            thread_stop(self.thread_id)
+            self.thread_id = -1
         except Exception as ex:
             self.write("wait_manual_guide,{}".format(ex))
         self.write("wait_manual_guide,done")

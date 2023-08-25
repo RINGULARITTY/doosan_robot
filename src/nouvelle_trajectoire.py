@@ -104,10 +104,12 @@ class NewTrajectory(ctk.CTk):
         
         ACTUALIZATION_TIME = 0.5
         
+        self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
+        while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
+            time.sleep(ACTUALIZATION_TIME)
+
         while not self.stop_thread_flag and self._is_window_alive():
-            self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
-            while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
-                time.sleep(ACTUALIZATION_TIME)
+            threading.Thread(target=robot.wait_manual_guide_robot)
 
             nature_choice = 0
             self.add_text("- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
@@ -124,13 +126,18 @@ class NewTrajectory(ctk.CTk):
                     nature_choice = "Passage"
                     break
             
+            while robot.get_digital_input(1) or robot.get_digital_input(2) or robot.get_digital_input(3):
+                pass
+            
             self.add_text(f"Choix : {nature_choice}")
 
+
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
-            robot.wait_manual_guide_robot()
             while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
-            point1 = Coordinate(*robot.get_current_posx())
+            while robot.get_digital_input(1):
+                pass
+            point1 = Coordinate(*robot.get_current_posx()[0])
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
             if nature_choice == "Circulaire":
@@ -138,7 +145,7 @@ class NewTrajectory(ctk.CTk):
                 robot.wait_manual_guide_robot()
                 while not robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
                     time.sleep(ACTUALIZATION_TIME)
-                point2 = Coordinate(*robot.get_current_posx())
+                point2 = Coordinate(*robot.get_current_posx()[0])
                 self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
             
             configuration_choice = 0

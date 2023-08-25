@@ -145,15 +145,9 @@ class EditTrajectory(ctk.CTkToplevel):
             return
 
         if self.trajectory.name != self.name_entry.get():
-            if os.path.exists(os.path.join(self.folder_path, self.name_entry.get() + ".json")):
-                response = messagebox.showerror(
-                    title="Erreur", 
-                    icon="error", 
-                    message=f"Une trajectoire au nom de {self.name_entry.get()} existe déjà"
-                )
-                return
             os.remove(os.path.join(self.folder_path, self.trajectory.name + ".json"))
             self.trajectory.name = self.name_entry.get()
-        self.trajectory.save(self.folder_path)
+        if not self.trajectory.save(self.folder_path):
+            return
         self.callback()
         self.after(250, self.destroy())

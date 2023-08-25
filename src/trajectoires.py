@@ -50,8 +50,7 @@ class MainWindow(ctk.CTk):
         self.geometry(f"{width}x{height}+{int(x)}+{int(y)}")
 
     def open_trajectory_edit(self, _):
-        folder_path = "./Trajectoires"
-        edit_trajectory_window = EditTrajectory(self, self.call_back_trajectory_edit, self.listbox.curselection(), folder_path, [file.split(".")[:-1][0] for file in os.listdir(folder_path) if file.endswith(".json")])
+        edit_trajectory_window = EditTrajectory(self, self.call_back_trajectory_edit, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
         self.grab_set()
         edit_trajectory_window.mainloop()
         self.grab_release()
@@ -61,7 +60,7 @@ class MainWindow(ctk.CTk):
         self.refresh_listbox()
 
     def on_add_button_click(self):
-        add_window = NewTrajectory(self)
+        add_window = NewTrajectory(self, self.folder_path)
         add_window.mainloop()
 
 if __name__ == "__main__":

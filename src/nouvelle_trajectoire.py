@@ -12,12 +12,13 @@ def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
 
 class NewTrajectory(ctk.CTk):
-    def __init__(self, master):
+    def __init__(self, master, directory):
         super().__init__()
         self.title("Ajouter un élément")
         self.center_window(700, 850)
 
         self.trajectory: Trajectory = Trajectory("")
+        self.directory = directory
 
         self.title_label = ctk.CTkLabel(self, text="Nouvelle Trajectoire", font=("Arial", 20))
         self.title_label.pack(pady=10)
@@ -37,17 +38,12 @@ class NewTrajectory(ctk.CTk):
 
         self.label4 = ctk.CTkLabel(self, text="3 - Testez la trajectoire", font=("Arial", 14))
         self.label4.pack(pady=5)
-        self.button1 = ctk.CTkButton(self, text="Test", command=self.on_button1_click)
+        self.button1 = ctk.CTkButton(self, text="Test", command=self.test_trajectory)
         self.button1.pack(pady=10)
 
         self.label5 = ctk.CTkLabel(self, text="4 - Si la trajectoire est correcte, sauvegardez", font=("Arial", 14))
         self.label5.pack(pady=5)
-        self.button2 = ctk.CTkButton(self, text="Sauvegarder", command=self.on_button2_click)
-        self.button2.pack(pady=10)
-        
-        self.label5 = ctk.CTkLabel(self, text="Sinon, annulez", font=("Arial", 14))
-        self.label5.pack(pady=5)
-        self.button2 = ctk.CTkButton(self, text="Annuler", command=self.on_button3_click)
+        self.button2 = ctk.CTkButton(self, text="Sauvegarder", command=self.save_trajectory)
         self.button2.pack(pady=10)
         
         self.stop_thread_flag = False
@@ -156,10 +152,10 @@ class NewTrajectory(ctk.CTk):
                 time.sleep(ACTUALIZATION_TIME)
 
                 if robot.get_digital_input(1):
-                    movement_choice = "PA"
+                    configuration_choice = "PA"
                     break
                 elif robot.get_digital_input(2):
-                    movement_choice = "PB"
+                    configuration_choice = "PB"
                     break
 
             wield_width = 0
@@ -167,10 +163,10 @@ class NewTrajectory(ctk.CTk):
             while robot.get_digital_input(1) or robot.get_digital_input(2):
                 pass
             
-            if movement_choice == "Circulaire":
-                self.add_text(f"Mouvement créé : {movement_choice}, {configuration_choice}, {point1}, {point2}")
+            if nature_choice == "Circulaire":
+                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, {point1.str_pos()}, {point2.str_pos()}")
             else:
-                self.add_text(f"Mouvement créé : {movement_choice}, {configuration_choice}, {point1}")
+                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, {point1.str_pos()}")
             
             confirm_choice = False
             self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)", end=" ")
@@ -191,7 +187,7 @@ class NewTrajectory(ctk.CTk):
                 continue
                 
             nature = {"Linéaire": Movement.LINEAR, "Circulaire": Movement.CIRCULAR, "Passage": Movement.PASS}[nature_choice]
-            configuration = {"PA": Movement.PA, "PB": Movement.PB}
+            configuration = {"PA": Movement.PA, "PB": Movement.PB}[configuration_choice]
             
             if nature == Movement.CIRCULAR:
                 self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1, point2]))
@@ -220,23 +216,20 @@ class NewTrajectory(ctk.CTk):
             
 
     def on_list_click(self, _):
-        
         pass
 
-    def on_add2_click(self):
-        
-        pass
-
-    def on_button1_click(self):
+    def test_trajectory(self):
         run_window = Run(self, self.trajectory)
         run_window.mainloop()
         pass
 
-    def on_button2_click(self):
+    def save_trajectory(self):
         def validate_entry():
-            entered_name = name_entry.get()
-            print(entered_name)
-            popup.destroy()
+            self.trajectory.name = name_entry.get()
+            if self.trajectory.save(self.directory):
+                popup.destroy()
+            else:
+                return
 
         popup = ctk.CTkToplevel(self)
         popup.geometry("350x150")

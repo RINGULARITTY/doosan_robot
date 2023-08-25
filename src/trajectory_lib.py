@@ -2,6 +2,7 @@ import os
 from math import sqrt, atan, pi
 from typing import List, Dict
 import jsonpickle
+from tkinter import messagebox
 
 
 class Coordinate:
@@ -88,9 +89,17 @@ class Trajectory:
         self.name: str = name
         self.trajectory: List[Movement] = trajectory
 
-    def save(self, directory):
+    def save(self, directory) -> bool:
+        if os.path.exists(os.path.join(self.folder_path, self.name_entry.get() + ".json")):
+            messagebox.showerror(
+                title="Erreur", 
+                icon="error", 
+                message=f"Une trajectoire au nom de {self.name_entry.get()} existe déjà"
+            )
+            return False
         with open(os.path.join(directory, self.name + ".json"), 'w') as f:
             f.write(jsonpickle.encode(self, indent=2))
+        return True
 
     @classmethod
     def load(cls, file_path):

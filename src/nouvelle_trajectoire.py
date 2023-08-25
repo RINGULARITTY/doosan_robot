@@ -224,7 +224,7 @@ class NewTrajectory(ctk.CTk):
     def test_trajectory(self):
         self.stop_thread_flag = True
         time.sleep(1.5)
-        run_window = Run(self, self.trajectory, 1, self.start_thread)
+        run_window = Run(self, self.robot, self.trajectory, 1, self.start_thread)
         run_window.mainloop()
         pass
 

@@ -133,7 +133,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.refresh_listbox()
         
     def on_run(self):
-        run = Run(self, self.trajectory)
+        run = Run(self, self.robot, self.trajectory)
         run.mainloop()
 
     def on_save(self):

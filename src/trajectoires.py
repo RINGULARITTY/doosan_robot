@@ -56,9 +56,9 @@ class MainWindow(ctk.CTk):
             return
         response = self.robot.hi()
         if not response:
-            self.add_text(f", Erreur dialogue : {response}")
+            self.add_text_log(f", Erreur dialogue : {response}")
             return
-        self.add_text(f", Ok")
+        self.add_text_log(f", Ok")
 
     def refresh_listbox(self):
         self.listbox.delete("all")

@@ -43,7 +43,7 @@ class Coordinate:
         if config == "P0":
             return
 
-        value = {"PA": 180, "PB": 135}[config]
+        value = {"PA": 135, "PB": 180}[config]
         if self.b > 0:
             self.b = value
         else:

@@ -114,6 +114,7 @@ class TCPClient():
         return response == "goto,done"
 
     def gotoc(self, pos1, pos2, vel, acc, app_type, ref, mod) -> bool:
+        pos1, pos2 = [str(p) for p in pos1], [str(p) for p in pos2]
         response = self.send_and_receive(f"gotoc,{','.join(pos1)},{','.join(pos2)},{vel},{acc},{app_type},{ref},{mod}")
         return response == "gotoc,done"
 

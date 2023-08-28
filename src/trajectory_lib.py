@@ -61,6 +61,7 @@ class Movement:
     
     TRANSLATIONS = {
         START: "Début",
+        APPROACH_POINT: "Point d'approche",
         LINEAR: "Linéaire",
         CIRCULAR: "Circulaire",
         PASS: "Passage"

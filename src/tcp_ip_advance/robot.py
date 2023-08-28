@@ -134,7 +134,7 @@ class TCPServer:
         except Exception as ex:
             self.write("gotop,{}".format(ex))
 
-        z_offset = (float(p) for p in z_offset)
+        z_offset = [str(p) for p in z_offset]
         self.write("offset,done,{z_offset}".format(",".join(z_offset)))
         
     def gotop(self, msg_posx, vel, acc, ref, mod):

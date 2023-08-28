@@ -126,9 +126,6 @@ class TCPClient():
         return [float(p) for p in response.split(",")[2:]]
 
     def gotop(self, x, y, z, rx, ry, rz, vel, acc, ref, mod) -> bool:       
-        if not self.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL"):
-            return False
-
         response = self.send_and_receive(f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},DR_MV_APP_NONE,{ref},{mod}")
         return response == "gotop,done"
     

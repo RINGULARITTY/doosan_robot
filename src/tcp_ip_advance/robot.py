@@ -118,8 +118,8 @@ class TCPServer:
         
     def offset(self, msg_pos, z):
         self.robot_log("debug " + "offset")
-        z = float(z)
-        pos = [float(elem) for elem in msg_pos]
+        pos, z = [float(elem) for elem in msg_pos], float(z)
+
         try:
             offset = coord_transform(pos, DR_BASE, DR_TOOL)
         except Exception as ex:
@@ -137,7 +137,7 @@ class TCPServer:
         z_offset = (float(p) for p in z_offset)
         self.write("offset,done,{z_offset}".format(",".join(z_offset)))
         
-    def gotop(self, msg_posx,vel, acc, ref, mod):
+    def gotop(self, msg_posx, vel, acc, ref, mod):
         self.robot_log("debug " + "gotop")
         p = [float(elem) for elem in msg_posx]
         
@@ -151,12 +151,31 @@ class TCPServer:
         self.robot_log("debug " + "offset: " + str(offset))
 
         try:
-            p2 = coord_transform(offset, DR_TOOL, DR_BASE)
+            offset2 = coord_transform(offset, DR_TOOL, DR_BASE)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+        
+        try:
+            movel(offset2, vel=float(vel),acc=float(acc), app_type=DR_MV_APP_NONE, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+        
+        try:
+            offset = coord_transform(p, DR_BASE, DR_TOOL)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+
+        self.robot_log("debug " + "offset: " + str(offset))
+        offset[2] += 50
+        self.robot_log("debug " + "offset: " + str(offset))
+
+        try:
+            offset2 = coord_transform(offset, DR_TOOL, DR_BASE)
         except Exception as ex:
             self.write("gotop,{}".format(ex))
 
         try:
-            movel(p2, float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
+            movel(offset2, float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
             movel(p, float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("gotop,{}".format(ex))

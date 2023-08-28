@@ -194,8 +194,6 @@ class NewTrajectory(ctk.CTk):
                 self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1, point2]))
             else:
                 self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1]))
-
-            self.trajectory.compile()
             
             self.refresh_listbox()
             

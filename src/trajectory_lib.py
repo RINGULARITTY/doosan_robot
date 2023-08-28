@@ -147,7 +147,7 @@ class Trajectory:
                     m.coords[0].a = angle
 
         self.trajectory[1].config = self.trajectory[2].config
-        self.trajectory[1].coords = [robot.offset(self.trajectory[2].coords)]
-        
+        self.trajectory[1].coords = [robot.offset(self.trajectory[2].coords, 50)]
+
         self.trajectory[-1].config = self.trajectory[-2].config
-        self.trajectory[-1].coords = [robot.offset(self.trajectory[2].coords)]
+        self.trajectory[-1].coords = [robot.offset(self.trajectory[2].coords, 50)]

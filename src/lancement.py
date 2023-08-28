@@ -57,11 +57,10 @@ class Run(ctk.CTkToplevel):
         self.check_thread()
     
     def check_thread(self):
-        if self.thread.is_alive() and self._is_window_alive() and not self.stop_thread_flag:
+        if self.thread.is_alive():
             self.after(250, self.check_thread)
         else:
             self.thread.join()
-            self.destroy()
     
     def combobox_callback(self):
         pass
@@ -112,6 +111,8 @@ class Run(ctk.CTkToplevel):
             landmark = time.time()
 
             for m in self.trajectory.trajectory:
+                if self.stop_thread_flag:
+                    return
                 self.add_text(f"Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
@@ -127,7 +128,10 @@ class Run(ctk.CTkToplevel):
                     self.add_text(f"Erreur : {ex}")
                     return
                 self.add_text("Ok")
-                
+            
+            if self.stop_thread_flag:
+                    return
+             
             self.add_text(f"Lancement de \"Fin d'execution\" : ", end=" ")
             try:
                 self.robot.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")

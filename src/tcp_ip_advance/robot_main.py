@@ -38,15 +38,15 @@ while True:
     elif msg[0] == "wait_manual_guide":
         computer.wait_manual_guide_robot()
     elif msg[0] == "goto":
-        computer.goto(msg[1:7], *msg[7:])
+        computer.goto(msg[1:7], msg[7], msg[8], msg[9], msg[10], msg[11])
     elif msg[0] == "gotoj":
-        computer.gotoj(msg[1:7], *msg[7:])
+        computer.gotoj(msg[1:7], msg[7], msg[8], msg[9], msg[10])
     elif msg[0] == "gotoc":
-        computer.gotoc(msg[1:7], msg[7:13], *msg[13:])
+        computer.gotoc(msg[1:7], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
     elif msg[0] == "gotooffset":
-        computer.gotooffset(msg[1:7], *msg[7:])
+        computer.gotooffset(msg[1:7], msg[7], msg[8], msg[9], msg[10])
     elif msg[0] == "gotop":
-        computer.gotop(msg[1:7], *msg[7:])
+        computer.gotop(msg[1:7], msg[7], msg[8], msg[9], msg[10])
     elif msg[0] == "get_current_posj":
         computer.get_posj()
     elif msg[0] == "get_current_rotm":
@@ -60,8 +60,8 @@ while True:
     elif msg[0] == "app_weld_disable_digital":
         computer.app_weld_disable_digital_robot()
     elif msg[0] == "app_weld_set_weld_cond_digital":
-        computer.app_weld_set_weld_cond_digital_robot(*msg[1:32])
+        computer.app_weld_set_weld_cond_digital_robot(msg[1], msg[2], msg[3], msg[4], msg[5], msg[6], msg[7], msg[8], msg[9], msg[10], msg[11], msg[12], msg[13], msg[14], msg[15], msg[16], msg[17], msg[18], msg[19], msg[20], msg[21], msg[22], msg[23], msg[24], msg[25], msg[26], msg[27], msg[28], msg[29], msg[30], msg[31])
     elif msg[0] == "app_weld_adj_welding_cond_digital":
-        computer.app_weld_adj_welding_cond_digital_robot(*msg[1:4])
+        computer.app_weld_adj_welding_cond_digital_robot(msg[1], msg[2], msg[3])
     elif msg[0] == "reset_weld_cond":
         computer.reset_weld_cond_robot(msg[1])

@@ -110,10 +110,10 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"-> Pièce {i + 1}/{self.pieces_amount}\n")
             landmark = time.time()
 
-            for i, m in enumerate(self.trajectory.trajectory):
+            for j, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
                     return
-                self.add_text(f"[{i+1}/{self.pieces_amount + 1}] Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
+                self.add_text(f"[{j+1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
                         case Movement.START:
@@ -149,14 +149,19 @@ class Run(ctk.CTkToplevel):
             self.add_text("Ok\n")
             
             times.append(time.time() - landmark)
-            self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}")
+            self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}", end="")
             if i + 1 != self.pieces_amount:
                 estimated_time = (self.pieces_amount - (i + 1)) * sum(times) / len(times)
-                self.add_text(f"Temps restant {self.time_display(estimated_time)}")
-            self.add_text(f"")
+                self.add_text(f", temps restant {self.time_display(estimated_time)}")
+            else:
+                self.add_text(f"")
+            self.add_text(f"Placez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
+            
+            while not self.stop_thread_flag and self.robot.get_digital_input(1):
+                time.sleep(0.5)
 
         self.add_text(f"{'-'*20}")
-        self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
+        self.add_text(f"Execution terminée en {self.time_display(sum(times))} (estimé {self.pieces_amount * (sum(times) / len(times))})")
 
     def _is_window_alive(self):
         try:

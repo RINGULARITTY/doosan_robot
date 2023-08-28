@@ -130,7 +130,7 @@ class Run(ctk.CTkToplevel):
                 
             self.add_text(f"Lancement de \"Fin d'execution\" : ", end=" ")
             try:
-                self.robot.gotooffset(-50, m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+                self.robot.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")
             except Exception as ex:
                 self.add_text(f"Erreur : {ex}")
                 return

@@ -135,7 +135,7 @@ class TCPServer:
             self.write("gotop,{}".format(ex))
 
         z_offset = [str(p) for p in z_offset]
-        self.write("offset,done,{z_offset}".format(",".join(z_offset)))
+        self.write("offset,done,{}".format(",".join(z_offset)))
         
     def gotop(self, msg_posx, vel, acc, ref, mod):
         self.robot_log("debug " + "gotop")

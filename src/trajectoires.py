@@ -47,8 +47,8 @@ class MainWindow(ctk.CTk):
         self.robot_connection_var.set(self.robot_connection_var.get() + text)
     
     def start_robot_connection(self):
-        #ip, port = "192.168.127.100", 20002
-        ip, port = "127.0.0.1", 20002
+        ip, port = "192.168.127.100", 20002
+        #ip, port = "127.0.0.1", 20002
         self.add_text_log(f"{ip}:{port}")
         try:
             self.robot = TCPClient(ip, port)

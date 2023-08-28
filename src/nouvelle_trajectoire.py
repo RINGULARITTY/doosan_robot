@@ -223,9 +223,8 @@ class NewTrajectory(ctk.CTk):
     def test_trajectory(self):
         self.stop_thread_flag = True
         time.sleep(1.5)
-        run_window = Run(self, self.robot, self.trajectory, 1, self.start_thread)
+        run_window = Run(self, self.robot, self.trajectory, 1, self.start_thread, )
         run_window.mainloop()
-        pass
 
     def save_trajectory(self):
         def validate_entry():
@@ -246,17 +245,22 @@ class NewTrajectory(ctk.CTk):
         name_entry = ctk.CTkEntry(popup)
         name_entry.pack(pady=10, padx=10, fill="x")
 
-        validate_button = ctk.CTkButton(popup, text="Valider", command=validate_entry)
-        validate_button.pack(pady=10)
+        self.frame = ctk.CTkFrame(popup)
+        self.frame.pack()
 
-    def on_button3_click(self):
-        response = messagebox.askyesno(
+        validate_button = ctk.CTkButton(self.frame, text="Sauvegarder", command=validate_entry)
+        validate_button.pack(side="left", pady=10)
+        delete_button = ctk.CTkButton(self.frame, text="Supprimer", command=lambda: self.confirm_cancel(popup))
+        delete_button.pack(side="left", pady=10)
+
+    def confirm_cancel(self, popup):
+        if messagebox.askyesno(
             title="Confirmation", 
             icon="warning", 
             message="Êtes-vous sûr de ne pas vouloir convercer la trajectoire créée ?"
-        )
-        if response:
-            pass
+        ):
+            self.popup.destroy()
+            self.on_closing()
     
     def _is_window_alive(self):
         try:

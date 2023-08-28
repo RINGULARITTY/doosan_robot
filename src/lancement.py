@@ -62,9 +62,6 @@ class Run(ctk.CTkToplevel):
         else:
             self.thread.join()
     
-    def combobox_callback(self):
-        pass
-    
     def add_text(self, text, end="\n"):
         self.textbox.configure(state='normal')
         self.textbox.insert("end", f"{text}{end}")
@@ -93,6 +90,8 @@ class Run(ctk.CTkToplevel):
                 self.pieces_amount = int(self.amount_entry.get())
             except:
                 self.add_text("Erreur : Le nombre de pièce doit être un nombre entier")
+        
+        self.trajectory.compile()
         
         self.add_text(f"Trajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
@@ -125,7 +124,7 @@ class Run(ctk.CTkToplevel):
                                 self.add_text(f"Erreur")
                                 return
                         case Movement.CIRCULAR:
-                            if self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
+                            if not self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
                                 self.add_text(f"Erreur")
                                 return
                         case Movement.PASS:

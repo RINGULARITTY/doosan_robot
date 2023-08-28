@@ -97,6 +97,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.geometry("775x575")
         
         self.trajectory: Trajectory = Trajectory.load(os.path.join(self.folder_path, trajectories[selected_index] + ".json"))
+        self.trajectory.compile()
         
         self.name_entry = ctk.CTkEntry(self, font=("Arial", 20), width=250)
         self.name_entry.pack(pady=10)

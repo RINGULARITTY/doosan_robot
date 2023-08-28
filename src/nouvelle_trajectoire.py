@@ -7,6 +7,7 @@ import time
 import threading
 from tkinter import TclError
 from tcp_ip_advance.computer import TCPClient
+from path_changer import resource_path
 
 def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
@@ -224,7 +225,7 @@ class NewTrajectory(ctk.CTk):
         self.stop_thread_flag = True
         time.sleep(1.5)
         run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
-        run_window.iconbitmap("./icon.ico")
+        run_window.iconbitmap(resource_path("./icon.ico"))
         run_window.mainloop()
 
     def save_trajectory(self):

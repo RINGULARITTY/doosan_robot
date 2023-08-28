@@ -7,6 +7,7 @@ import datetime
 from tcp_ip_advance.computer import TCPClient
 import tkinter as tk
 import json
+from path_changer import resource_path
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -30,7 +31,7 @@ class MainWindow(ctk.CTk):
         self.listbox = CTkListbox(self, command=self.open_trajectory_edit, font=("Arial", 14))
         self.listbox.pack(fill="both", expand=True, padx=10, pady=10)
 
-        self.folder_path = "./Trajectoires"  
+        self.folder_path = resource_path(resource_path("./fichiers_trajectoires"))  
         self.refresh_listbox()
 
         self.add_trajectory_txt = ctk.CTkLabel(self, text=f"Ajouter une nouvelle trajectoire", font=("Arial", 12))
@@ -48,7 +49,7 @@ class MainWindow(ctk.CTk):
         self.robot_connection_var.set(self.robot_connection_var.get() + text)
     
     def start_robot_connection(self):
-        with open("./config.json", "r") as f:
+        with open(resource_path("./config.json"), "r") as f:
             config = json.load(f)
 
         ip, port = config['robot']['ip'], config['robot']['port']
@@ -92,12 +93,12 @@ class MainWindow(ctk.CTk):
 
     def open_trajectory_edit(self, _):
         edit_trajectory_window = EditTrajectory(self, self.robot, self.call_back_refresh, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
-        edit_trajectory_window.iconbitmap("./icon.ico")
+        edit_trajectory_window.iconbitmap(resource_path("./icon.ico"))
         edit_trajectory_window.mainloop()
 
     def on_add_button_click(self):
         add_window = NewTrajectory(self, self.robot, self.call_back_refresh, self.folder_path)
-        add_window.iconbitmap("./icon.ico")
+        add_window.iconbitmap(resource_path("./icon.ico"))
         add_window.mainloop()
     
     def call_back_refresh(self):
@@ -107,5 +108,5 @@ if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
     main_window = MainWindow()
-    main_window.iconbitmap("./icon.ico")
+    main_window.iconbitmap(resource_path("./icon.ico"))
     main_window.mainloop()

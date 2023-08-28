@@ -5,6 +5,7 @@ from password import Password
 import os
 from tkinter import messagebox
 from lancement import Run
+from path_changer import resource_path
 
 class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
@@ -66,7 +67,7 @@ class EditMovement(ctk.CTkToplevel):
     
     def on_hand_change(self):
         password = Password(self, self.password_callback)
-        password.iconbitmap("./icon.ico")
+        password.iconbitmap(resource_path("./icon.ico"))
         password.mainloop()
         
     def password_callback(self, res):
@@ -126,7 +127,7 @@ class EditTrajectory(ctk.CTkToplevel):
 
     def on_list_click(self, _):
         edit_move = EditMovement(self, self.robot, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())
-        edit_move.iconbitmap("./icon.ico")
+        edit_move.iconbitmap(resource_path("./icon.ico"))
         edit_move.mainloop()
         self.slaves(edit_move)
     

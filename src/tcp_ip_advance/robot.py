@@ -101,7 +101,7 @@ class TCPServer:
         self.robot_log("debug " + "goto")
         p = [float(elem) for elem in msg_pos]
         try:
-            movel(p,vel=30,acc=20,app_type=DR_MV_APP_NONE,ref=DR_BASE,mod=DR_MV_MOD_ABS)
+            movel(p,vel=float(vel),acc=float(acc),app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("goto,{}".format(ex))
         self.write("goto,done")
@@ -111,7 +111,7 @@ class TCPServer:
         p1 = [float(elem) for elem in msg_pos1]
         p2 = [float(elem) for elem in msg_pos2]
         try:
-            movec(p1,p2,vel=vel,acc=acc,app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
+            movec(p1,p2,float(vel),acc=float(acc),app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("gotoc,{}".format(ex))
         self.write("gotoc,done")
@@ -120,7 +120,7 @@ class TCPServer:
         self.robot_log("debug " + "gotooffset")
         p = [float(elem) for elem in msg_pos]
         try:
-            movel(p,vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+            movel(p,float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("gotooffset,{}".format(ex))
         self.write("gotooffset,done")
@@ -144,8 +144,8 @@ class TCPServer:
             self.write("gotop,{}".format(ex))
 
         try:
-            movel(p2, vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
-            movel(p, vel=vel,acc=acc,ref=eval(ref),mod=eval(mod))
+            movel(p2, float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
+            movel(p, float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
         except Exception as ex:
             self.write("gotop,{}".format(ex))
         self.write("gotop,done")
@@ -155,7 +155,7 @@ class TCPServer:
         p = [float(elem) for elem in msg_posj]
         
         try:
-            movej(p, vel=vel, acc=acc, mod=mod)
+            movej(p, float(vel),acc=float(acc), mod=eval(mod))
         except Exception as ex:
             self.write("gotoj,{}".format(ex))
         self.write("gotoj,done")
@@ -206,12 +206,12 @@ class TCPServer:
     def app_weld_set_weld_cond_digital_robot(self, flag_dry_run, vel_target, vel_min, vel_max, welding_mode, s_2t, pulse_mode, wm_opt1, simulation, ts_opt1, ts_opt2, job_num, synergic_id, r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1, r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8, r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15):
         self.robot_log("debug " + "app_weld_set_weld_cond_digital")
         try:
-            app_weld_set_weld_cond_digital(flag_dry_run, vel_target, vel_min,
-                vel_max, welding_mode, s_2t, pulse_mode, wm_opt1,
-                simulation, ts_opt1, ts_opt2, job_num, synergic_id,
-                r_wire_feed_speed, voltage_correct, dynamic_correct, r_opt1,
-                r_opt2, r_opt3, r_opt4, r_opt5, r_opt6, r_opt7, r_opt8,
-                r_opt9, r_opt10, r_opt11, r_opt12, r_opt13, r_opt14, r_opt15)
+            app_weld_set_weld_cond_digital(int(flag_dry_run), float(vel_target), float(vel_min),
+                float(vel_max), int(welding_mode), int(s_2t), int(pulse_mode), int(wm_opt1),
+                int(simulation), int(ts_opt1), int(ts_opt2), int(job_num), int(synergic_id),
+                float(r_wire_feed_speed), float(voltage_correct), float(dynamic_correct), float(r_opt1),
+                float(r_opt2), float(r_opt3), float(r_opt4), float(r_opt5), float(r_opt6), float(r_opt7), float(r_opt8),
+                float(r_opt9), float(r_opt10), float(r_opt11), float(r_opt12), float(r_opt13), float(r_opt14), float(r_opt15))
         except Exception as ex:
             self.write("app_weld_set_weld_cond_digital,{}".format(ex))
         msg = "app_weld_set_weld_cond_digital,done"
@@ -220,7 +220,7 @@ class TCPServer:
     def app_weld_adj_welding_cond_digital_robot(self, vel_target, job_number, synergic_id):
         self.robot_log("debug " + "app_weld_adj_welding_cond_digital")
         try:
-            app_weld_adj_welding_cond_digital(vel_target=vel_target, job_number=job_number, synergic_id=synergic_id)
+            app_weld_adj_welding_cond_digital(vel_target=float(vel_target), job_number=float(job_number), synergic_id=float(synergic_id))
         except Exception as ex:
             self.write("app_weld_adj_welding_cond_digital,{}".format(ex))
 
@@ -230,7 +230,7 @@ class TCPServer:
     def reset_weld_cond_robot(self, flag_reset):
         self.robot_log("debug " + "reset_weld_cond")
         try:
-            reset_weld_cond(flag_reset=flag_reset)
+            reset_weld_cond(flag_reset=int(flag_reset))
         except Exception as ex:
             self.write("reset_weld_cond,{}".format(ex))
         msg = "reset_weld_cond,done"

@@ -94,7 +94,7 @@ class Run(ctk.CTkToplevel):
             except:
                 self.add_text("Erreur : Le nombre de pièce doit être un nombre entier")
         
-        self.add_text(f"Trajectoire : {self.trajectory.name}")
+        self.add_text(f"Trajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
         self.add_text(f"{'-'*20}\n")
 
@@ -110,20 +110,28 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"-> Pièce {i + 1}/{self.pieces_amount}\n")
             landmark = time.time()
 
-            for m in self.trajectory.trajectory:
+            for i, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
                     return
-                self.add_text(f"Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
+                self.add_text(f"[{i+1}/{self.pieces_amount + 1}] Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
                         case Movement.START:
-                            self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS")
+                            if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"):
+                                self.add_text(f"Erreur")
+                                return
                         case Movement.LINEAR:
-                            self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
+                            if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
+                                self.add_text(f"Erreur")
+                                return
                         case Movement.CIRCULAR:
-                            self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS")
+                            if self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
+                                self.add_text(f"Erreur")
+                                return
                         case Movement.PASS:
-                            self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+                            if not self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS"):
+                                self.add_text(f"Erreur")
+                                return
                 except Exception as ex:
                     self.add_text(f"Erreur : {ex}")
                     return
@@ -132,7 +140,7 @@ class Run(ctk.CTkToplevel):
             if self.stop_thread_flag:
                     return
              
-            self.add_text(f"Lancement de \"Fin d'execution\" : ", end=" ")
+            self.add_text(f"[{self.pieces_amount + 1}/{self.pieces_amount + 1}] Lancement de \"Point de dégagement\" : ", end=" ")
             try:
                 self.robot.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")
             except Exception as ex:
@@ -141,12 +149,13 @@ class Run(ctk.CTkToplevel):
             self.add_text("Ok\n")
             
             times.append(time.time() - landmark)
-            self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}\n")
-            if i != self.pieces_amount:
+            self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}")
+            if i + 1 != self.pieces_amount:
                 estimated_time = (self.pieces_amount - (i + 1)) * sum(times) / len(times)
                 self.add_text(f"Temps restant {self.time_display(estimated_time)}")
-            self.add_text(f"{'-'*20}")
+            self.add_text(f"")
 
+        self.add_text(f"{'-'*20}")
         self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
 
     def _is_window_alive(self):

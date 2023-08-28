@@ -224,6 +224,7 @@ class NewTrajectory(ctk.CTk):
         self.stop_thread_flag = True
         time.sleep(1.5)
         run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
+        run_window.iconbitmap("./icon.ico")
         run_window.mainloop()
 
     def save_trajectory(self):

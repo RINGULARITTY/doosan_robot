@@ -6,6 +6,7 @@ from edit_trajectoire import EditTrajectory
 import datetime
 from tcp_ip_advance.computer import TCPClient
 import tkinter as tk
+import json
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -47,8 +48,10 @@ class MainWindow(ctk.CTk):
         self.robot_connection_var.set(self.robot_connection_var.get() + text)
     
     def start_robot_connection(self):
-        ip, port = "192.168.127.100", 20002
-        #ip, port = "127.0.0.1", 20002
+        with open("./config.json", "r") as f:
+            config = json.load(f)
+
+        ip, port = config['robot']['ip'], config['robot']['port']
         self.add_text_log(f"{ip}:{port}")
         try:
             self.robot = TCPClient(ip, port)
@@ -89,12 +92,12 @@ class MainWindow(ctk.CTk):
 
     def open_trajectory_edit(self, _):
         edit_trajectory_window = EditTrajectory(self, self.robot, self.call_back_refresh, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
-        self.grab_set()
+        edit_trajectory_window.iconbitmap("./icon.ico")
         edit_trajectory_window.mainloop()
-        self.grab_release()
 
     def on_add_button_click(self):
         add_window = NewTrajectory(self, self.robot, self.call_back_refresh, self.folder_path)
+        add_window.iconbitmap("./icon.ico")
         add_window.mainloop()
     
     def call_back_refresh(self):
@@ -104,4 +107,5 @@ if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("blue")
     main_window = MainWindow()
+    main_window.iconbitmap("./icon.ico")
     main_window.mainloop()

@@ -40,7 +40,7 @@ while True:
     elif msg[0] == "goto":
         computer.goto(msg[1:7], *msg[7:])
     elif msg[0] == "gotoj":
-        computer.goto(msg[1:7], *msg[7:])
+        computer.gotoj(msg[1:7], *msg[7:])
     elif msg[0] == "gotoc":
         computer.gotoc(msg[1:7], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
     elif msg[0] == "gotooffset":

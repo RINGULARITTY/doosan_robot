@@ -44,7 +44,7 @@ while True:
     elif msg[0] == "gotoc":
         computer.gotoc(msg[1:7], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
     elif msg[0] == "gotooffset":
-        computer.gotooffset(msg[1:7], msg[17], msg[8], msg[9], msg[10])
+        computer.gotooffset(msg[1:7], msg[7], msg[8], msg[9], msg[10])
     elif msg[0] == "gotop":
         computer.gotop(msg[1:7], msg[17], msg[8], msg[9], msg[10])
     elif msg[0] == "get_current_posj":

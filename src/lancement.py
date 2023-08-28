@@ -2,6 +2,8 @@ import customtkinter as ctk
 from trajectory_lib import Trajectory, Movement
 import time
 from tcp_ip_advance.computer import TCPClient
+import threading
+from tkinter import TclError
 
 class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
@@ -9,7 +11,7 @@ class Run(ctk.CTkToplevel):
         self.title("Ajouter un élément")
         self.geometry("450x700")
         
-        self.robot = robot
+        self.robot: TCPClient = robot
         self.callback = callback
         
         self.trajectory: Trajectory = trajectory
@@ -38,11 +40,28 @@ class Run(ctk.CTkToplevel):
         self.textbox.pack(padx=5, fill="both", expand=True)
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
+        self.stop_thread_flag = False
+        self.start_thread()
 
     def on_closing(self):
         self.callback()
-        self.after(250, self.destroy())
-        
+        self.stop_thread_flag = True
+        self.after(1000, self.destroy())
+    
+    def start_thread(self):
+        self.stop_thread_flag = False
+        self.thread = threading.Thread(target=self.run)
+        self.thread.start()
+        self.check_thread()
+    
+    def check_thread(self):
+        if self.thread.is_alive() and self._is_window_alive() and not self.stop_thread_flag:
+            self.after(250, self.check_thread)
+        else:
+            self.thread.join()
+            self.destroy()
+    
     def combobox_callback(self):
         pass
     
@@ -126,3 +145,10 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"{'-'*20}")
 
         self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
+
+    def _is_window_alive(self):
+        try:
+            self.winfo_exists()
+            return True
+        except TclError:
+            return False

@@ -22,16 +22,7 @@ import os
 import socket
 
 class TCPServer:
-    """Class of the TCP connection"""
-
-    def __init__(self, port=20002):
-        """
-        Initialize server
-
-        Params:\n
-            - 'port': port of the TCP connection
-        """
-        
+    def __init__(self, port=20002):       
         self.display_logs = False
         
         try:
@@ -42,7 +33,6 @@ class TCPServer:
             raise e
 
     def close_socket(self):
-        """ Close the network socket"""
         try:
             server_socket_close(self.socket)
             self.robot_log("Close the socket")
@@ -55,17 +45,6 @@ class TCPServer:
             tp_log(msg)
 
     def read(self, length=-1, timeout=-1):
-        """
-        Read the socket
-
-        Params:\n
-            - 'length': number of bytes to read (default = -1)
-            - 'timeout': Waiting time (default = -1)
-
-        Return:\n
-            - 'res': result of the reading
-            - 'rx_data': data received
-        """
         res, rx_data = server_socket_read(self.socket, length, timeout)
 
         # Check res value
@@ -87,18 +66,6 @@ class TCPServer:
         return res, rx_data
 
     def write(self, msg):
-        """
-        Write 'msg' in the socket
-
-        Params:\n
-            - 'msg': a message
-
-        Return:\n
-            - 'res': result of the writing
-
-        Exemple:\n
-            write("posj(100,100,100,100,100,100)")
-        """
         msg = msg + "\r"
         # Convert msg in ascii before sending
         msg = bytes(msg, encoding="ascii")

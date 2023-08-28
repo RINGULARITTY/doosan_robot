@@ -38,11 +38,11 @@ while True:
     elif msg[0] == "wait_manual_guide":
         computer.wait_manual_guide_robot()
     elif msg[0] == "goto":
-        computer.goto(msg[1:])
+        computer.goto(msg[1:7], *msg[7:])
     elif msg[0] == "gotoj":
-        computer.gotoj(msg[1:])
+        computer.goto(msg[1:7], *msg[7:])
     elif msg[0] == "gotoc":
-        computer.gotoc(msg[1:8], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
+        computer.gotoc(msg[1:7], msg[7:13], msg[13], msg[14], msg[15], msg[16], msg[17])
     elif msg[0] == "gotooffset":
         computer.gotooffset(msg[1:7], msg[17], msg[8], msg[9], msg[10])
     elif msg[0] == "gotop":

@@ -17,7 +17,7 @@ class NewTrajectory(ctk.CTk):
         self.title("Ajouter un élément")
         self.center_window(700, 850)
 
-        self.robot = robot
+        self.robot: TCPClient = robot
         self.callback = callback
 
         self.trajectory: Trajectory = Trajectory("")
@@ -117,7 +117,6 @@ class NewTrajectory(ctk.CTk):
             
             self.add_text(f"Choix : {nature_choice}")
 
-
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
             self.robot.wait_manual_guide()
             while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
@@ -212,7 +211,7 @@ class NewTrajectory(ctk.CTk):
         self.after(1000, self.kill_thread)
     
     def check_thread(self):
-        if self.thread.is_alive():
+        if self.thread.is_alive() :
             self.after(100, self.check_thread)
         else:
             self.destroy()

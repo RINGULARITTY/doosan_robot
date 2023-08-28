@@ -116,14 +116,26 @@ class TCPServer:
             self.write("gotoc,{}".format(ex))
         self.write("gotoc,done")
         
-    def gotooffset(self, msg_pos, vel, acc, ref, mod):
-        self.robot_log("debug " + "gotooffset")
-        p = [float(elem) for elem in msg_pos]
+    def offset(self, msg_pos, z):
+        self.robot_log("debug " + "offset")
+        z = float(z)
+        pos = [float(elem) for elem in msg_pos]
         try:
-            movel(p,float(vel),acc=float(acc),ref=eval(ref),mod=eval(mod))
+            offset = coord_transform(pos, DR_BASE, DR_TOOL)
         except Exception as ex:
-            self.write("gotooffset,{}".format(ex))
-        self.write("gotooffset,done")
+            self.write("gotop,{}".format(ex))
+
+        self.robot_log("debug " + "offset: " + str(offset))
+        offset[2] += z
+        self.robot_log("debug " + "offset: " + str(offset))
+
+        try:
+            z_offset = coord_transform(offset, DR_TOOL, DR_BASE)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+
+        z_offset = (float(p) for p in z_offset)
+        self.write("offset,done,{z_offset}".format(",".join(z_offset)))
         
     def gotop(self, msg_posx,vel, acc, ref, mod):
         self.robot_log("debug " + "gotop")

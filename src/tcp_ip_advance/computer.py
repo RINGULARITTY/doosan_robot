@@ -118,9 +118,12 @@ class TCPClient():
         response = self.send_and_receive(f"gotoc,{','.join(pos1)},{','.join(pos2)},{vel},{acc},{app_type},{ref},{mod}")
         return response == "gotoc,done"
 
-    def gotooffset(self, z, vel, acc, ref, mod) -> bool:       
-        response = self.send_and_receive(f"gotooffset,0,0,{z},0,0,0,{vel},{acc},{ref},{mod}")
-        return response == "gotooffset,done"
+    def offset(self, pos, z) -> Union[None, List[float]]:  
+        pos = [str(p) for p in pos]     
+        response = self.send_and_receive(f"offset,{','.join(pos)},z")
+        if not "offset,done" in response:
+            return None
+        return [float(p) for p in response.split(",")[2:]]
 
     def gotop(self, x, y, z, rx, ry, rz, vel, acc, ref, mod) -> bool:       
         if not self.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL"):

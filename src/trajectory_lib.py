@@ -3,7 +3,7 @@ from math import sqrt, atan, pi
 from typing import List, Dict
 import jsonpickle
 from tkinter import messagebox
-
+from tcp_ip_advance.computer import TCPClient
 
 class Coordinate:
     def __init__(self, x, y, z, a, b, c=0):
@@ -53,18 +53,20 @@ class Coordinate:
 class Movement:
     START_POS = Coordinate(-6.25, 368, 500, 90, -180, 0)
     
-    START: str = "START"
+    ORIGIN: str = "ORIGIN"
     APPROACH_POINT: str = "APPROACH_POINT"
     LINEAR: str = "LINEAR"
     CIRCULAR: str = "CIRCULAR"
     PASS: str = "PASS"
+    CLEARANCE: str = "CLEARANCE"
     
     TRANSLATIONS = {
-        START: "Début",
+        ORIGIN: "Origine",
         APPROACH_POINT: "Point d'approche",
         LINEAR: "Linéaire",
         CIRCULAR: "Circulaire",
-        PASS: "Passage"
+        PASS: "Passage",
+        CLEARANCE: "Dégagement"
     }
     
     P0: str = "P0"
@@ -96,8 +98,9 @@ class Movement:
 
 class Trajectory:
     def __init__(self, name, trajectory=[
-        Movement(Movement.START, "P0", 0, [Movement.START_POS]),
-        Movement(Movement.APPROACH_POINT, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)])
+        Movement(Movement.ORIGIN, "P0", 0, [Movement.START_POS]),
+        Movement(Movement.APPROACH_POINT, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)]),
+        Movement(Movement.CLEARANCE, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)])
     ]):
         self.name: str = name
         self.trajectory: List[Movement] = trajectory
@@ -119,13 +122,14 @@ class Trajectory:
         with open(file_path, 'r') as f:
             return jsonpickle.decode(f.read())
 
-    def add_movement(self, movement: Movement):
-        self.trajectory.append(movement)
+    def add_movement(self, robot: TCPClient, movement: Movement):
+        self.trajectory.insert(len(self.trajectory) - 1, movement)
+        self.compile(robot)
         
     def re_order(self):
         pass
 
-    def compile(self):
+    def compile(self, robot: TCPClient):       
         for i in range(2, len(self.trajectory) - 1):
             prev_m, m, next_m = self.trajectory[i - 1], self.trajectory[i], self.trajectory[i + 1]
 
@@ -142,4 +146,8 @@ class Trajectory:
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle
 
-        self.trajectory[1].coords = [self.trajectory[2].coords[0]]
+        self.trajectory[1].config = self.trajectory[2].config
+        self.trajectory[1].coords = [robot.offset(self.trajectory[2].coords)]
+        
+        self.trajectory[-1].config = self.trajectory[-2].config
+        self.trajectory[-1].coords = [robot.offset(self.trajectory[2].coords)]

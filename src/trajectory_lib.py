@@ -26,7 +26,7 @@ class Coordinate:
     def str_pos(self):
         return f"{self.x, self.y, self.z}"
     
-    def get_angle(self, c2):
+    def get_angle(self, c2: "Coordinate"):
         dx, dy, dz = c2.x - self.x, c2.y - self.y, c2.z - self.z
         den = sqrt(dx**2 + dz**2)
 
@@ -148,6 +148,8 @@ class Trajectory:
 
         self.trajectory[1].config = self.trajectory[2].config
         self.trajectory[1].coords = [Coordinate(*robot.offset(self.trajectory[2].coords[0].get_as_array(), 50))]
+        print(f"Bite {self.trajectory[1].coords}")
 
         self.trajectory[-1].config = self.trajectory[-2].config
         self.trajectory[-1].coords = [Coordinate(*robot.offset(self.trajectory[-2].coords[0].get_as_array(), 50))]
+        print(f"Bite {self.trajectory[-1].coords}")

@@ -191,10 +191,10 @@ class NewTrajectory(ctk.CTk):
             configuration = {"PA": Movement.PA, "PB": Movement.PB}[configuration_choice]
             
             if nature == Movement.CIRCULAR:
-                self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1, point2]))
+                self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1, point2]))
             else:
-                self.trajectory.add_movement(Movement(nature, configuration, wield_width, [point1]))
-            
+                self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1]))
+
             self.trajectory.compile()
             
             self.refresh_listbox()

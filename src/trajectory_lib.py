@@ -51,7 +51,7 @@ class Coordinate:
 
 
 class Movement:
-    START_POS = Coordinate(-6.25, 368,500,90,-180,0, 91.97, -180, 1.97)
+    START_POS = Coordinate(-6.25, 368, 500, 90, -180, 0)
     
     START: str = "START"
     LINEAR: str = "LINEAR"

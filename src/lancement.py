@@ -23,14 +23,12 @@ class Run(ctk.CTkToplevel):
         self.label4 = ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 14))
         self.label4.pack(pady=5)
         
-        self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
-        self.label5.pack(pady=5)
+        if pieces_amount == -1:
+            self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
+            self.label5.pack(pady=5)
 
-        self.amount_entry = ctk.CTkEntry(self)
-        self.amount_entry.pack(pady=10)
-        if pieces_amount != -1:
-            self.amount_entry.config(text=f"{pieces_amount}")
-            self.amount_entry.config.config(state='disabled')
+            self.amount_entry = ctk.CTkEntry(self)
+            self.amount_entry.pack(pady=10)
         
         self.button2 = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
         self.button2.pack(pady=20)
@@ -92,8 +90,6 @@ class Run(ctk.CTkToplevel):
         self.textbox.configure(state='disabled')
 
         if self.pieces_amount == -1:
-            self.pieces_amount = 1
-        else:
             try:
                 self.pieces_amount = int(self.amount_entry.get())
             except:

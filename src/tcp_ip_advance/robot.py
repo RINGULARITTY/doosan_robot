@@ -23,7 +23,7 @@ import socket
 
 class TCPServer:
     def __init__(self, port=20002):       
-        self.display_logs = False
+        self.display_logs = True
         
         try:
             self.socket = server_socket_open(port)

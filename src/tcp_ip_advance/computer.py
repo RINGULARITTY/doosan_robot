@@ -30,7 +30,7 @@ class TCPClient():
         self.ip = ip
         self.port = port
         self._socket = None
-        self.display_log = False
+        self.display_log = True
 
         self.log(f"Connecting to robot at {self.ip}:{self.port}")
         self.log("Waiting the server...")

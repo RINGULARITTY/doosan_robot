@@ -9,7 +9,7 @@ class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
         self.title("Ajouter un élément")
-        self.geometry("450x700")
+        self.geometry("850x700")
         
         self.robot: TCPClient = robot
         self.callback = callback
@@ -23,14 +23,16 @@ class Run(ctk.CTkToplevel):
         self.label4 = ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 14))
         self.label4.pack(pady=5)
         
+        self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
+        self.label5.pack(pady=5)
+
+        self.amount_entry = ctk.CTkEntry(self)
+        self.amount_entry.pack(pady=10)
         if pieces_amount != -1:
-            self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
-            self.label5.pack(pady=5)
+            self.amount_entry.config(text=f"{pieces_amount}")
+            self.amount_entry.config.config(state='disabled')
         
-            self.amount_entry = ctk.CTkEntry(self)
-            self.amount_entry.pack(pady=10)
-        
-        self.button2 = ctk.CTkButton(self, text="Lancer", command=self.run)
+        self.button2 = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
         self.button2.pack(pady=20)
         
         self.label6 = ctk.CTkLabel(self, text="Avancement", font=("Arial", 14))
@@ -40,7 +42,8 @@ class Run(ctk.CTkToplevel):
         self.textbox.pack(padx=5, fill="both", expand=True)
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        
+    
+    def run_btn(self):
         self.stop_thread_flag = False
         self.start_thread()
 
@@ -113,7 +116,7 @@ class Run(ctk.CTkToplevel):
             landmark = time.time()
 
             for m in self.trajectory.trajectory:
-                self.add_text(f"Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" : ", end=" ")
+                self.add_text(f"Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
                         case Movement.START:
@@ -125,9 +128,9 @@ class Run(ctk.CTkToplevel):
                         case Movement.PASS:
                             self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
                 except Exception as ex:
-                    self.add_text("end", f"Erreur : {ex}")
+                    self.add_text(f"Erreur : {ex}")
                     return
-                self.add_text("end", "Ok")
+                self.add_text("Ok")
                 
             self.add_text(f"Lancement de \"Fin d'execution\" : ", end=" ")
             try:

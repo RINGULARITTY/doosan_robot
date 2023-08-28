@@ -187,7 +187,7 @@ class NewTrajectory(ctk.CTk):
             if not confirm_choice:
                 continue
                 
-            nature = {"Linéaire": Movement.LINEAR, "Circulaire": Movement.CIRCULAR, "Passage": Movement.PASS}[nature_choice]
+            nature = {v: k for k, v in Movement.TRANSLATIONS.items()}[nature_choice]
             configuration = {"PA": Movement.PA, "PB": Movement.PB}[configuration_choice]
             
             if nature == Movement.CIRCULAR:

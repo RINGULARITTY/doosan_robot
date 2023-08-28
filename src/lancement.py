@@ -106,7 +106,7 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
-                        case Movement.START | Movement.APPROACH_POINT | Movement.CLEARANCE:
+                        case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.CLEARANCE:
                             if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"):
                                 self.add_text(f"Erreur")
                                 return

@@ -129,6 +129,11 @@ class TCPClient():
         response = self.send_and_receive(f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},DR_MV_APP_NONE,{ref},{mod}")
         return response == "gotop,done"
     
+    def approachpoint(self, pos) -> bool:
+        pos = [str(p) for p in pos]
+        response = self.send_and_receive(f"approachpoint,{','.join(pos)}")
+        return response == "approachpoint,done"
+    
     def gotoj(self, j1, j2, j3, j4, j5, j6) -> bool:
         response = self.send_and_receive(f"gotoj,{j1},{j2},{j3},{j4},{j5},{j6}")
         return response == "gotoj,done"

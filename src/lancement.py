@@ -96,13 +96,6 @@ class Run(ctk.CTkToplevel):
         self.add_text(f"Trajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
         self.add_text(f"{'-'*20}\n")
-
-        translations = {
-            Movement.START: "Début",
-            Movement.LINEAR: "Linéaire",
-            Movement.CIRCULAR: "Circulaire",
-            Movement.PASS: "Passage"
-        }
         
         times = []
         for i in range(self.pieces_amount):
@@ -112,13 +105,17 @@ class Run(ctk.CTkToplevel):
             for j, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
                     return
-                self.add_text(f"[{j+1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"{translations[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
+                self.add_text(f"[{j+1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
                         case Movement.START:
                             if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"):
                                 self.add_text(f"Erreur")
                                 return
+                        case Movement.APPROACH_POINT:
+                            if not self.robot.approachpoint(*m.coords[0].get_as_array()):
+                                self.add_text(f"Erreur")
+                            pass
                         case Movement.LINEAR:
                             if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
                                 self.add_text(f"Erreur")
@@ -139,7 +136,7 @@ class Run(ctk.CTkToplevel):
             if self.stop_thread_flag:
                     return
              
-            self.add_text(f"[{self.pieces_amount + 1}/{self.pieces_amount + 1}] Lancement de \"Point de dégagement\" : ", end=" ")
+            self.add_text(f"[{len(self.trajectory.trajectory) + 1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"Point de dégagement\" : ", end=" ")
             try:
                 self.robot.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")
             except Exception as ex:
@@ -153,14 +150,14 @@ class Run(ctk.CTkToplevel):
                 estimated_time = (self.pieces_amount - (i + 1)) * sum(times) / len(times)
                 self.add_text(f", temps restant {self.time_display(estimated_time)}")
             else:
-                self.add_text(f"")
-            self.add_text(f"Placez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
+                self.add_text(f"\nPlacez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
+            self.add_text("")
             
             while not self.stop_thread_flag and self.robot.get_digital_input(1):
                 time.sleep(0.5)
 
         self.add_text(f"{'-'*20}")
-        self.add_text(f"Execution terminée en {self.time_display(sum(times))} (estimé {self.pieces_amount * (sum(times) / len(times))})")
+        self.add_text(f"Execution terminée en {self.time_display(sum(times))} (estimé {self.time_display(self.pieces_amount * (sum(times) / len(times)))})")
 
     def _is_window_alive(self):
         try:

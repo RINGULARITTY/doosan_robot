@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from CTkListbox import CTkListbox
-from trajectory_lib import Trajectory
+from trajectory_lib import Trajectory, Movement
 from password import Password
 import os
 from tkinter import messagebox
@@ -120,9 +120,8 @@ class EditTrajectory(ctk.CTkToplevel):
 
     def refresh_listbox(self):
         self.listbox.delete("all")
-        translations = {"START": "Début", "LINEAR": "Linéaire", "CIRCULAR": "Circulaire", "PASS": "Passage"}
         for m in self.trajectory.trajectory:
-            self.listbox.insert("END", f"{translations[m.nature]}, {m.config}, {m.str_coords_pos()}")
+            self.listbox.insert("END", f"{Movement.TRANSLATIONS[m.nature]}, {m.config}, {m.str_coords_pos()}")
 
     def on_list_click(self, _):
         edit_move = EditMovement(self, self.robot, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())

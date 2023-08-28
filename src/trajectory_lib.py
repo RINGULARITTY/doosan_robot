@@ -54,9 +54,17 @@ class Movement:
     START_POS = Coordinate(-6.25, 368, 500, 90, -180, 0)
     
     START: str = "START"
+    APPROACH_POINT: str = "APPROACH_POINT"
     LINEAR: str = "LINEAR"
     CIRCULAR: str = "CIRCULAR"
     PASS: str = "PASS"
+    
+    TRANSLATIONS = {
+        START: "Début",
+        LINEAR: "Linéaire",
+        CIRCULAR: "Circulaire",
+        PASS: "Passage"
+    }
     
     P0: str = "P0"
     PA: str = "PA"
@@ -87,7 +95,8 @@ class Movement:
 
 class Trajectory:
     def __init__(self, name, trajectory=[
-        Movement(Movement.START, "P0", 0, [Movement.START_POS])
+        Movement(Movement.START, "P0", 0, [Movement.START_POS]),
+        Movement(Movement.APPROACH_POINT, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)])
     ]):
         self.name: str = name
         self.trajectory: List[Movement] = trajectory
@@ -116,7 +125,7 @@ class Trajectory:
         pass
 
     def compile(self):
-        for i in range(1, len(self.trajectory) - 1):
+        for i in range(2, len(self.trajectory) - 1):
             prev_m, m, next_m = self.trajectory[i - 1], self.trajectory[i], self.trajectory[i + 1]
 
             m.set_c0()
@@ -131,3 +140,5 @@ class Trajectory:
                     angle = m.coords[-1].get_angle(next_m.coords)
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle
+
+        self.trajectory[1].coords = [self.trajectory[2].coords[0]]

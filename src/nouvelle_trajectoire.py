@@ -87,15 +87,16 @@ class NewTrajectory(ctk.CTk):
         self.textbox.delete('1.0', "end")
         self.textbox.configure(state='disabled')
         
-        ACTUALIZATION_TIME = 0.25
+        ACTUALIZATION_TIME = 0.1
         
         self.add_text("- Pour enregistrer une nouvelle trajectoire, appuyez sur le bouton vert")
         while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
             time.sleep(ACTUALIZATION_TIME)
 
+        i = 0
         while not self.stop_thread_flag and self._is_window_alive():
             nature_choice = 0
-            self.add_text("\n- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire, bleu2 = Passage)")
+            self.add_text(f"\n- Pour ajouter un mouvement, choisissez un type. (vert = Linéaire, bleu1 = Circulaire{'' if i == 0 else ', bleu2 = Passage'})")
             while not self.stop_thread_flag and self._is_window_alive():
                 time.sleep(ACTUALIZATION_TIME)
                 
@@ -105,7 +106,7 @@ class NewTrajectory(ctk.CTk):
                 elif self.robot.get_digital_input(2):
                     nature_choice = "Circulaire"
                     break
-                elif self.robot.get_digital_input(3):
+                elif i != 0 and self.robot.get_digital_input(3):
                     nature_choice = "Passage"
                     break
             
@@ -200,6 +201,8 @@ class NewTrajectory(ctk.CTk):
             self.refresh_listbox()
             
             self.add_text(f"Enregistré")
+            
+            i += 1
 
     def kill_thread(self):
         self.thread.join()
@@ -223,7 +226,7 @@ class NewTrajectory(ctk.CTk):
     def test_trajectory(self):
         self.stop_thread_flag = True
         time.sleep(1.5)
-        run_window = Run(self, self.robot, self.trajectory, 1, self.start_thread, )
+        run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
         run_window.mainloop()
 
     def save_trajectory(self):

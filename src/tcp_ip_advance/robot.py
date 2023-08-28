@@ -160,6 +160,31 @@ class TCPServer:
             self.write("gotoj,{}".format(ex))
         self.write("gotoj,done")
 
+    def approachpoint(self, msg_posx):
+        self.robot_log("debug " + "approachpoint")
+        p = [float(elem) for elem in msg_posx]
+        
+        try:
+            offset = coord_transform(p, DR_BASE, DR_TOOL)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+
+        self.robot_log("debug " + "offset: " + str(offset))
+        offset[2] -= 50
+        self.robot_log("debug " + "offset: " + str(offset))
+
+        try:
+            p2 = coord_transform(offset, DR_TOOL, DR_BASE)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+
+        try:
+            movel(p2,vel=30,acc=20,ref=DR_BASE,mod=DR_MV_MOD_ABS)
+        except Exception as ex:
+            self.write("gotop,{}".format(ex))
+        self.write("gotop,done")
+
+
     def get_posj(self):
         self.robot_log("debug " + "get_posj")
         

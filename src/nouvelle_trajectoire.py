@@ -236,7 +236,7 @@ class NewTrajectory(ctk.CTk):
             else:
                 return
 
-        popup = ctk.CTkToplevel(self)
+        popup = ctk.CTk(self)
         popup.geometry("350x150")
         popup.title("Nom Trajectoire")
 

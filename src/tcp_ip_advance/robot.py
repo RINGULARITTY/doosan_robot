@@ -67,12 +67,10 @@ class TCPServer:
 
     def write(self, msg):
         msg = msg + "\r"
-        # Convert msg in ascii before sending
         msg = bytes(msg, encoding="ascii")
 
         res = server_socket_write(self.socket, msg)
 
-        # Check res value
         if res == -1:
             self.robot_log("error " + 
                 "Error during a socket write: Server not connected")
@@ -99,6 +97,7 @@ class TCPServer:
 
     def goto(self, msg_pos, vel, acc, app_type, ref, mod):
         self.robot_log("debug " + "goto")
+        tp_log("Goto input {}".format(p))
         p = [float(elem) for elem in msg_pos]
         try:
             movel(p,vel=float(vel),acc=float(acc),app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
@@ -190,31 +189,6 @@ class TCPServer:
         except Exception as ex:
             self.write("gotoj,{}".format(ex))
         self.write("gotoj,done")
-
-    def approachpoint(self, msg_posx):
-        self.robot_log("debug " + "approachpoint")
-        p = [float(elem) for elem in msg_posx]
-        
-        try:
-            offset = coord_transform(p, DR_BASE, DR_TOOL)
-        except Exception as ex:
-            self.write("gotop,{}".format(ex))
-
-        self.robot_log("debug " + "offset: " + str(offset))
-        offset[2] -= 50
-        self.robot_log("debug " + "offset: " + str(offset))
-
-        try:
-            p2 = coord_transform(offset, DR_TOOL, DR_BASE)
-        except Exception as ex:
-            self.write("gotop,{}".format(ex))
-
-        try:
-            movel(p2,vel=30,acc=20,ref=DR_BASE,mod=DR_MV_MOD_ABS)
-        except Exception as ex:
-            self.write("gotop,{}".format(ex))
-        self.write("gotop,done")
-
 
     def get_posj(self):
         self.robot_log("debug " + "get_posj")

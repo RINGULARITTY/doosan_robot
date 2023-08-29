@@ -47,8 +47,6 @@ while True:
         computer.offset(msg[1:7], msg[7])
     elif msg[0] == "gotop":
         computer.gotop(msg[1:7], msg[7], msg[8], msg[9], msg[10])
-    elif msg[0] == "approachpoint":
-        computer.approachpoint(msg[1:7])
     elif msg[0] == "get_current_posj":
         computer.get_posj()
     elif msg[0] == "get_current_rotm":

@@ -24,7 +24,7 @@ class Coordinate:
         return f"posx{self.x, self.y, self.z, self.a, self.b, self.c}"
     
     def str_pos(self):
-        return f"{self.x, self.y, self.z}"
+        return f"{self.x:.3f}, {self.y:.3f}, {self.z:.3f}"
     
     def get_angle(self, c2: "Coordinate"):
         dx, dy, dz = c2.x - self.x, c2.y - self.y, c2.z - self.z

@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import time
 
-class Password(ctk.CTkToplevel):   
+class Password(ctk.CTk):   
     def __init__(self, master, callback):
         super().__init__()
         

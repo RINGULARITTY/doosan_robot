@@ -16,6 +16,7 @@ class NewTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, directory):
         super().__init__()
         
+        self.grab_set()
         self.after(250, self.iconbitmap(resource_path("./icon.ico")))
         self.title("Ajouter un élément")
         self.center_window(700, 850)
@@ -249,6 +250,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 return
 
         popup = ctk.CTkToplevel(self)
+        popup.grab_set()
         popup.geometry("350x150")
         popup.title("Sauvegarde")
 

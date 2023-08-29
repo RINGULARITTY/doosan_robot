@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 def open_child():
     child_window = ctk.CTkToplevel(root)
-    child_window.grab_set()  # rend cette fenêtre modale
+    child_window.grab_set()
     ctk.CTkLabel(child_window, text="Je suis une fenêtre enfant").pack()
     ctk.CTkButton(child_window, text="Fermer", command=child_window.destroy).pack()
 

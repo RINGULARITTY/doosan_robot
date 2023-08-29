@@ -10,6 +10,7 @@ class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=1, callback=lambda: 0):
         super().__init__()
         
+        self.grab_set()
         self.after(250, self.iconbitmap(resource_path("./icon.ico")))
         
         self.title("Production")

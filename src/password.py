@@ -8,6 +8,7 @@ class Password(ctk.CTkToplevel):
         
         self.callback = callback
         
+        self.grab_set()
         self.after(250, self.iconbitmap(resource_path("./icon.ico")))
         
         self.title("Mot de passe")

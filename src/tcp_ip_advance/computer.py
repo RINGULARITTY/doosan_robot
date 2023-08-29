@@ -111,12 +111,12 @@ class TCPClient():
 
     def goto(self, x, y, z, rx, ry, rz, vel, acc, app_type, ref, mod) -> bool:
         response = self.send_and_receive(f"goto,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},{app_type},{ref},{mod}")
-        return response == "goto,done"
+        return response == "goto,done", response.split(",")[1]
 
     def gotoc(self, pos1, pos2, vel, acc, app_type, ref, mod) -> bool:
         pos1, pos2 = [str(p) for p in pos1], [str(p) for p in pos2]
         response = self.send_and_receive(f"gotoc,{','.join(pos1)},{','.join(pos2)},{vel},{acc},{app_type},{ref},{mod}")
-        return response == "gotoc,done"
+        return response == "gotoc,done", response.split(",")[1]
 
     def offset(self, pos, z) -> Union[None, List[float]]:  
         pos = [str(p) for p in pos]     
@@ -127,12 +127,7 @@ class TCPClient():
 
     def gotop(self, x, y, z, rx, ry, rz, vel, acc, ref, mod) -> bool:       
         response = self.send_and_receive(f"gotop,{x},{y},{z},{rx},{ry},{rz},{vel},{acc},DR_MV_APP_NONE,{ref},{mod}")
-        return response == "gotop,done"
-    
-    def approachpoint(self, pos) -> bool:
-        pos = [str(p) for p in pos]
-        response = self.send_and_receive(f"approachpoint,{','.join(pos)}")
-        return response == "approachpoint,done"
+        return response == "gotop,done", response.split(",")[1]
     
     def gotoj(self, j1, j2, j3, j4, j5, j6) -> bool:
         response = self.send_and_receive(f"gotoj,{j1},{j2},{j3},{j4},{j5},{j6}")

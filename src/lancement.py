@@ -8,7 +8,7 @@ from tkinter import TclError
 class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
-        self.title("Ajouter un élément")
+        self.title("Production")
         self.geometry("850x725")
         
         self.robot: TCPClient = robot
@@ -123,8 +123,9 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 
                 try:
-                    if not ACTIONS[m.nature](m):
-                        self.add_text("Erreur machine")
+                    res = ACTIONS[m.nature](m):
+                    if not res[0]:
+                        self.add_text(f"Erreur machine : {res[1]}")
                         self.stop_thread_flag = True
                         return
                 except Exception as ex:
@@ -148,7 +149,7 @@ class Run(ctk.CTkToplevel):
             self.add_text("")
             
             while not self.stop_thread_flag and not self.robot.get_digital_input(1):
-                time.sleep(0.5)
+                time.sleep(0.25)
 
         self.add_text(f"{'-'*20}")
         self.add_text(f"Execution terminée en {self.time_display(sum(times))} (estimé {self.time_display(self.pieces_amount * (sum(times) / len(times)))})")

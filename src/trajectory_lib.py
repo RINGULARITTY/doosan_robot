@@ -27,6 +27,8 @@ class Coordinate:
         return f"{self.x, self.y, self.z}"
     
     def get_angle(self, c2: "Coordinate"):
+        print(f"Caca {c2}")
+        print(f"Caca {c2.get_as_array()}")
         dx, dy, dz = c2.x - self.x, c2.y - self.y, c2.z - self.z
         den = sqrt(dx**2 + dz**2)
 
@@ -138,13 +140,13 @@ class Trajectory:
 
             if m.nature == Movement.LINEAR:
                 if prev_m.nature == Movement.PASS or prev_m.nature == Movement.CIRCULAR:
-                    print(m.coords)
+                    print(f"Pipi {m.coords}")
                     angle = prev_m.coords[-1].get_angle(m.coords)
                     prev_m.coords[-1].a = angle
                     m.coords[0].a = angle
                 elif next_m.nature == Movement.LINEAR:
-                    print(next_m.coords)
-                    angle = m.coords[-1].get_angle(next_m.coords)
+                    print(f"Pipi {next_m.coords}")
+                    angle = m.coords[0].get_angle(next_m.coords)
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle
 

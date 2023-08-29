@@ -138,10 +138,12 @@ class Trajectory:
 
             if m.nature == Movement.LINEAR:
                 if prev_m.nature == Movement.PASS or prev_m.nature == Movement.CIRCULAR:
+                    print(m.coords)
                     angle = prev_m.coords[-1].get_angle(m.coords)
                     prev_m.coords[-1].a = angle
                     m.coords[0].a = angle
                 elif next_m.nature == Movement.LINEAR:
+                    print(next_m)
                     angle = m.coords[-1].get_angle(next_m.coords)
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle

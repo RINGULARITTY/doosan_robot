@@ -50,7 +50,6 @@ class MainWindow(ctk.CTk):
             config = json.load(f)
 
         ip, port = config['robot']['ip'], config['robot']['port']
-        self.add_text_log(f"{ip}:{port}")
         try:
             self.robot = TCPClient(ip, port)
         except Exception as ex:

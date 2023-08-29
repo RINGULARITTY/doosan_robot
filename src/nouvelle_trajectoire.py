@@ -191,9 +191,9 @@ class NewTrajectory(ctk.CTk):
             nature = {v: k for k, v in Movement.TRANSLATIONS.items()}[nature_choice]
             configuration = {"PA": Movement.PA, "PB": Movement.PB}[configuration_choice]
             
-            print(f"Prout {point1}")
+            print(f"Prout {point1.get_as_array()}")
             if nature == Movement.CIRCULAR:
-                print(f"Prout {point2}")
+                print(f"Prout {point2.get_as_array()}")
             
             if nature == Movement.CIRCULAR:
                 self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1, point2]))

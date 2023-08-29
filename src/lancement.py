@@ -64,7 +64,7 @@ class Run(ctk.CTkToplevel):
         self.check_thread()
     
     def check_thread(self):
-        if self.thread.is_alive():
+        if self.thread.is_alive() and not self.stop_thread_flag:
             self.after(250, self.check_thread)
         else:
             self.thread.join()
@@ -94,9 +94,12 @@ class Run(ctk.CTkToplevel):
 
         try:
             self.pieces_amount = int(self.amount_entry.get())
-            assert self.pieces_amount <= 0
+            assert self.pieces_amount > 0
         except:
             self.add_text("Erreur : Le nombre de pièce doit être un nombre entier >= 1")
+            self.stop_thread_flag = True
+            return
+            
         
         self.add_text("Assurez vous que le robot est dégagé de la pièce")
         self.robot.wait_manual_guide()

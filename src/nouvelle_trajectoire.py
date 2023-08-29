@@ -167,7 +167,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 wield_width = dialog.get_input()
                 try:
                     wield_width = int(wield_width)
-                    assert not wield_width in wield_width_available
+                    assert wield_width in wield_width_available
                     break
                 except:
                     self.add_text(f"Taille de cordon invalide : {wield_width}")

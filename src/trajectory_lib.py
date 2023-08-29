@@ -51,7 +51,7 @@ class Coordinate:
 
 
 class Movement:
-    START_POS = Coordinate(-6.25, 368, 500, 90, -180, 0)
+    START_POS = Coordinate(-4.49, 369.3, 65.08, 90, -180, 0)
     
     ORIGIN: str = "ORIGIN"
     APPROACH_POINT: str = "APPROACH_POINT"

@@ -48,7 +48,7 @@ class Run(ctk.CTkToplevel):
         self.stop_btn.pack(pady=5)
         
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-    
+
     def run_btn(self):
         self.stop_thread_flag = False
         self.start_thread()
@@ -113,26 +113,27 @@ class Run(ctk.CTkToplevel):
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
         self.add_text(f"{'-'*20}\n")
         
+        ACTIONS = {
+            Movement.ORIGIN: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+            Movement.APPROACH_POINT: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+            Movement.CLEARANCE: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+            Movement.LINEAR: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
+            Movement.CIRCULAR: lambda m: self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
+            Movement.PASS: lambda m: self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+        }
+        
         times = []
         for i in range(self.pieces_amount):
             self.add_text(f"-> Pièce {i + 1}/{self.pieces_amount}\n")
             landmark = time.time()
 
-            ACTIONS = {
-                Movement.ORIGIN: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
-                Movement.APPROACH_POINT: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
-                Movement.CLEARANCE: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
-                Movement.LINEAR: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
-                Movement.CIRCULAR: lambda m: self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
-                Movement.PASS: lambda m: self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
-            }
-
             for j, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
                     self.add_text("Arrêt forcé")
                     return
+
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
-                
+
                 try:
                     res = ACTIONS[m.nature](m)
                     if not res[0]:

@@ -7,7 +7,6 @@ import datetime
 from tcp_ip_advance.computer import TCPClient
 import json
 from path_changer import resource_path
-from threading import Thread
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -15,7 +14,6 @@ class MainWindow(ctk.CTk):
 
         self.title("Trajectoires")
 
-        # Label au-dessus de la liste
         self.label = ctk.CTkLabel(self, text="TRAJECTOIRES", font=("Arial", 20))
         self.label.pack(pady=10)
 
@@ -69,7 +67,7 @@ class MainWindow(ctk.CTk):
                     "END",
                     os.path.splitext(file)[0] +
                         "  -  " +
-                        datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(self.folder_path, file))).strftime('%Y-%m-%d %H:%M:%S')
+                        datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(self.folder_path, file))).strftime('%d-%m-%Y %H:%M')
                 )
 
     def center_window(self, width=None, height=None):
@@ -94,8 +92,7 @@ class MainWindow(ctk.CTk):
     
     def call_back_refresh(self):
         self.refresh_listbox()
-        
-    
+
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")

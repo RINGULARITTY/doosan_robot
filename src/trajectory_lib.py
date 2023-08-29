@@ -81,11 +81,18 @@ class Movement:
         self.config: str = config
         self.coords: List[Coordinate] = coords
         self.wield_width = wield_width
-        self.vel: float = 30
-        self.acc: float = 20
+        self.vel: float = vel
+        self.acc: float = acc
     
+    def to_string(self):
+        match self.nature:
+            case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.PASS | Movement.CLEARANCE:
+                return f"{Movement.TRANSLATIONS[self.nature]}, {self.config}, {self.str_coords_pos()}, v={self.vel}, a={self.acc}"
+            case _:
+                return f"{Movement.TRANSLATIONS[self.nature]}, {self.config}, cordon={self.wield_width}, {self.str_coords_pos()}, v={self.vel}, a={self.acc}"
+
     def str_coords_pos(self):
-        return ", ".join([c.str_pos() for c in self.coords])
+        return ", ".join([f"P{i + 1}({c.str_pos()})" for i, c in enumerate(self.coords)])
     
     def set_c0(self):
         for c in self.coords:

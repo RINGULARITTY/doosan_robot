@@ -180,7 +180,7 @@ class NewTrajectory(ctk.CTkToplevel):
                         self.add_text(f"Taille de cordon invalide : {wield_width}")
             else:
                 wield_width = 0
-            
+
             if nature_choice == Movement.CIRCULAR:
                 self.add_text(f"Mouvement créé : {Movement.TRANSLATIONS[nature_choice]}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
             elif nature_choice == Movement.PASS:
@@ -229,13 +229,12 @@ class NewTrajectory(ctk.CTkToplevel):
         self.stop_thread_flag = True
         self.after(1000, self.kill_thread)
         self.after(1500, self.destroy())
-    
+
     def check_thread(self):
         if self.thread.is_alive():
             self.after(100, self.check_thread)
         else:
             self.kill_thread()
-
 
     def on_list_click(self, _):
         pass

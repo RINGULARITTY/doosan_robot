@@ -222,6 +222,7 @@ class NewTrajectory(ctk.CTkToplevel):
         pass
 
     def test_trajectory(self):
+        self.stop_thread_flag = True
         time.sleep(1)
         run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
         run_window.iconbitmap(resource_path("./icon.ico"))

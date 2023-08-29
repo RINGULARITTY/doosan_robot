@@ -110,7 +110,7 @@ class Run(ctk.CTkToplevel):
             for j, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
                     return
-                self.add_text(f"[{j+1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
+                self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 try:
                     match m.nature:
                         case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.CLEARANCE:

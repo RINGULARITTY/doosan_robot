@@ -148,7 +148,7 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"\nPlacez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
             self.add_text("")
             
-            while not self.stop_thread_flag and self.robot.get_digital_input(1):
+            while not self.stop_thread_flag and not self.robot.get_digital_input(1):
                 time.sleep(0.5)
 
         self.add_text(f"{'-'*20}")

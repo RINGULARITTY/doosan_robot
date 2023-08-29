@@ -141,21 +141,7 @@ class TCPServer:
         p = [float(elem) for elem in msg_posx]
         
         try:
-            offset = coord_transform(p, DR_BASE, DR_TOOL)
-        except Exception as ex:
-            self.write("gotop,{}".format(ex))
-
-        self.robot_log("debug " + "offset: " + str(offset))
-        offset[2] -= 50
-        self.robot_log("debug " + "offset: " + str(offset))
-
-        try:
-            offset2 = coord_transform(offset, DR_TOOL, DR_BASE)
-        except Exception as ex:
-            self.write("gotop,{}".format(ex))
-        
-        try:
-            movel(offset2, vel=float(vel),acc=float(acc), app_type=DR_MV_APP_NONE, ref=DR_BASE, mod=DR_MV_MOD_ABS)
+            movel(posx(0,0,-50,0,0,0), vel=30, acc=20, ref=DR_TOOL, mod=DR_MV_MOD_REL)
         except Exception as ex:
             self.write("gotop,{}".format(ex))
         

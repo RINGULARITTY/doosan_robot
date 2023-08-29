@@ -107,37 +107,36 @@ class Run(ctk.CTkToplevel):
             self.add_text(f"-> Pièce {i + 1}/{self.pieces_amount}\n")
             landmark = time.time()
 
+            ACTIONS = {
+                Movement.ORIGIN: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+                Movement.APPROACH_POINT: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+                Movement.CLEARANCE: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
+                Movement.LINEAR: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
+                Movement.CIRCULAR: lambda m: self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"),
+                Movement.PASS: lambda m: self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS")
+            }
+
             for j, m in enumerate(self.trajectory.trajectory):
                 if self.stop_thread_flag:
+                    self.add_text("Arrêt forcé")
                     return
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
+                
                 try:
-                    match m.nature:
-                        case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.CLEARANCE:
-                            if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"):
-                                self.add_text(f"Erreur")
-                                return
-                        case Movement.LINEAR:
-                            if not self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
-                                self.add_text(f"Erreur")
-                                return
-                        case Movement.CIRCULAR:
-                            if not self.robot.gotoc(m.coords[0].get_as_array(), m.coords[1].get_as_array(), m.vel, m.acc, "DR_MV_APP_WELD", "DR_BASE", "DR_MV_MOD_ABS"):
-                                self.add_text(f"Erreur")
-                                return
-                        case Movement.PASS:
-                            if not self.robot.gotop(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_BASE", "DR_MV_MOD_ABS"):
-                                self.add_text(f"Erreur")
-                                return
+                    if not ACTIONS[m.nature]:
+                        self.add_text("Erreur machine")
+                        self.stop_thread_flag = True
+                        return
                 except Exception as ex:
                     self.add_text(f"Erreur : {ex}")
                     return
                 self.add_text("Ok")
             
-            if self.stop_thread_flag:
-                    return
-
             self.add_text("")
+            
+            if self.stop_thread_flag:
+                self.add_text("Arrêt forcé")
+                return
             
             times.append(time.time() - landmark)
             self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}", end="")

@@ -6,6 +6,7 @@ import os
 from tkinter import messagebox
 from lancement import Run
 from path_changer import resource_path
+from tcp_ip_advance.computer import TCPClient
 
 class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
@@ -17,7 +18,7 @@ class EditMovement(ctk.CTkToplevel):
         self.title("Editeur Mouvement")
         self.geometry("700x350")
         
-        self.robot = robot
+        self.robot: TCPClient = robot
         self.callback = callback
         
         self.trajectory = trajectory
@@ -66,7 +67,9 @@ class EditMovement(ctk.CTkToplevel):
         self.save.pack(pady=10)
       
     def on_new_take(self, index):
-        pass
+        self.robot.wait_manual_guide()
+        position = self.robot.get_current_posx()[0]
+        self.coords[index][0:3] = position[0:3]
     
     def on_hand_change(self):
         password = Password(self, self.password_callback)
@@ -98,6 +101,7 @@ class EditMovement(ctk.CTkToplevel):
             self.trajectory.trajectory[self.movement_index].coords[i].y = float(self.coords[i][1].get())
             self.trajectory.trajectory[self.movement_index].coords[i].z = float(self.coords[i][2].get())
 
+        self.trajectory.compile(self.robot)
         self.callback()
         self.after(250, self.destroy)
 

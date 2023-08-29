@@ -113,6 +113,8 @@ class NewTrajectory(ctk.CTkToplevel):
                     nature_choice = "Passage"
                     break
             
+            nature_choice = {v: k for k, v in Movement.TRANSLATIONS}[nature_choice]
+            
             if self.stop_thread_flag or not self._is_window_alive():
                 break
             
@@ -134,7 +136,7 @@ class NewTrajectory(ctk.CTkToplevel):
             point1 = Coordinate(*self.robot.get_current_posx()[0])
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
-            if nature_choice == "Circulaire":
+            if nature_choice == Movement.CIRCULAR:
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
                 self.robot.wait_manual_guide()
                 while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
@@ -164,22 +166,27 @@ class NewTrajectory(ctk.CTkToplevel):
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
             
-            wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
-            while True:
-                dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
-                wield_width = dialog.get_input()
-                try:
-                    wield_width = int(wield_width)
-                    assert wield_width in wield_width_available
-                    break
-                except:
-                    self.add_text(f"Taille de cordon invalide : {wield_width}")
-                
-            
-            if nature_choice == "Circulaire":
-                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
+            if nature_choice != Movement.PASS:
+                wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
+                while True:
+                    dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
+                    dialog.grab_set()
+                    wield_width = dialog.get_input()
+                    try:
+                        wield_width = int(wield_width)
+                        assert wield_width in wield_width_available
+                        break
+                    except:
+                        self.add_text(f"Taille de cordon invalide : {wield_width}")
             else:
-                self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}")
+                wield_width = 0
+            
+            if nature_choice == Movement.CIRCULAR:
+                self.add_text(f"Mouvement créé : {Movement.TRANSLATIONS[nature_choice]}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
+            elif nature_choice == Movement.PASS:
+                self.add_text(f"Mouvement créé : {Movement.TRANSLATIONS[nature_choice]}, {configuration_choice}, {point1.str_pos()}")
+            else:
+                self.add_text(f"Mouvement créé : {Movement.TRANSLATIONS[nature_choice]}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}")
 
             confirm_choice = False
             self.add_text(f"Est-ce que le mouvement vous convient ? (vert = oui, bleu1 = non)", end=" ")
@@ -200,14 +207,13 @@ class NewTrajectory(ctk.CTkToplevel):
 
             if not confirm_choice:
                 continue
-                
-            nature = {v: k for k, v in Movement.TRANSLATIONS.items()}[nature_choice]
+
             configuration = {"PA": Movement.PA, "PB": Movement.PB}[configuration_choice]
             
-            if nature == Movement.CIRCULAR:
-                self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1, point2]))
+            if nature_choice == Movement.CIRCULAR:
+                self.trajectory.add_movement(self.robot, Movement(nature_choice, configuration, wield_width, [point1, point2]))
             else:
-                self.trajectory.add_movement(self.robot, Movement(nature, configuration, wield_width, [point1]))
+                self.trajectory.add_movement(self.robot, Movement(nature_choice, configuration, wield_width, [point1]))
             
             self.refresh_listbox()
             

@@ -12,7 +12,7 @@ class EditMovement(ctk.CTkToplevel):
         super().__init__()
 
         self.grab_set()
-        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
+        self.iconbitmap(resource_path("./icon.ico"))
 
         self.title("Editeur Mouvement")
         self.geometry("700x350")
@@ -111,7 +111,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.callback = callback
         self.folder_path = folder_path
         
-        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
+        self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Editeur Trajectoire")
         self.geometry("775x575")

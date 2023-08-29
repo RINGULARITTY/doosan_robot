@@ -5,9 +5,9 @@ from nouvelle_trajectoire import NewTrajectory
 from edit_trajectoire import EditTrajectory
 import datetime
 from tcp_ip_advance.computer import TCPClient
-import tkinter as tk
 import json
 from path_changer import resource_path
+from threading import Thread
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -18,9 +18,6 @@ class MainWindow(ctk.CTk):
         # Label au-dessus de la liste
         self.label = ctk.CTkLabel(self, text="TRAJECTOIRES", font=("Arial", 20))
         self.label.pack(pady=10)
-
-        self.robot_connection_var = tk.StringVar()
-        self.robot_connection_var.set("Connection au robot ")
 
         self.robot_connection = ctk.CTkLabel(self, text="Connexion au robot...", font=("Arial", 14))
         self.robot_connection.pack(pady=5)
@@ -43,10 +40,10 @@ class MainWindow(ctk.CTk):
         self.center_window(500, 625)
 
         self.robot = None
-        self.start_robot_connection()
-    
-    def add_text_log(self, text):
-        self.robot_connection_var.set(self.robot_connection_var.get() + text)
+        self.after(500, self.start_robot_connection())
+
+    def set_text_log(self, text):
+        self.robot_connection.configure(text=text)
     
     def start_robot_connection(self):
         with open(resource_path("./config.json"), "r") as f:
@@ -57,15 +54,13 @@ class MainWindow(ctk.CTk):
         try:
             self.robot = TCPClient(ip, port)
         except Exception as ex:
-            self.add_text_log(f", Erreur connexion : {ex}")
-            print(str(ex))
+            self.set_text_log(f"Erreur connexion robot : {ex}")
             return
         response = self.robot.hi()
         if not response:
-            self.add_text_log(f", Erreur dialogue : {response}")
-            print(str(response))
+            self.set_text_log(f"Erreur dialogue robot : {response}")
             return
-        self.add_text_log(f", Ok")
+        self.set_text_log(f", Robot connecté")
 
     def refresh_listbox(self):
         self.listbox.delete("all")

@@ -11,7 +11,7 @@ class Run(ctk.CTkToplevel):
         super().__init__()
         
         self.grab_set()
-        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
+        self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Production")
         self.geometry("850x725")

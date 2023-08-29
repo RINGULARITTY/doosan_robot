@@ -97,8 +97,8 @@ class TCPServer:
 
     def goto(self, msg_pos, vel, acc, app_type, ref, mod):
         self.robot_log("debug " + "goto")
-        tp_log("Goto input {}".format(p))
         p = [float(elem) for elem in msg_pos]
+        tp_log("Goto input {}".format(p))
         try:
             movel(p,vel=float(vel),acc=float(acc),app_type=eval(app_type),ref=eval(ref),mod=eval(mod))
         except Exception as ex:

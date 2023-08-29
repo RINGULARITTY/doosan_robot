@@ -23,7 +23,7 @@ import time
 computer = TCPServer()
 
 while True:
-    time.sleep(0.05)
+    time.sleep(0.1)
     res, msg = computer.read()
     if res <= 0 or msg == "":
         continue

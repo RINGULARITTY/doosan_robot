@@ -61,7 +61,6 @@ class MainWindow(ctk.CTk):
             print(str(ex))
             return
         response = self.robot.hi()
-        print(response)
         if not response:
             self.add_text_log(f", Erreur dialogue : {response}")
             print(str(response))

@@ -143,7 +143,7 @@ class Trajectory:
                     prev_m.coords[-1].a = angle
                     m.coords[0].a = angle
                 elif next_m.nature == Movement.LINEAR:
-                    print(next_m)
+                    print(next_m.coords)
                     angle = m.coords[-1].get_angle(next_m.coords)
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle

@@ -9,7 +9,7 @@ class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
         self.title("Ajouter un élément")
-        self.geometry("850x700")
+        self.geometry("850x725")
         
         self.robot: TCPClient = robot
         self.callback = callback
@@ -30,8 +30,8 @@ class Run(ctk.CTkToplevel):
             self.amount_entry = ctk.CTkEntry(self)
             self.amount_entry.pack(pady=10)
         
-        self.button2 = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
-        self.button2.pack(pady=20)
+        self.start_btn = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
+        self.start_btn.pack(pady=20)
         
         self.label6 = ctk.CTkLabel(self, text="Avancement", font=("Arial", 14))
         self.label6.pack(pady=5)
@@ -39,16 +39,23 @@ class Run(ctk.CTkToplevel):
         self.textbox = ctk.CTkTextbox(self, state='disabled', height=200, font=("Arial", 14))
         self.textbox.pack(padx=5, fill="both", expand=True)
         
+        self.stop_btn = ctk.CTkButton(self, text="Arrêt", command=self.cancel_btn)
+        self.stop_btn.pack(pady=5)
+        
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
     
     def run_btn(self):
         self.stop_thread_flag = False
         self.start_thread()
+    
+    def cancel_btn(self):
+        self.stop_thread_flag = True
 
     def on_closing(self):
-        self.callback()
         self.stop_thread_flag = True
-        self.after(1000, self.destroy())
+        time.sleep(0.5)
+        self.callback()
+        self.after(500, self.destroy())
     
     def start_thread(self):
         self.stop_thread_flag = False
@@ -129,14 +136,8 @@ class Run(ctk.CTkToplevel):
             
             if self.stop_thread_flag:
                     return
-             
-            self.add_text(f"[{len(self.trajectory.trajectory) + 1}/{len(self.trajectory.trajectory) + 1}] Lancement de \"Point de dégagement\" : ", end=" ")
-            try:
-                self.robot.gotooffset(-50, 30, 20, "DR_TOOL", "DR_MV_MOD_REL")
-            except Exception as ex:
-                self.add_text(f"Erreur : {ex}")
-                return
-            self.add_text("Ok\n")
+
+            self.add_text("")
             
             times.append(time.time() - landmark)
             self.add_text(f"Pièce réalisée en {self.time_display(times[-1])}", end="")

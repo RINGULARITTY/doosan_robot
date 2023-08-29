@@ -204,26 +204,25 @@ class NewTrajectory(ctk.CTk):
 
     def kill_thread(self):
         self.thread.join()
-        self.destroy()
 
     def on_closing(self):
         self.callback()
         self.stop_thread_flag = True
         self.after(1000, self.kill_thread)
+        self.after(1500, self.destroy())
     
     def check_thread(self):
-        if self.thread.is_alive() :
+        if self.thread.is_alive():
             self.after(100, self.check_thread)
         else:
-            self.destroy()
-            
+            self.kill_thread()
+
 
     def on_list_click(self, _):
         pass
 
     def test_trajectory(self):
-        self.stop_thread_flag = True
-        time.sleep(1.5)
+        time.sleep(1)
         run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
         run_window.iconbitmap(resource_path("./icon.ico"))
         run_window.mainloop()

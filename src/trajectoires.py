@@ -22,10 +22,10 @@ class MainWindow(ctk.CTk):
         self.robot_connection_var = tk.StringVar()
         self.robot_connection_var.set("Connection au robot ")
 
-        self.robot_connection = ctk.CTkLabel(self, text="Connection au robot ", font=("Arial", 14))
+        self.robot_connection = ctk.CTkLabel(self, text="Connexion au robot ", font=("Arial", 14))
         self.robot_connection.pack(pady=5)
 
-        self.pick_trajectory = ctk.CTkLabel(self, text="Choissisez une trajectoire existante", font=("Arial", 12))
+        self.pick_trajectory = ctk.CTkLabel(self, text="Choisissez une trajectoire existante", font=("Arial", 12))
         self.pick_trajectory.pack(pady=5)
 
         self.listbox = CTkListbox(self, command=self.open_trajectory_edit, font=("Arial", 14))
@@ -92,16 +92,21 @@ class MainWindow(ctk.CTk):
 
     def open_trajectory_edit(self, _):
         edit_trajectory_window = EditTrajectory(self, self.robot, self.call_back_refresh, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])
-        edit_trajectory_window.iconbitmap(resource_path("./icon.ico"))
         edit_trajectory_window.mainloop()
 
     def on_add_button_click(self):
         add_window = NewTrajectory(self, self.robot, self.call_back_refresh, self.folder_path)
-        add_window.iconbitmap(resource_path("./icon.ico"))
         add_window.mainloop()
     
     def call_back_refresh(self):
         self.refresh_listbox()
+        
+    
+    def open_toplevel(self, open_window):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = ToplevelWindow(self)  # create window if its None or destroyed
+        else:
+            self.toplevel_window.focus()  # if window exists focus it
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")

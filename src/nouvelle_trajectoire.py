@@ -15,6 +15,8 @@ def rgb_to_hex(rgb):
 class NewTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, directory):
         super().__init__()
+        
+        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
         self.title("Ajouter un élément")
         self.center_window(700, 850)
 
@@ -235,7 +237,6 @@ class NewTrajectory(ctk.CTkToplevel):
         self.stop_thread_flag = True
         time.sleep(1)
         run_window = Run(self, self.robot, self.trajectory, 1, self.save_trajectory)
-        run_window.iconbitmap(resource_path("./icon.ico"))
         run_window.mainloop()
 
     def save_trajectory(self):
@@ -249,9 +250,9 @@ class NewTrajectory(ctk.CTkToplevel):
 
         popup = ctk.CTkToplevel(self)
         popup.geometry("350x150")
-        popup.title("Nom Trajectoire")
+        popup.title("Sauvegarde")
 
-        label = ctk.CTkLabel(popup, text="Choisissez le nom de la trajectoire")
+        label = ctk.CTkLabel(popup, text="Entrez le nom de la trajectoire")
         label.pack(pady=10)
 
         name_entry = ctk.CTkEntry(popup)
@@ -261,15 +262,15 @@ class NewTrajectory(ctk.CTkToplevel):
         self.frame.pack()
 
         validate_button = ctk.CTkButton(self.frame, text="Sauvegarder", command=validate_entry)
-        validate_button.pack(side="left", pady=10)
+        validate_button.pack(side="left", padx=10, pady=5)
         delete_button = ctk.CTkButton(self.frame, text="Supprimer", command=lambda: self.confirm_cancel(popup))
-        delete_button.pack(side="left", pady=10)
+        delete_button.pack(side="left", pady=5)
 
     def confirm_cancel(self, popup):
         if messagebox.askyesno(
             title="Confirmation", 
             icon="warning", 
-            message="Êtes-vous sûr de ne pas vouloir convercer la trajectoire créée ?"
+            message="Êtes-vous sûr de ne pas vouloir conserver la trajectoire créée ?"
         ):
             popup.destroy()
             self.on_closing()

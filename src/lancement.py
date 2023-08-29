@@ -4,10 +4,14 @@ import time
 from tcp_ip_advance.computer import TCPClient
 import threading
 from tkinter import TclError
+from path_changer import resource_path
 
 class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=1, callback=lambda: 0):
         super().__init__()
+        
+        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
+        
         self.title("Production")
         self.geometry("850x725")
         
@@ -150,7 +154,7 @@ class Run(ctk.CTkToplevel):
             if i + 1 != self.pieces_amount:
                 estimated_time = (self.pieces_amount - (i + 1)) * sum(times) / len(times)
                 self.add_text(f", temps restant {self.time_display(estimated_time)}")
-                self.add_text(f"\nPlacez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
+                self.add_text(f"Placez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
                 while not self.stop_thread_flag and not self.robot.get_digital_input(1):
                     time.sleep(0.25)
             else:

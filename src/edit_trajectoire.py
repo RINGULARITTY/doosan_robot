@@ -11,6 +11,8 @@ class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
         super().__init__()
 
+        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
+
         self.title("Editeur Mouvement")
         self.geometry("700x350")
         
@@ -67,7 +69,6 @@ class EditMovement(ctk.CTkToplevel):
     
     def on_hand_change(self):
         password = Password(self, self.password_callback)
-        password.iconbitmap(resource_path("./icon.ico"))
         password.mainloop()
         
     def password_callback(self, res):
@@ -79,6 +80,18 @@ class EditMovement(ctk.CTkToplevel):
                     c.configure(state="normal")
     
     def on_save(self):
+        for i in range(len(self.trajectory.trajectory[self.movement_index].coords)):
+            for j in range(3):
+                try:
+                    float(self.coords[i][j].get())
+                except:
+                    messagebox.showerror(
+                        title="Erreur", 
+                        icon="error", 
+                        message=f"Coordonée invalide pour le point {i + 1} pour la coordonée {['x', 'y', 'z'][j]}"
+                    )
+                    return
+        
         for i in range(len(self.trajectory.trajectory[self.movement_index].coords)):
             self.trajectory.trajectory[self.movement_index].coords[i].x = float(self.coords[i][0].get())
             self.trajectory.trajectory[self.movement_index].coords[i].y = float(self.coords[i][1].get())
@@ -94,6 +107,8 @@ class EditTrajectory(ctk.CTkToplevel):
         self.robot = robot
         self.callback = callback
         self.folder_path = folder_path
+        
+        self.after(250, self.iconbitmap(resource_path("./icon.ico")))
         
         self.title("Editeur Trajectoire")
         self.geometry("775x575")
@@ -127,7 +142,6 @@ class EditTrajectory(ctk.CTkToplevel):
 
     def on_list_click(self, _):
         edit_move = EditMovement(self, self.robot, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())
-        edit_move.iconbitmap(resource_path("./icon.ico"))
         edit_move.mainloop()
         self.slaves(edit_move)
     

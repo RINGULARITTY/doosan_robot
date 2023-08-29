@@ -150,12 +150,11 @@ class Run(ctk.CTkToplevel):
             if i + 1 != self.pieces_amount:
                 estimated_time = (self.pieces_amount - (i + 1)) * sum(times) / len(times)
                 self.add_text(f", temps restant {self.time_display(estimated_time)}")
-            else:
                 self.add_text(f"\nPlacez la nouvelle pièce et appuyez sur le bouton vert pour continuer")
-            self.add_text("")
-            
-            while not self.stop_thread_flag and not self.robot.get_digital_input(1):
-                time.sleep(0.25)
+                while not self.stop_thread_flag and not self.robot.get_digital_input(1):
+                    time.sleep(0.25)
+            else:
+                self.add_text("")
 
         self.add_text(f"{'-'*20}")
         self.add_text(f"Execution terminée en {self.time_display(sum(times))}")

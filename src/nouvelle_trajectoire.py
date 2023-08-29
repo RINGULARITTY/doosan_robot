@@ -161,7 +161,17 @@ class NewTrajectory(ctk.CTkToplevel):
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
             
-            wield_width = 0
+            wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
+            while True:
+                dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
+                wield_width = dialog.get_input()
+                try:
+                    wield_width = int(wield_width)
+                    assert not wield_width in wield_width_available
+                    break
+                except:
+                    self.add_text(f"Taille de cordon invalide : {wield_width}")
+                
             
             if nature_choice == "Circulaire":
                 self.add_text(f"Mouvement créé : {nature_choice}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
@@ -261,7 +271,7 @@ class NewTrajectory(ctk.CTkToplevel):
             icon="warning", 
             message="Êtes-vous sûr de ne pas vouloir convercer la trajectoire créée ?"
         ):
-            self.popup.destroy()
+            popup.destroy()
             self.on_closing()
     
     def _is_window_alive(self):

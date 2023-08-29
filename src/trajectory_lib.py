@@ -147,6 +147,11 @@ class Trajectory:
                     m.coords[0].a = angle
             if m.nature == Movement.PASS:
                 m.coords[0].a = prev_m.coords[-1].a
+            if i == 2 and m.nature == Movement.LINEAR:
+                if next_m.nature == Movement.PASS or next_m.nature == Movement.LINEAR:        
+                    angle = m.coords[0].get_angle(next_m.coords[0])
+                    next_m.coords[0].a = angle
+                    m.coords[0].a = angle
 
         self.trajectory[1].config = self.trajectory[2].config
         self.trajectory[1].coords = [Coordinate(*robot.offset(self.trajectory[2].coords[0].get_as_array(), -50))]

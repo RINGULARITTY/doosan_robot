@@ -6,7 +6,7 @@ import threading
 from tkinter import TclError
 
 class Run(ctk.CTkToplevel):
-    def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
+    def __init__(self, master, robot, trajectory, pieces_amount=1, callback=lambda: 0):
         super().__init__()
         self.title("Production")
         self.geometry("850x725")
@@ -23,12 +23,12 @@ class Run(ctk.CTkToplevel):
         self.label4 = ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 14))
         self.label4.pack(pady=5)
         
-        if pieces_amount == -1:
-            self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
-            self.label5.pack(pady=5)
+        self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
+        self.label5.pack(pady=5)
 
-            self.amount_entry = ctk.CTkEntry(self)
-            self.amount_entry.pack(pady=10)
+        self.amount_entry = ctk.CTkEntry(self)
+        self.amount_entry.pack(pady=10)
+        self.amount_entry.configure(textvariable=f"{pieces_amount}")
         
         self.start_btn = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
         self.start_btn.pack(pady=20)
@@ -92,11 +92,11 @@ class Run(ctk.CTkToplevel):
         self.textbox.delete('1.0', "end")
         self.textbox.configure(state='disabled')
 
-        if self.pieces_amount == -1:
-            try:
-                self.pieces_amount = int(self.amount_entry.get())
-            except:
-                self.add_text("Erreur : Le nombre de pièce doit être un nombre entier")
+        try:
+            self.pieces_amount = int(self.amount_entry.get())
+            assert self.pieces_amount <= 0
+        except:
+            self.add_text("Erreur : Le nombre de pièce doit être un nombre entier >= 1")
         
         self.add_text("Assurez vous que le robot est dégagé de la pièce")
         self.robot.wait_manual_guide()
@@ -155,7 +155,7 @@ class Run(ctk.CTkToplevel):
                 time.sleep(0.25)
 
         self.add_text(f"{'-'*20}")
-        self.add_text(f"Execution terminée en {self.time_display(sum(times))} (estimé {self.time_display(self.pieces_amount * (sum(times) / len(times)))})")
+        self.add_text(f"Execution terminée en {self.time_display(sum(times))}")
 
     def _is_window_alive(self):
         try:

@@ -98,7 +98,10 @@ class Run(ctk.CTkToplevel):
             except:
                 self.add_text("Erreur : Le nombre de pièce doit être un nombre entier")
         
-        self.add_text(f"Trajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
+        self.add_text("Assurez vous que le robot est dégagé de la pièce")
+        self.robot.wait_manual_guide()
+        
+        self.add_text(f"\nTrajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
         self.add_text(f"{'-'*20}\n")
         

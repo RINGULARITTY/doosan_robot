@@ -7,7 +7,7 @@ from tkinter import messagebox
 from lancement import Run
 from path_changer import resource_path
 
-class EditMovement(ctk.CTk):
+class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
         super().__init__()
 
@@ -87,7 +87,7 @@ class EditMovement(ctk.CTk):
         self.callback()
         self.after(250, self.destroy)
 
-class EditTrajectory(ctk.CTk):
+class EditTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, selected_index, folder_path, trajectories):
         super().__init__()
         

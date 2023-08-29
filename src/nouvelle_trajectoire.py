@@ -12,7 +12,7 @@ from path_changer import resource_path
 def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
 
-class NewTrajectory(ctk.CTk):
+class NewTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, directory):
         super().__init__()
         self.title("Ajouter un élément")
@@ -236,7 +236,7 @@ class NewTrajectory(ctk.CTk):
             else:
                 return
 
-        popup = ctk.CTk(self)
+        popup = ctk.CTkToplevel(self)
         popup.geometry("350x150")
         popup.title("Nom Trajectoire")
 

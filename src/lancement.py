@@ -5,7 +5,7 @@ from tcp_ip_advance.computer import TCPClient
 import threading
 from tkinter import TclError
 
-class Run(ctk.CTk):
+class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=-1, callback=lambda: 0):
         super().__init__()
         self.title("Ajouter un élément")

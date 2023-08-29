@@ -123,7 +123,7 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
                 
                 try:
-                    if not ACTIONS[m.nature]:
+                    if not ACTIONS[m.nature](m):
                         self.add_text("Erreur machine")
                         self.stop_thread_flag = True
                         return

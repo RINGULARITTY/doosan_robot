@@ -165,7 +165,7 @@ class TCPServer:
             self.write("gotop,{}".format(ex))
 
         self.robot_log("debug " + "offset: " + str(offset))
-        offset[2] += 50
+        offset[2] -= 50
         self.robot_log("debug " + "offset: " + str(offset))
 
         try:

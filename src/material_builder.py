@@ -71,7 +71,7 @@ if __name__ == "__main__":
         "passes_amount": [1]*7
     })
     
-    ALUMINUM = Material("aluminium", {
+    ALUMINUM = Material("aluminum", {
         "bead_widths": [3, 4, 5, 6, 8, 10, 12],
         "job": [9]*7,
         "synergic_id": [0]*7,

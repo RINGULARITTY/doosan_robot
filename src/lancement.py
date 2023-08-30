@@ -40,7 +40,7 @@ class Run(ctk.CTkToplevel):
             ctk.CTkLabel(self, text="Clef de déchiffrement manquante", font=("Arial", 12)).pack(pady=5)
         else:
             self.materials.load(self.key)
-            materials_names = self.materials.get_materials_names()
+            materials_names = [Materials.TRANSLATIONS[m] for m in self.materials.get_materials_names() ]
             if len(materials_names) == 0:
                 ctk.CTkLabel(self, text="Materiaux manquants", font=("Arial", 12)).pack(pady=5)
             material_choices = material_choices + materials_names
@@ -124,6 +124,7 @@ class Run(ctk.CTkToplevel):
         self.add_text("Assurez vous que le robot est dégagé de la pièce")
         self.robot.wait_manual_guide()
         
+        wield = self.material_choice.get()
         self.add_text(f"\nTrajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
         self.add_text(f"Materiau : {'Sans Soudure' if self.material_choice.get() == 'Sans Soudure' else Materials.TRANSLATIONS[self.material_choice.get()]}")
@@ -151,15 +152,23 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
 
                 try:
+                    if wield != 'Sans Soudure' and m.wield_width > 0:
+                        self.add_text("Soudage activé", end=" ")
+                        self.robot.start_wield()
                     res = ACTIONS[m.nature](m)
                     if not res[0]:
                         self.add_text(f"Erreur machine : {res[1]}")
                         self.stop_thread_flag = True
                         return
+                    self.add_text("Mouvement Ok", end=" ")
+                    if wield != 'Sans Soudure' and m.wield_width > 0:
+                        self.add_text("Soudage désactivé", end=" ")
+                        self.robot.end_wield()
+                    else:
+                        self.add_text(" ")
                 except Exception as ex:
                     self.add_text(f"Erreur : {ex}")
                     return
-                self.add_text("Ok")
             
             self.add_text("")
             

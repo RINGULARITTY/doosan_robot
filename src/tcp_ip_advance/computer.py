@@ -186,6 +186,14 @@ class TCPClient():
         response = self.send_and_receive(f"reset_weld_cond,{flag_reset}")
         return response == "reset_weld_cond,done"
     
+    def start_wield(self, vel_target, job_num, synergic_id):
+        self.app_weld_enable_digital()
+        self.app_weld_set_weld_cond_digital(0, vel_target, 0.00, 16.67, 0, job_num, synergic_id, 10)
+    
+    def end_wield(self):
+        self.app_weld_adj_welding_cond_digital(1)
+        self.app_weld_disable_digital()
+    
     def send_mission(self, mission_name) -> bool:
         response = self.send_and_receive(mission_name)
         return response == f"{mission_name},done"

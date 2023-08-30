@@ -8,6 +8,7 @@ import threading
 from tkinter import TclError
 from tcp_ip_advance.computer import TCPClient
 from path_changer import resource_path
+from window_tools import center_right_window
 
 def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
@@ -19,7 +20,7 @@ class NewTrajectory(ctk.CTkToplevel):
         self.grab_set()
         self.iconbitmap(resource_path("./icon.ico"))
         self.title("Ajouter un élément")
-        self.center_window(700, 850)
+        center_right_window(self, 700, 850)
 
         self.robot: TCPClient = robot
         self.callback = callback
@@ -256,7 +257,7 @@ class NewTrajectory(ctk.CTkToplevel):
 
         popup = ctk.CTkToplevel(self)
         popup.grab_set()
-        popup.geometry("350x150")
+        center_right_window(popup, 350, 150)
         popup.title("Sauvegarde")
 
         label = ctk.CTkLabel(popup, text="Entrez le nom de la trajectoire")

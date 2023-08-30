@@ -7,12 +7,14 @@ import datetime
 from tcp_ip_advance.computer import TCPClient
 import json
 from path_changer import resource_path
+from window_tools import center_right_window
 
 class MainWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         self.title("Trajectoires")
+        center_right_window(self, 500, 625)
 
         self.label = ctk.CTkLabel(self, text="TRAJECTOIRES", font=("Arial", 20))
         self.label.pack(pady=10)
@@ -34,8 +36,6 @@ class MainWindow(ctk.CTk):
 
         self.add_button = ctk.CTkButton(self, text="+", command=self.on_add_button_click, font=("Arial", 25))
         self.add_button.pack(pady=10, ipadx=10)
-
-        self.center_window(500, 625)
 
         self.robot = None
         self.after(500, self.start_robot_connection())
@@ -69,18 +69,6 @@ class MainWindow(ctk.CTk):
                         "  -  " +
                         datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(self.folder_path, file))).strftime('%d-%m-%Y %H:%M')
                 )
-
-    def center_window(self, width=None, height=None):
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        if width is None:
-            width = self.winfo_width()
-        if height is None:
-            height = self.winfo_height()
-        x = (screen_width / 2) - (width / 2)
-        y = (screen_height / 2) - (height / 2)
-        
-        self.geometry(f"{width}x{height}+{int(x)}+{int(y)}")
 
     def open_trajectory_edit(self, _):
         edit_trajectory_window = EditTrajectory(self, self.robot, self.call_back_refresh, self.listbox.curselection(), self.folder_path, [file.split(".")[:-1][0] for file in os.listdir(self.folder_path) if file.endswith(".json")])

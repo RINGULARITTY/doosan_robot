@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import time
 from path_changer import resource_path
+from window_tools import center_right_window
 
 class Password(ctk.CTkToplevel):   
     def __init__(self, master, callback):
@@ -10,8 +11,9 @@ class Password(ctk.CTkToplevel):
         
         self.grab_set()
         self.iconbitmap(resource_path("./icon.ico"))
-        
+        center_right_window(self, 300, 155)
         self.title("Mot de passe")
+        
         self.geometry("300x155")
         
         self.label = ctk.CTkLabel(self, text="Mot de Passe", font=("Arial", 20))

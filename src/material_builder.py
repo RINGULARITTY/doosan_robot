@@ -54,7 +54,7 @@ class Materials:
                 f.write(encrypted_data)
 
 if __name__ == "__main__":
-    
+
     # Create materials
     steel = Material("steel", {
         "bead_widths": [3, 4, 5, 6, 8, 10, 12],

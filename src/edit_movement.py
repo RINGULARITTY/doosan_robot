@@ -8,6 +8,7 @@ from lancement import Run
 from path_changer import resource_path
 from tcp_ip_advance.computer import TCPClient
 from typing import List
+from window_tools import center_right_window
 
 class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
@@ -17,7 +18,7 @@ class EditMovement(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
 
         self.title("Editeur Mouvement")
-        self.geometry("715x425")
+        center_right_window(self, 715, 425)
         
         self.robot: TCPClient = robot
         self.callback = callback

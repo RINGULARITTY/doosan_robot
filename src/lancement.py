@@ -5,6 +5,7 @@ from tcp_ip_advance.computer import TCPClient
 import threading
 from tkinter import TclError
 from path_changer import resource_path
+from window_tools import center_right_window
 
 class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=1, callback=lambda: 0):
@@ -14,7 +15,7 @@ class Run(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Production")
-        self.geometry("850x725")
+        center_right_window(self, 850, 725)
         
         self.robot: TCPClient = robot
         self.callback = callback

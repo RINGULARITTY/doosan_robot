@@ -9,7 +9,7 @@ from path_changer import resource_path
 from tcp_ip_advance.computer import TCPClient
 from typing import List
 from edit_movement import EditMovement
-
+from window_tools import center_right_window
 
 class EditTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, selected_index, folder_path, trajectories):
@@ -24,7 +24,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Editeur Trajectoire")
-        self.geometry("775x575")
+        center_right_window(self, 775, 575)
         
         self.trajectory: Trajectory = Trajectory.load(os.path.join(self.folder_path, trajectories[selected_index] + ".json"))
         self.trajectory.compile(self.robot)

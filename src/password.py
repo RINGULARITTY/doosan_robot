@@ -5,12 +5,12 @@ from window_tools import center_right_window
 
 class Password(ctk.CTkToplevel):   
     def __init__(self, master, callback):
-        super().__init__()
+        super().__init__(master)
         
         self.callback = callback
         
         self.grab_set()
-        self.iconbitmap(resource_path("./icon.ico"))
+        self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
         center_right_window(self, 300, 155)
         self.title("Mot de passe")
         

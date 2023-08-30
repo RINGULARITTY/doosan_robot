@@ -12,10 +12,10 @@ from window_tools import center_right_window
 
 class EditMovement(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, trajectory: Trajectory, movement_index):
-        super().__init__()
+        super().__init__(master)
 
         self.grab_set()
-        self.iconbitmap(resource_path("./icon.ico"))
+        self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
 
         self.title("Editeur Mouvement")
         center_right_window(self, 650, 425)

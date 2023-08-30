@@ -6,16 +6,18 @@ import threading
 from tkinter import TclError
 from path_changer import resource_path
 from window_tools import center_right_window
+from material_builder import Materials
+from key_gen import KeyGen
 
 class Run(ctk.CTkToplevel):
     def __init__(self, master, robot, trajectory, pieces_amount=1, callback=lambda: 0):
-        super().__init__()
+        super().__init__(master)
         
         self.grab_set()
-        self.iconbitmap(resource_path("./icon.ico"))
+        self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
         
         self.title("Production")
-        center_right_window(self, 650, 725)
+        center_right_window(self, 650, 775)
         
         self.robot: TCPClient = robot
         self.callback = callback
@@ -23,26 +25,38 @@ class Run(ctk.CTkToplevel):
         self.trajectory: Trajectory = trajectory
         self.pieces_amount = pieces_amount
         
-        self.label3 = ctk.CTkLabel(self, text="Lancement", font=("Arial", 20))
-        self.label3.pack(pady=10)
-        
-        self.label4 = ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 14))
-        self.label4.pack(pady=5)
-        
-        self.label5 = ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14))
-        self.label5.pack(pady=5)
+        ctk.CTkLabel(self, text="Lancement", font=("Arial", 20)).pack(pady=10)
+        ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 18)).pack(pady=5)
+        ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14)).pack(pady=5)
 
         self.amount_entry = ctk.CTkEntry(self)
         self.amount_entry.pack(pady=10)
         self.amount_entry.configure(textvariable=f"{pieces_amount}")
         
+        self.materials = Materials()
+        self.key = KeyGen.get_default_key()
+        material_choices = []
+        if self.key == None:
+            ctk.CTkLabel(self, text="Clef de déchiffrement manquante", font=("Arial", 12)).pack(pady=5)
+        else:
+            self.materials.load(self.key)
+            materials_names = self.materials.get_materials_names()
+            if len(materials_names) == 0:
+                ctk.CTkLabel(self, text="Materiaux manquants", font=("Arial", 12)).pack(pady=5)
+            material_choices = material_choices + materials_names
+        
+        ctk.CTkLabel(self, text="Choisissez un matériaux", font=("Arial", 14)).pack(pady=5)
+        material_choices = ["Sans soudure"] + material_choices
+        self.material_choice = ctk.CTkComboBox(self, values=material_choices, width=400)
+        self.material_choice.pack(pady=10)
+        self.material_choice.set("Sans soudure")
+        
         self.start_btn = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
-        self.start_btn.pack(pady=20)
+        self.start_btn.pack(pady=15)
         
-        self.label6 = ctk.CTkLabel(self, text="Avancement", font=("Arial", 14))
-        self.label6.pack(pady=5)
+        ctk.CTkLabel(self, text="Avancement", font=("Arial", 16)).pack(pady=5)
         
-        self.textbox = ctk.CTkTextbox(self, state='disabled', height=200, font=("Arial", 14))
+        self.textbox = ctk.CTkTextbox(self, state='disabled', font=("Arial", 14))
         self.textbox.pack(padx=5, fill="both", expand=True)
         
         self.stop_btn = ctk.CTkButton(self, text="Arrêt", command=self.cancel_btn)
@@ -112,6 +126,7 @@ class Run(ctk.CTkToplevel):
         
         self.add_text(f"\nTrajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
+        self.add_text(f"Materiau : {'Sans Soudure' if self.material_choice.get() == 'Sans Soudure' else Materials.TRANSLATIONS[self.material_choice.get()]}")
         self.add_text(f"{'-'*20}\n")
         
         ACTIONS = {

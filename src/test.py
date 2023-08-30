@@ -4,8 +4,7 @@ import tkinter as tk
 def open_child():
     child_window = ctk.CTkToplevel(root)
     child_window.grab_set()
-    icon = tk.PhotoImage(file="./icon.png")
-    child_window.iconphoto(True, icon)
+    child_window.after(200, lambda: child_window.iconbitmap("icon.ico"))
     ctk.CTkLabel(child_window, text="Je suis une fenêtre enfant").pack()
     ctk.CTkButton(child_window, text="Fermer", command=child_window.destroy).pack()
 

@@ -5,7 +5,7 @@ import os
 import pandas as pd
 import lz4.frame
 from cryptography.fernet import Fernet
-from key_gen import get_key
+from key_gen import KeyGen
 import pickle
 
 class Material:
@@ -20,7 +20,11 @@ class Material:
         return m
 
 class Materials:
-    MATERIALS_FOLDER = "./materials"
+    MATERIALS_FOLDER = resource_path("materials")
+    TRANSLATIONS = {
+        "steel": "Acier",
+        "aluminum": "Aluminium"
+    }
     
     def __init__(self):
         self.materials: List[Material] = []
@@ -52,11 +56,22 @@ class Materials:
             encrypted_data = cipher_suite.encrypt(compressed_data)
             with open(os.path.join(Materials.MATERIALS_FOLDER, f"{m.name}.bin"), 'wb') as f:
                 f.write(encrypted_data)
+            
+    def get_materials_names(self):
+        return [m.name for m in self.materials]
 
 if __name__ == "__main__":
 
     # Create materials
-    steel = Material("steel", {
+    STEEL = Material("steel", {
+        "bead_widths": [3, 4, 5, 6, 8, 10, 12],
+        "job": [9]*7,
+        "synergic_id": [0]*7,
+        "robot_speed": [8.33]*7,
+        "passes_amount": [1]*7
+    })
+    
+    ALUMINUM = Material("aluminium", {
         "bead_widths": [3, 4, 5, 6, 8, 10, 12],
         "job": [9]*7,
         "synergic_id": [0]*7,
@@ -65,10 +80,10 @@ if __name__ == "__main__":
     })
 
     # Load key to decode
-    key = get_key("test_2023_08_29_20_46_28")
+    key = KeyGen.get_key("main_2023_08_30_15_23_16")
     
     # Save all materials
-    Materials().add_materials([steel]).save(key)
+    Materials().add_materials([STEEL, ALUMINUM]).save(key)
     
     # Load materials
     m = Materials()

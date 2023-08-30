@@ -18,7 +18,7 @@ class NewTrajectory(ctk.CTkToplevel):
         super().__init__()
         
         self.grab_set()
-        self.iconbitmap(resource_path("./icon.ico"))
+        self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
         self.title("Ajouter un élément")
         center_right_window(self, 650, 850)
 

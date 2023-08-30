@@ -21,7 +21,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.callback = callback
         self.folder_path = folder_path
         
-        self.iconbitmap(resource_path("./icon.ico"))
+        self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
         
         self.title("Editeur Trajectoire")
         center_right_window(self, 650, 575)

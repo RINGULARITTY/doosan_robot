@@ -2,7 +2,6 @@ import pandas as pd
 from typing import Dict, List
 from path_changer import resource_path
 import os
-import pandas as pd
 import lz4.frame
 from cryptography.fernet import Fernet
 from key_gen import KeyGen
@@ -63,32 +62,3 @@ class Materials:
     
     def get_material_from_name(self, name):
         return [m.data for m in self.materials if m.name == name][0]
-
-if __name__ == "__main__":
-
-    # Create materials
-    STEEL = Material("steel", {
-        "bead_widths": [3, 4, 5, 6, 8, 10, 12],
-        "job": [9]*7,
-        "synergic_id": [0]*7,
-        "robot_speed": [8.33]*7,
-        "passes_amount": [1]*7
-    })
-    
-    ALUMINUM = Material("aluminum", {
-        "bead_widths": [3, 4, 5, 6, 8, 10, 12],
-        "job": [9]*7,
-        "synergic_id": [0]*7,
-        "robot_speed": [8.33]*7,
-        "passes_amount": [1]*7
-    })
-
-    # Load key to decode
-    key = KeyGen.get_key("main_2023_08_30_15_23_16")
-    
-    # Save all materials
-    Materials().add_materials([STEEL, ALUMINUM]).save(key)
-    
-    # Load materials
-    m = Materials()
-    m.load(key)

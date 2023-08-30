@@ -27,6 +27,3 @@ class KeyGen:
             return
         with open(os.path.join(KeyGen.KEYS_FOLDER, f"{key_files[0]}"), 'rb') as key_file:
             return key_file.read()
-
-if __name__ == "__main__":
-    KeyGen.generate_key("main")

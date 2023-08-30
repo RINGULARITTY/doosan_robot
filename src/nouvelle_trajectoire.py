@@ -28,29 +28,25 @@ class NewTrajectory(ctk.CTkToplevel):
         self.trajectory: Trajectory = Trajectory("")
         self.directory = directory
 
-        self.title_label = ctk.CTkLabel(self, text="Nouvelle Trajectoire", font=("Arial", 20))
-        self.title_label.pack(pady=10)
+        font = ctk.CTkFont("Arial", 20, weight="bold")
+        ctk.CTkLabel(self, text="NOUVELLE TRAJECTOIRE", font=font, text_color="#327DFF").pack(pady=10)
         
-        self.label3 = ctk.CTkLabel(self, text="1 - Suivez les instructions", font=("Arial", 14))
-        self.label3.pack(pady=5)
+        ctk.CTkLabel(self, text="1 - Suivez les instructions pour ajouter des mouvements").pack(pady=5)
         
-        self.textbox = ctk.CTkTextbox(self, state='disabled', height=200, font=("Arial", 14))
+        self.textbox = ctk.CTkTextbox(self, state='disabled', height=200)
         self.textbox.pack(padx=10, pady=10, fill="both", expand=True)
         
-        self.label2 = ctk.CTkLabel(self, text="Mouvements", font=("Arial", 14))
-        self.label2.pack(pady=5)
+        ctk.CTkLabel(self, text="Mouvements").pack(pady=5)
 
-        self.listbox = CTkListbox(self, command=self.on_list_click, height=75)
+        self.listbox = CTkListbox(self, command=self.on_list_click)
         self.listbox.pack(fill="both", expand=True, padx=10, pady=10)
         self.refresh_listbox()
 
-        self.label4 = ctk.CTkLabel(self, text="3 - Testez la trajectoire", font=("Arial", 14))
-        self.label4.pack(pady=5)
+        ctk.CTkLabel(self, text="2 - Testez la trajectoire").pack(pady=5)
         self.button1 = ctk.CTkButton(self, text="Test", command=self.test_trajectory)
         self.button1.pack(pady=10)
 
-        self.label5 = ctk.CTkLabel(self, text="4 - Si la trajectoire est correcte, sauvegardez", font=("Arial", 14))
-        self.label5.pack(pady=5)
+        ctk.CTkLabel(self, text="3 - Si la trajectoire est correcte, sauvegardez").pack(pady=5)
         self.button2 = ctk.CTkButton(self, text="Sauvegarder", command=self.save_trajectory)
         self.button2.pack(pady=10)
         

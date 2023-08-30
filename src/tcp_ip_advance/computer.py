@@ -18,7 +18,6 @@ limitations under the License.
 
 import socket
 import time
-import math
 from typing import List, Tuple, Union
 
 class TCPClient():

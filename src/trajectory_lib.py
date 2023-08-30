@@ -1,6 +1,6 @@
 import os
 from math import sqrt, atan, pi
-from typing import List, Dict
+from typing import List
 import jsonpickle
 from tkinter import messagebox
 from tcp_ip_advance.computer import TCPClient
@@ -92,7 +92,7 @@ class Movement:
                 return f"{Movement.TRANSLATIONS[self.nature]}, {self.config}, cordon={self.wield_width}, {self.str_coords_pos()}, v={self.vel}, a={self.acc}"
 
     def str_coords_pos(self):
-        return ", ".join([f"P{i + 1}({c.str_pos()})" for i, c in enumerate(self.coords)])
+        return ", ".join([f"p{i + 1}({c.str_pos()})" for i, c in enumerate(self.coords)])
     
     def set_c0(self):
         for c in self.coords:

@@ -25,9 +25,11 @@ class Run(ctk.CTkToplevel):
         self.trajectory: Trajectory = trajectory
         self.pieces_amount = pieces_amount
         
-        ctk.CTkLabel(self, text="Lancement", font=("Arial", 20)).pack(pady=10)
+        font = ctk.CTkFont("Arial", 20, weight="bold")
+        ctk.CTkLabel(self, text="LANCEMENT", font=font, text_color="#327DFF").pack(pady=10)
+
         ctk.CTkLabel(self, text=f"Trajectoire choisie : {self.trajectory.name}", font=("Arial", 18)).pack(pady=5)
-        ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire", font=("Arial", 14)).pack(pady=5)
+        ctk.CTkLabel(self, text="Choisissez le nombre de pièces à produire").pack(pady=5)
 
         self.amount_entry = ctk.CTkEntry(self)
         self.amount_entry.pack(pady=10)
@@ -45,7 +47,7 @@ class Run(ctk.CTkToplevel):
                 ctk.CTkLabel(self, text="Materiaux manquants", font=("Arial", 12)).pack(pady=5)
             material_choices = material_choices + materials_names
         
-        ctk.CTkLabel(self, text="Choisissez un matériaux", font=("Arial", 14)).pack(pady=5)
+        ctk.CTkLabel(self, text="Choisissez un matériaux").pack(pady=5)
         material_choices = [Materials.NO_WIELD] + material_choices
         self.material_choice = ctk.CTkComboBox(self, values=material_choices, width=400)
         self.material_choice.pack(pady=10)
@@ -56,7 +58,7 @@ class Run(ctk.CTkToplevel):
         
         ctk.CTkLabel(self, text="Avancement", font=("Arial", 16)).pack(pady=5)
         
-        self.textbox = ctk.CTkTextbox(self, state='disabled', font=("Arial", 14))
+        self.textbox = ctk.CTkTextbox(self, state='disabled')
         self.textbox.pack(padx=5, fill="both", expand=True)
         
         self.stop_btn = ctk.CTkButton(self, text="Arrêt", command=self.cancel_btn)

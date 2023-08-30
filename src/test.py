@@ -1,18 +1,12 @@
 import customtkinter as ctk
-import tkinter as tk
 
-def open_child():
-    child_window = ctk.CTkToplevel(root)
-    child_window.grab_set()
-    child_window.after(200, lambda: child_window.iconbitmap("icon.ico"))
-    ctk.CTkLabel(child_window, text="Je suis une fenêtre enfant").pack()
-    ctk.CTkButton(child_window, text="Fermer", command=child_window.destroy).pack()
+ctk.set_default_color_theme("Office_Like.json")
+ctk.set_appearance_mode("light")
 
 root = ctk.CTk()
-root.title("Fenêtre parent")
+root.geometry("450x350")
 
-ctk.CTkLabel(root, text="Je suis la fenêtre parent").pack()
-ctk.CTkButton(root, text="Ouvrir fenêtre enfant", command=open_child).pack()
-ctk.CTkButton(root, text="Issou", command=lambda : print("issou")).pack()
+combo = ctk.CTkComboBox(root, values=["Item 1", "Item 2", "Item 3"])
+combo.pack()
 
 root.mainloop()

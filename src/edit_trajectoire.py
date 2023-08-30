@@ -1,15 +1,13 @@
 import customtkinter as ctk
 from CTkListbox import CTkListbox
-from trajectory_lib import Trajectory, Movement
-from password import Password
 import os
 from tkinter import messagebox
 from lancement import Run
 from path_changer import resource_path
-from tcp_ip_advance.computer import TCPClient
 from typing import List
 from edit_movement import EditMovement
 from window_tools import center_right_window
+from trajectory_lib import Trajectory
 
 class EditTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, selected_index, folder_path, trajectories):
@@ -29,12 +27,12 @@ class EditTrajectory(ctk.CTkToplevel):
         self.trajectory: Trajectory = Trajectory.load(os.path.join(self.folder_path, trajectories[selected_index] + ".json"))
         self.trajectory.compile(self.robot)
         
-        self.name_entry = ctk.CTkEntry(self, font=("Arial", 20), width=250)
+        font = ctk.CTkFont("Arial", 20, weight="bold")
+        self.name_entry = ctk.CTkEntry(self, font=font, text_color="#327DFF", width=250)
         self.name_entry.pack(pady=10)
         self.name_entry.insert(0, self.trajectory.name)
 
-        self.title_label = ctk.CTkLabel(self, text="Mouvements", font=("Arial", 14))
-        self.title_label.pack(pady=5)
+        ctk.CTkLabel(self, text="Mouvements").pack(pady=5)
 
         self.listbox = CTkListbox(self, command=self.on_list_click)
         self.listbox.pack(fill="both", expand=True, padx=10, pady=10)
@@ -43,9 +41,9 @@ class EditTrajectory(ctk.CTkToplevel):
 
         self.frame1 = ctk.CTkFrame(self)
         self.frame1.pack()
-        self.run = ctk.CTkButton(self.frame1, text="Lancer", command=self.on_run, font=("Arial", 14))
+        self.run = ctk.CTkButton(self.frame1, text="Lancer", command=self.on_run)
         self.run.pack(side="left", padx=5, pady=10)
-        self.save = ctk.CTkButton(self.frame1, text="Sauvegarder", command=self.on_save, font=("Arial", 14))
+        self.save = ctk.CTkButton(self.frame1, text="Sauvegarder", command=self.on_save)
         self.save.pack(side="left", padx=5, pady=10)
 
     def refresh_listbox(self):

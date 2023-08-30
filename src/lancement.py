@@ -124,11 +124,12 @@ class Run(ctk.CTkToplevel):
         self.add_text("Assurez vous que le robot est dégagé de la pièce")
         self.robot.wait_manual_guide()
         
-        wield = self.material_choice.get()
         self.add_text(f"\nTrajectoire : {'test' if self.trajectory.name == '' else self.trajectory.name}")
         self.add_text(f"Pièces à produire : {self.pieces_amount}")
-        self.add_text(f"Materiau : {'Sans Soudure' if self.material_choice.get() == 'Sans Soudure' else Materials.TRANSLATIONS[self.material_choice.get()]}")
+        self.add_text(f"Materiau : {self.material_choice.get()}")
         self.add_text(f"{'-'*20}\n")
+        
+        wield = 'Sans Soudure' if self.material_choice.get() == 'Sans Soudure' else {v: k for k, v in Materials.TRANSLATIONS.items()}[self.material_choice.get()]
         
         ACTIONS = {
             Movement.ORIGIN: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),

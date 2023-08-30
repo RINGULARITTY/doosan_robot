@@ -113,14 +113,14 @@ class EditMovement(ctk.CTkToplevel):
         
         if self.wield_frame != None:
             try:
-                wield_width = int(self.coords[i][j].get())
+                wield_width = int(self.wield.get())
                 assert wield_width in [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
                 self.trajectory.trajectory[self.movement_index].wield_width = wield_width
             except:
                 messagebox.showerror(
                     title="Erreur", 
                     icon="error", 
-                    message=f"Taille de cordon incorrecte : {int(self.coords[i][j].get())}"
+                    message=f"Taille de cordon incorrecte : {self.wield.get()}"
                 )
                 return
         

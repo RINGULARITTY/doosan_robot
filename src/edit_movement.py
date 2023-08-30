@@ -47,7 +47,7 @@ class EditMovement(ctk.CTkToplevel):
                 
                 fs.append(ctk.CTkEntry(self.frames[-1], font=("Arial", 14)))
                 fs[-1].pack(side="left", padx=5, pady=5)
-                fs[-1].configure(textvariable=f"{c.get_with_index(j)}")
+                fs[-1].insert(0, f"{c.get_with_index(j)}")
                 fs[-1].configure(state="disabled")
             
             self.labels.append(ls)
@@ -56,7 +56,7 @@ class EditMovement(ctk.CTkToplevel):
             self.change_coord.append(ctk.CTkButton(self.frames[-1], text="Nouvelle prise", command=lambda: self.on_new_take(i), font=("Arial", 14)))
             self.change_coord[-1].pack(side="left", padx=5)
         
-        match self.trajectory.trajectory[self.movement_index].nature:
+        match movement.nature:
             case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.PASS | Movement.CLEARANCE:
                 self.wield_frame = None
             case _:
@@ -65,6 +65,7 @@ class EditMovement(ctk.CTkToplevel):
                 self.wield_label = ctk.CTkLabel(self.wield_frame, text="Taille cordon", font=("Arial", 14))
                 self.wield_label.pack(side="left", padx=5)
                 self.wield = ctk.CTkEntry(self.wield_frame, font=("Arial", 14))
+                self.wield.insert(0, f"{movement.wield_width}")
                 self.wield.pack(side="left")
         
         self.space = ctk.CTkLabel(self, text="", font=("Arial", 14))

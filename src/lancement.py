@@ -46,7 +46,7 @@ class Run(ctk.CTkToplevel):
             material_choices = material_choices + materials_names
         
         ctk.CTkLabel(self, text="Choisissez un matériaux", font=("Arial", 14)).pack(pady=5)
-        material_choices = ["Sans soudure"] + material_choices
+        material_choices = [Materials.NO_WIELD] + material_choices
         self.material_choice = ctk.CTkComboBox(self, values=material_choices, width=400)
         self.material_choice.pack(pady=10)
         self.material_choice.set("Sans soudure")
@@ -129,7 +129,9 @@ class Run(ctk.CTkToplevel):
         self.add_text(f"Materiau : {self.material_choice.get()}")
         self.add_text(f"{'-'*20}\n")
         
-        wield = 'Sans Soudure' if self.material_choice.get() == 'Sans Soudure' else {v: k for k, v in Materials.TRANSLATIONS.items()}[self.material_choice.get()]
+        wield = Materials.NO_WIELD if self.material_choice.get() == Materials.NO_WIELD else {v: k for k, v in Materials.TRANSLATIONS.items()}[self.material_choice.get()]
+        if wield != "Sans Soudure":
+            material = self.materials.get_material_from_name(wield)
         
         ACTIONS = {
             Movement.ORIGIN: lambda m: self.robot.goto(*m.coords[0].get_as_array(), m.vel, m.acc, "DR_MV_APP_NONE", "DR_BASE", "DR_MV_MOD_ABS"),
@@ -153,16 +155,20 @@ class Run(ctk.CTkToplevel):
                 self.add_text(f"[{j+1}/{len(self.trajectory.trajectory)}] Lancement de \"{Movement.TRANSLATIONS[m.nature]}, {m.config}, cordon={m.wield_width}, {m.str_coords_pos()}\" :", end=" ")
 
                 try:
-                    if wield != 'Sans Soudure' and m.wield_width > 0:
+                    if wield != Materials.NO_WIELD and m.wield_width > 0:
                         self.add_text("Soudage activé", end=" ")
-                        self.robot.start_wield()
+                        self.robot.start_wield(
+                            material.loc[material['bead_widths'] == m.wield_width, 'robot_speed'].iloc[0],
+                            material.loc[material['bead_widths'] == m.wield_width, 'job'].iloc[0],
+                            material.loc[material['bead_widths'] == m.wield_width, 'synergic_id'].iloc[0],
+                        )
                     res = ACTIONS[m.nature](m)
                     if not res[0]:
                         self.add_text(f"Erreur machine : {res[1]}")
                         self.stop_thread_flag = True
                         return
                     self.add_text("Mouvement Ok", end=" ")
-                    if wield != 'Sans Soudure' and m.wield_width > 0:
+                    if wield != Materials.NO_WIELD and m.wield_width > 0:
                         self.add_text("Soudage désactivé", end=" ")
                         self.robot.end_wield()
                     else:

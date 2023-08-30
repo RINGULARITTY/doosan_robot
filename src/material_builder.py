@@ -21,6 +21,7 @@ class Material:
 
 class Materials:
     MATERIALS_FOLDER = resource_path("materials")
+    NO_WIELD = 'Sans Soudure'
     TRANSLATIONS = {
         "steel": "Acier",
         "aluminum": "Aluminium"
@@ -59,6 +60,9 @@ class Materials:
             
     def get_materials_names(self):
         return [m.name for m in self.materials]
+    
+    def get_material_from_name(self, name):
+        return [m.data for m in self.materials if m.name == name][0]
 
 if __name__ == "__main__":
 

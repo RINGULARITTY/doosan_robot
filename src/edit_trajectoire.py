@@ -77,7 +77,10 @@ class EditTrajectory(ctk.CTkToplevel):
         if self.trajectory.name != self.name_entry.get():
             os.remove(os.path.join(self.folder_path, self.trajectory.name + ".json"))
             self.trajectory.name = self.name_entry.get()
-        if not self.trajectory.save(self.folder_path):
-            return
+            if not self.trajectory.save(self.folder_path):
+                return
+        else:
+            if not self.trajectory.save(self.folder_path, True):
+                return
         self.callback()
         self.after(250, self.destroy())

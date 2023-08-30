@@ -112,8 +112,8 @@ class Trajectory:
         self.name: str = name
         self.trajectory: List[Movement] = trajectory
 
-    def save(self, directory) -> bool:
-        if os.path.exists(os.path.join(directory, self.name + ".json")):
+    def save(self, directory, override=False) -> bool:
+        if not override and os.path.exists(os.path.join(directory, self.name + ".json")):
             messagebox.showerror(
                 title="Erreur", 
                 icon="error", 

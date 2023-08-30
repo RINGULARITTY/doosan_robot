@@ -15,7 +15,7 @@ class Run(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Production")
-        center_right_window(self, 850, 725)
+        center_right_window(self, 650, 725)
         
         self.robot: TCPClient = robot
         self.callback = callback

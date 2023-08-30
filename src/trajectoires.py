@@ -14,7 +14,7 @@ class MainWindow(ctk.CTk):
         super().__init__()
 
         self.title("Trajectoires")
-        center_right_window(self, 500, 625)
+        center_right_window(self, 500, 700)
 
         self.label = ctk.CTkLabel(self, text="TRAJECTOIRES", font=("Arial", 20))
         self.label.pack(pady=10)

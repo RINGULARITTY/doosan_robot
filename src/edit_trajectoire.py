@@ -24,7 +24,7 @@ class EditTrajectory(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
         
         self.title("Editeur Trajectoire")
-        center_right_window(self, 775, 575)
+        center_right_window(self, 650, 575)
         
         self.trajectory: Trajectory = Trajectory.load(os.path.join(self.folder_path, trajectories[selected_index] + ".json"))
         self.trajectory.compile(self.robot)

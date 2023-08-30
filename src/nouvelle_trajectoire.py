@@ -20,7 +20,7 @@ class NewTrajectory(ctk.CTkToplevel):
         self.grab_set()
         self.iconbitmap(resource_path("./icon.ico"))
         self.title("Ajouter un élément")
-        center_right_window(self, 700, 850)
+        center_right_window(self, 650, 850)
 
         self.robot: TCPClient = robot
         self.callback = callback
@@ -114,7 +114,7 @@ class NewTrajectory(ctk.CTkToplevel):
                     nature_choice = "Passage"
                     break
             
-            nature_choice = {v: k for k, v in Movement.TRANSLATIONS}[nature_choice]
+            nature_choice = {v: k for k, v in Movement.TRANSLATIONS.items()}[nature_choice]
             
             if self.stop_thread_flag or not self._is_window_alive():
                 break

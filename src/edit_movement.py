@@ -18,7 +18,7 @@ class EditMovement(ctk.CTkToplevel):
         self.iconbitmap(resource_path("./icon.ico"))
 
         self.title("Editeur Mouvement")
-        center_right_window(self, 715, 425)
+        center_right_window(self, 650, 425)
         
         self.robot: TCPClient = robot
         self.callback = callback

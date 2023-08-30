@@ -105,16 +105,14 @@ class NewTrajectory(ctk.CTkToplevel):
                 time.sleep(ACTUALIZATION_TIME)
                 
                 if self.robot.get_digital_input(1):
-                    nature_choice = "Linéaire"
+                    nature_choice = Movement.LINEAR
                     break
                 elif self.robot.get_digital_input(2):
-                    nature_choice = "Circulaire"
+                    nature_choice = Movement.CIRCULAR
                     break
                 elif i != 0 and self.robot.get_digital_input(3):
-                    nature_choice = "Passage"
+                    nature_choice = Movement.PASS
                     break
-            
-            nature_choice = {v: k for k, v in Movement.TRANSLATIONS.items()}[nature_choice]
             
             if self.stop_thread_flag or not self._is_window_alive():
                 break
@@ -122,7 +120,7 @@ class NewTrajectory(ctk.CTkToplevel):
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2) or self.robot.get_digital_input(3):
                 pass
             
-            self.add_text(f"Choix : {nature_choice}")
+            self.add_text(f"Choix : {Movement.TRANSLATIONS[nature_choice]}")
 
             self.add_text("- Placer la machine au point voulu puis appuyez sur le bouton vert.")
             self.robot.wait_manual_guide()
@@ -137,7 +135,7 @@ class NewTrajectory(ctk.CTkToplevel):
             point1 = Coordinate(*self.robot.get_current_posx()[0])
             self.add_text(f"Coordonées du point : {point1.str_pos()}")
 
-            if nature_choice == Movement.CIRCULAR:
+            if nature_choice == Movement.CIRCULAR and i != 0:
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
                 self.robot.wait_manual_guide()
                 while not self.robot.get_digital_input(1) and not self.stop_thread_flag and self._is_window_alive():
@@ -171,7 +169,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
                 while True:
                     dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
-                    dialog.grab_set()
+                    center_right_window(dialog, 250, 150)
                     wield_width = dialog.get_input()
                     try:
                         wield_width = int(wield_width)

@@ -23,7 +23,7 @@ class EditMovement(ctk.CTkToplevel):
         self.robot: TCPClient = robot
         self.callback = callback
         
-        self.trajectory = trajectory
+        self.trajectory: Trajectory = trajectory
         self.movement_index = movement_index
         
         self.title_label = ctk.CTkLabel(self, text="Mouvement", font=("Arial", 20))
@@ -56,7 +56,7 @@ class EditMovement(ctk.CTkToplevel):
             self.change_coord.append(ctk.CTkButton(self.frames[-1], text="Nouvelle prise", command=lambda: self.on_new_take(i), font=("Arial", 14)))
             self.change_coord[-1].pack(side="left", padx=5)
         
-        match self.trajectory.trajectory.nature:
+        match self.trajectory.trajectory[self.movement_index].nature:
             case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.PASS | Movement.CLEARANCE:
                 self.wield_frame = None
             case _:

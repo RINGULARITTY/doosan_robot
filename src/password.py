@@ -14,8 +14,6 @@ class Password(ctk.CTkToplevel):
         center_right_window(self, 300, 155)
         self.title("Mot de passe")
         
-        self.geometry("300x155")
-        
         self.label = ctk.CTkLabel(self, text="Mot de Passe", font=("Arial", 20))
         self.label.pack(pady=10)
         

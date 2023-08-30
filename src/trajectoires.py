@@ -57,7 +57,7 @@ class MainWindow(ctk.CTk):
         if not response:
             self.set_text_log(f"Erreur dialogue robot : {response}")
             return
-        self.set_text_log(f", Robot connecté")
+        self.set_text_log(f"Robot connecté")
 
     def refresh_listbox(self):
         self.listbox.delete("all")

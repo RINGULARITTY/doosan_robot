@@ -165,7 +165,6 @@ class NewTrajectory(ctk.CTkToplevel):
                 wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
                 while True:
                     dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
-                    center_right_window(dialog, 250, 150)
                     wield_width = dialog.get_input()
                     try:
                         wield_width = int(wield_width)
@@ -211,7 +210,6 @@ class NewTrajectory(ctk.CTkToplevel):
                 self.trajectory.add_movement(self.robot, Movement(nature_choice, configuration, wield_width, [point1]))
             
             self.refresh_listbox()
-            
             self.add_text(f"Enregistré")
             
             i += 1

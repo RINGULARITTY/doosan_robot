@@ -4,7 +4,6 @@ from path_changer import resource_path
 import os
 import lz4.frame
 from cryptography.fernet import Fernet
-from key_gen import KeyGen
 import pickle
 
 class Material:

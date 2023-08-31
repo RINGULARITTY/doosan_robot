@@ -1,5 +1,4 @@
 import customtkinter as ctk
-import time
 from path_changer import resource_path
 from window_tools import center_right_window
 

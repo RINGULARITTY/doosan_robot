@@ -117,9 +117,9 @@ class TCPClient():
         response = self.send_and_receive(f"gotoc,{','.join(pos1)},{','.join(pos2)},{vel},{acc},{app_type},{ref},{mod}")
         return response == "gotoc,done", response.split(",")[1]
 
-    def offset(self, pos, z) -> Union[None, List[float]]:  
-        pos = [str(p) for p in pos]     
-        response = self.send_and_receive(f"offset,{','.join(pos)},{z}")
+    def offset(self, pos, x, y, z) -> Union[None, List[float]]:  
+        pos = [str(p) for p in pos]
+        response = self.send_and_receive(f"offset,{','.join(pos)},{x},{y}{z}")
         if not "offset,done" in response:
             return None
         return [float(p) for p in response.split(",")[2:]]

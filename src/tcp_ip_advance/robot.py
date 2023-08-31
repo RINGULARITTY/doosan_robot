@@ -115,9 +115,10 @@ class TCPServer:
             self.write("gotoc,{}".format(ex))
         self.write("gotoc,done")
         
-    def offset(self, msg_pos, z):
+    def offset(self, msg_pos, x, y, z):
         self.robot_log("debug " + "offset")
-        pos, z = [float(elem) for elem in msg_pos], float(z)
+        x, y, z = float(x), float(y), float(z)
+        pos = [float(elem) for elem in msg_pos]
 
         try:
             offset = coord_transform(pos, DR_BASE, DR_TOOL)
@@ -125,6 +126,8 @@ class TCPServer:
             self.write("gotop,{}".format(ex))
 
         self.robot_log("debug " + "offset: " + str(offset))
+        offset[0] += x
+        offset[1] += y
         offset[2] += z
         self.robot_log("debug " + "offset: " + str(offset))
 

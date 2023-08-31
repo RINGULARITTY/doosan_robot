@@ -20,6 +20,8 @@ class Material:
 class Materials:
     MATERIALS_FOLDER = resource_path("materials")
     NO_WIELD = 'Sans Soudure'
+    WIELD_WIDTHS = [0, 3, 4, 5, 6, 8, 10, 12]
+    
     TRANSLATIONS = {
         "steel": "Acier",
         "aluminum": "Aluminium"

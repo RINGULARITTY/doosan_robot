@@ -73,9 +73,6 @@ class Movement:
     PA: str = "PA"
     PB: str = "PB"
 
-    # app_type pas sur premier movement ni passage
-    # premier move doit être movel ou movec
-
     def __init__(self, nature, config, wield_width, coords, vel=30, acc=20):
         self.nature: str = nature
         self.config: str = config

@@ -8,6 +8,7 @@ from tcp_ip_advance.computer import TCPClient
 import json
 from path_changer import resource_path
 from window_tools import center_right_window
+import shutil
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -80,7 +81,15 @@ class MainWindow(ctk.CTk):
         self.refresh_listbox()
 
 
+def make_backup():
+    trajectories_folder = resource_path("fichiers_trajectoires")
+    backup_folder = resource_path("backup")
+    for tf in [f for f in os.listdir(trajectories_folder) if f.endswith('.json')]:
+        shutil.copy(os.path.join(trajectories_folder, tf), os.path.join(backup_folder, tf))
+
+
 if __name__ == "__main__":
+    make_backup()
     ctk.set_default_color_theme(resource_path("Office_Like.json"))
     ctk.set_appearance_mode("light")
     main_window = MainWindow()

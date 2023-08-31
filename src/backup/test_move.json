@@ -1,0 +1,129 @@
+{
+  "py/object": "trajectory_lib.Trajectory",
+  "name": "test_move",
+  "trajectory": [
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "ORIGIN",
+      "config": "P0",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -4.49,
+          "y": 369.3,
+          "z": 65.08,
+          "a": 90,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "APPROACH_POINT",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -71.0,
+          "y": 508.3139953613281,
+          "z": 203.20700073242188,
+          "a": 90.00878143310547,
+          "b": 180.0,
+          "c": -1.3462125062942505
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -71.0,
+          "y": 508.314,
+          "z": 153.207,
+          "a": 91.355,
+          "b": 180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "CIRCULAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 37.374,
+          "y": 481.502,
+          "z": 150.724,
+          "a": 58.114,
+          "b": 180,
+          "c": 0
+        },
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 115.205,
+          "y": 395.833,
+          "z": 149.062,
+          "a": 167.398,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "PASS",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -62.06,
+          "y": 426.233,
+          "z": 97.068,
+          "a": 167.398,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "CLEARANCE",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -62.060001373291016,
+          "y": 426.2330017089844,
+          "z": 147.06800842285156,
+          "a": 161.48214721679688,
+          "b": -180.0,
+          "c": -5.915859699249268
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    }
+  ]
+}

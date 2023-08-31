@@ -127,4 +127,4 @@ class EditMovement(ctk.CTkToplevel):
         self.after(250, self.destroy)
 
 if __name__ == '__main__':
-    EditMovement(ctk.CTk(), None, lambda : 0, Trajectory.load("./fichiers_trajectoires/test_move.json"), 1).mainloop()
+    EditMovement(ctk.CTk(), None, lambda : 0, Trajectory.load("./fichiers_trajectoires/test_move.json"), 2).mainloop()

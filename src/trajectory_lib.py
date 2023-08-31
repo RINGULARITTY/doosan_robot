@@ -7,24 +7,24 @@ from tcp_ip_advance.computer import TCPClient
 
 class Coordinate:
     def __init__(self, x, y, z, a, b, c=0):
-        self.x: float = x
-        self.y: float = y
-        self.z: float = z
-        self.a: float = a
-        self.b: float = b
-        self.c: float = c
+        self.x: float = round(x, 2)
+        self.y: float = round(y, 2)
+        self.z: float = round(z, 2)
+        self.a: float = round(a, 2)
+        self.b: float = round(b, 2)
+        self.c: float = round(c, 2)
     
     def get_as_array(self):
         return [self.x, self.y, self.z, self.a, self.b, self.c]
     
     def get_with_index(self, index):
         return self.get_as_array()[index]
-    
+
     def to_posx(self):
         return f"posx{self.x, self.y, self.z, self.a, self.b, self.c}"
     
     def str_pos(self):
-        return f"{self.x:.3f}, {self.y:.3f}, {self.z:.3f}"
+        return f"{self.x:.2f}, {self.y:.2f}, {self.z:.2f}"
     
     def get_angle(self, c2: "Coordinate"):
         dx, dy, dz = c2.x - self.x, c2.y - self.y, c2.z - self.z
@@ -125,7 +125,7 @@ class Trajectory:
         return True
 
     @classmethod
-    def load(cls, file_path):
+    def load(cls, file_path) -> "Trajectory":
         with open(file_path, 'r') as f:
             return jsonpickle.decode(f.read())
 

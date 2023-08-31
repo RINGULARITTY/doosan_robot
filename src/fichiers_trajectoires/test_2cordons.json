@@ -1,0 +1,139 @@
+{
+  "py/object": "trajectory_lib.Trajectory",
+  "name": "test_2cordons",
+  "trajectory": [
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "ORIGIN",
+      "config": "P0",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -4.49,
+          "y": 369.3,
+          "z": 65.08,
+          "a": 90,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "APPROACH_POINT",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 127.73020935058594,
+          "y": 390.0005187988281,
+          "z": 112.32587432861328,
+          "a": 81.26278686523438,
+          "b": 180.0,
+          "c": 58.576969146728516
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 124.566,
+          "y": 383.533,
+          "z": 62.847,
+          "a": 22.685813121329474,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 90.894,
+          "y": 469.845,
+          "z": 49.887,
+          "a": 22.685813121329474,
+          "b": 180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "PASS",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -1.81,
+          "y": 396.652,
+          "z": 52.047,
+          "a": 124.32000395307023,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 90.774,
+          "y": 333.422,
+          "z": 49.386,
+          "a": 124.32000395307023,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "CLEARANCE",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 93.9382095336914,
+          "y": 339.8895263671875,
+          "z": 98.86487579345703,
+          "a": 81.26278686523438,
+          "b": 180.0,
+          "c": -43.05722427368164
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    }
+  ]
+}

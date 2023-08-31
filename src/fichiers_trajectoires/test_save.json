@@ -1,0 +1,101 @@
+{
+  "py/object": "trajectory_lib.Trajectory",
+  "name": "test_save",
+  "trajectory": [
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "ORIGIN",
+      "config": "P0",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": -4.49,
+          "y": 369.3,
+          "z": 65.08,
+          "a": 90,
+          "b": -180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "APPROACH_POINT",
+      "config": "PA",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 91.93284606933594,
+          "y": 338.74615478515625,
+          "z": 148.81170654296875,
+          "a": 60.356754302978516,
+          "b": 135.0,
+          "c": 7.859586759195736e-08
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PA",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 93.938,
+          "y": 339.889,
+          "z": 98.865,
+          "a": 60.35675578381993,
+          "b": 135,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "LINEAR",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 48.855,
+          "y": 366.266,
+          "z": 109.63,
+          "a": 60.35675578381993,
+          "b": 180,
+          "c": 0
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    },
+    {
+      "py/object": "trajectory_lib.Movement",
+      "nature": "CLEARANCE",
+      "config": "PB",
+      "coords": [
+        {
+          "py/object": "trajectory_lib.Coordinate",
+          "x": 46.84984588623047,
+          "y": 365.1231384277344,
+          "z": 159.5767059326172,
+          "a": 80.07211303710938,
+          "b": 180.0,
+          "c": 19.715364456176758
+        }
+      ],
+      "wield_width": 0,
+      "vel": 30,
+      "acc": 20
+    }
+  ]
+}

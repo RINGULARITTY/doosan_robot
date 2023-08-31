@@ -15,7 +15,7 @@ class EditMovement(ctk.CTkToplevel):
         self.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
 
         self.title("Editeur Mouvement")
-        center_right_window(self, 650, 425)
+        center_right_window(self, 650, 600)
         
         self.robot: TCPClient = robot
         self.callback = callback
@@ -29,29 +29,27 @@ class EditMovement(ctk.CTkToplevel):
         movement = self.trajectory.trajectory[self.movement_index]
         
         self.coords: List[List[ctk.CTkEntry]] = []
-        self.frames, self.titles, self.labels, self.change_coord = [], [], [], []
+        self.frames, self.change_coord = [], []
         for i, c in enumerate(movement.coords):
             self.frames.append(ctk.CTkFrame(self))
             self.frames[-1].pack(padx=10)
 
-            self.titles.append(ctk.CTkLabel(self.frames[-1], text=f"Position Point {i + 1}", font=("Arial", 12)))
-            self.titles[-1].pack()
+            ctk.CTkLabel(self.frames[-1], text=f"Position Point {i + 1}", font=("Arial", 12)).pack()
 
-            ls, fs = [], []
+            fs = []
             for j in range(3):
-                ls.append(ctk.CTkLabel(self.frames[-1], text=["X", "Y", "Z"][j]))
-                ls[-1].pack(side="left", padx=3, pady=5)
+                ctk.CTkLabel(self.frames[-1], text=["X", "Y", "Z"][j]).pack(side="left", padx=3, pady=5)
                 
-                fs.append(ctk.CTkEntry(self.frames[-1]))
+                fs.append(ctk.CTkEntry(self.frames[-1], width=75))
                 fs[-1].pack(side="left", padx=5, pady=5)
                 fs[-1].insert(0, f"{c.get_with_index(j)}")
                 fs[-1].configure(state="disabled")
             
-            self.labels.append(ls)
             self.coords.append(fs)
             
-            self.change_coord.append(ctk.CTkButton(self.frames[-1], text="Nouvelle prise", command=lambda: self.on_new_take(i)))
+            self.change_coord.append(ctk.CTkButton(self.frames[-1], text="Nouvelle prise", command=lambda: self.on_new_take(i), width=100))
             self.change_coord[-1].pack(side="left", padx=5)
+            
         
         match movement.nature:
             case Movement.ORIGIN | Movement.APPROACH_POINT | Movement.PASS | Movement.CLEARANCE:
@@ -127,3 +125,6 @@ class EditMovement(ctk.CTkToplevel):
         self.trajectory.compile(self.robot)
         self.callback()
         self.after(250, self.destroy)
+
+if __name__ == '__main__':
+    EditMovement(ctk.CTk(), None, lambda : 0, Trajectory.load("./fichiers_trajectoires/test_move.json"), 1).mainloop()

@@ -164,8 +164,7 @@ class NewTrajectory(ctk.CTkToplevel):
             if nature_choice != Movement.PASS:
                 wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
                 while True:
-                    dialog = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon")
-                    wield_width = dialog.get_input()
+                    wield_width = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon").get_input()
                     try:
                         wield_width = int(wield_width)
                         assert wield_width in wield_width_available

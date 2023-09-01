@@ -119,7 +119,7 @@ class TCPClient():
 
     def offset(self, pos, x, y, z) -> Union[None, List[float]]:  
         pos = [str(p) for p in pos]
-        response = self.send_and_receive(f"offset,{','.join(pos)},{x},{y}{z}")
+        response = self.send_and_receive(f"offset,{','.join(pos)},{x},{y},{z}")
         if not "offset,done" in response:
             return None
         return [float(p) for p in response.split(",")[2:]]

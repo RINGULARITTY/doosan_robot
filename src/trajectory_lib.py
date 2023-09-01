@@ -4,6 +4,8 @@ from typing import List
 import jsonpickle
 from tkinter import messagebox
 from tcp_ip_advance.computer import TCPClient
+from path_changer import resource_path
+import json
 
 class Coordinate:
     def __init__(self, x, y, z, a, b, c=0):
@@ -102,10 +104,21 @@ class Movement:
 
 class Trajectory:
     def __init__(self, name, trajectory=[
-        Movement(Movement.ORIGIN, "P0", 0, [Movement.START_POS]),
         Movement(Movement.APPROACH_POINT, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)]),
         Movement(Movement.CLEARANCE, "P0", 0, [Coordinate(0, 0, 0, 0, 0, 0)])
     ]):
+        with open(resource_path("config.json")) as f:
+            config = json.load(f)
+        
+        trajectory = [Movement(Movement.ORIGIN, "P0", 0, [Coordinate(
+            config["default_coords"]["origin"]["x"],
+            config["default_coords"]["origin"]["y"],
+            config["default_coords"]["origin"]["z"],
+            config["default_coords"]["origin"]["a"],
+            config["default_coords"]["origin"]["b"],
+            config["default_coords"]["origin"]["c"],
+        )])] + trajectory
+        
         self.name: str = name
         self.trajectory: List[Movement] = trajectory
 
@@ -140,7 +153,7 @@ class Trajectory:
             m.set_c0()
             m.set_p()
 
-            if m.nature == Movement.LINEAR:
+            if m.nature == Movement.LINEAR or Movement.PASS:
                 if prev_m.nature == Movement.PASS or prev_m.nature == Movement.CIRCULAR:
                     angle = prev_m.coords[-1].get_angle(m.coords[0])
                     prev_m.coords[-1].a = angle
@@ -149,16 +162,27 @@ class Trajectory:
                     angle = m.coords[0].get_angle(next_m.coords[0])
                     next_m.coords[0].a = angle
                     m.coords[0].a = angle
-            if m.nature == Movement.PASS:
-                m.coords[0].a = prev_m.coords[-1].a
-            if i == 2 and m.nature == Movement.LINEAR:
-                if next_m.nature == Movement.PASS or next_m.nature == Movement.LINEAR:        
+            elif m.nature == Movement.CIRCULAR:
+                if next_m.nature == Movement.LINEAR or next_m.nature == Movement.PASS:
                     angle = m.coords[0].get_angle(next_m.coords[0])
+                    m.coords[1].a = angle
                     next_m.coords[0].a = angle
-                    m.coords[0].a = angle
 
+        with open(resource_path("config.json")) as f:
+            config = json.load(f)
+        
         self.trajectory[1].config = self.trajectory[2].config
-        self.trajectory[1].coords = [Coordinate(*robot.offset(self.trajectory[2].coords[0].get_as_array(), 0, 0, -50))]
+        self.trajectory[1].coords = [Coordinate(*robot.offset(
+            self.trajectory[2].coords[0].get_as_array(),
+            config["default_coords"]["approach_point"]["x_offset"],
+            config["default_coords"]["approach_point"]["y_offset"],
+            config["default_coords"]["approach_point"]["z_offset"]
+        ))]
 
         self.trajectory[-1].config = self.trajectory[-2].config
-        self.trajectory[-1].coords = [Coordinate(*robot.offset(self.trajectory[-2].coords[0].get_as_array(), 0, 0, -50))]
+        self.trajectory[-1].coords = [Coordinate(*robot.offset(
+            self.trajectory[-2].coords[0].get_as_array(),
+            config["default_coords"]["clearance_point"]["x_offset"],
+            config["default_coords"]["clearance_point"]["y_offset"],
+            config["default_coords"]["clearance_point"]["z_offset"]
+        ))]

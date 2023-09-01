@@ -86,6 +86,18 @@ class Settings(ctk.CTkToplevel):
                 message=f"Port invalide : {self.port_entry.get()}"
             )
             return
+        
+        try:
+            for i, c in enumerate(["x", "y", "z", "a", "b", "c"]):
+                float(self.origin_coords[i])
+        except:
+            messagebox.showerror(
+                title="Erreur", 
+                icon="error", 
+                message=f"Port invalide : {self.port_entry.get()}"
+            )
+            return
+        
         Password(self, self.password_callback).mainloop()
 
     def password_callback(self, res):

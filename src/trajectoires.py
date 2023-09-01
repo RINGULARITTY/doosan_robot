@@ -57,7 +57,7 @@ class MainWindow(ctk.CTk):
         with open(resource_path("./config.json"), "r") as f:
             config = json.load(f)
 
-        ip, port = config['robot']['ip'], config['robot']['port']
+        ip, port = config['robot']['ip'], int(config['robot']['port'])
         try:
             self.robot = TCPClient(ip, port)
         except Exception as ex:
@@ -68,6 +68,7 @@ class MainWindow(ctk.CTk):
             self.set_text_log('\n'.join(textwrap.wrap(f"Erreur dialogue robot : {response}", 55)))
             return
         self.set_text_log(f"Robot connecté")
+        self.robot_connection.configure(text_color="#32E600")
 
     def refresh_listbox(self):
         self.listbox.delete("all")

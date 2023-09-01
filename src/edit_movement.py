@@ -100,7 +100,13 @@ class EditMovement(ctk.CTkToplevel):
         for i in range(3):
             self.coords[index][i].configure(textvariable=f"{position[i]}")
     
-    def add_coords(self):
+    def add_coord_pw(self):
+        Password(self, callback=self.add_coords)
+    
+    def add_coords(self, res):
+        if not res:
+            return
+        
         movement: Movement = self.trajectory.trajectory[self.movement_index]
         
         for i, c in enumerate(movement.coords):
@@ -136,8 +142,7 @@ class EditMovement(ctk.CTkToplevel):
             for j, ce in enumerate(self.coords_edit[i]):
                 ce.delete(0, "end")
                 ce.insert(0, "0")
-                
-        
+
         self.coords[0][0].focus()     
         
     def password_callback(self, res):

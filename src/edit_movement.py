@@ -29,6 +29,8 @@ class EditMovement(ctk.CTkToplevel):
         
         movement = self.trajectory.trajectory[self.movement_index]
         
+        ctk.CTkLabel(self, text=f"Movement {Movement.TRANSLATIONS[movement.nature]}", font=("Arial", 16)).pack(pady=10)
+        
         self.coords: List[List[ctk.CTkLabel]] = []
         self.frames, self.change_coord = [], []
         for i, c in enumerate(movement.coords):
@@ -64,7 +66,7 @@ class EditMovement(ctk.CTkToplevel):
         
         ctk.CTkLabel(self, text="").pack()
         
-        ctk.CTkLabel(self, text="Ajouter aux coordonées existantes", font=('Arial', 16)).pack(pady=5)
+        ctk.CTkLabel(self, text="Ajouter aux coordonnées existantes", font=('Arial', 16)).pack(pady=5)
         
         self.coords_edit: List[List[ctk.CTkEntry]] = []
         self.frames_edit, self.change_landmark = [], []

@@ -7,7 +7,7 @@ from path_changer import resource_path
 from typing import List
 from edit_movement import EditMovement
 from window_tools import center_right_window
-from trajectory_lib import Trajectory
+from trajectory_lib import Trajectory, Movement
 
 class EditTrajectory(ctk.CTkToplevel):
     def __init__(self, master, robot, callback, selected_index, folder_path, trajectories):
@@ -52,6 +52,8 @@ class EditTrajectory(ctk.CTkToplevel):
             self.listbox.insert("END", m.to_string())
 
     def on_list_click(self, _):
+        if self.trajectory.trajectory[self.listbox.curselection()].nature == Movement.ORIENTATION:
+            return
         edit_move = EditMovement(self, self.robot, self.on_move_edit_closed, self.trajectory, self.listbox.curselection())
         edit_move.mainloop()
         self.slaves(edit_move)

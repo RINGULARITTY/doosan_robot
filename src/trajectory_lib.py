@@ -60,6 +60,7 @@ class Movement:
     LINEAR: str = "LINEAR"
     CIRCULAR: str = "CIRCULAR"
     PASS: str = "PASS"
+    ORIENTATION: str = "ORIENTATION"
     CLEARANCE: str = "CLEARANCE"
     
     TRANSLATIONS = {
@@ -68,6 +69,7 @@ class Movement:
         LINEAR: "Linéaire",
         CIRCULAR: "Circulaire",
         PASS: "Passage",
+        ORIENTATION: "Orientation",
         CLEARANCE: "Dégagement"
     }
     

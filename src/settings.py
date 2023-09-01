@@ -39,7 +39,7 @@ class Settings(ctk.CTkToplevel):
         self.frame2 = ctk.CTkFrame(self)
         self.frame2.pack(pady=10)
         
-        ctk.CTkLabel(self.frame2, text="Coordonées origine").pack()
+        ctk.CTkLabel(self.frame2, text="Coordonnées origine").pack()
 
         self.origin_coords = []
         for c in ["x", "y", "z", "a", "b", "c"]:
@@ -51,7 +51,7 @@ class Settings(ctk.CTkToplevel):
         self.frame3 = ctk.CTkFrame(self)
         self.frame3.pack(pady=10)
         
-        ctk.CTkLabel(self.frame3, text="Point d'approche").pack()
+        ctk.CTkLabel(self.frame3, text="Offsets d'approche").pack()
         
         self.approach_coords = []
         for c in ["x_offset", "y_offset", "z_offset"]:
@@ -63,7 +63,7 @@ class Settings(ctk.CTkToplevel):
         self.frame4 = ctk.CTkFrame(self)
         self.frame4.pack(pady=25)
         
-        ctk.CTkLabel(self.frame4, text="Point de dégagement").pack()
+        ctk.CTkLabel(self.frame4, text="Offsets de dégagement").pack()
         
         self.clearance_coords = []
         for c in ["x_offset", "y_offset", "z_offset"]:
@@ -73,8 +73,6 @@ class Settings(ctk.CTkToplevel):
             self.clearance_coords[-1].pack(side="left", padx=10)
         
         ctk.CTkButton(self, text="Sauvegarder", command=self.save).pack()
-
-        ctk.CTkLabel(self, text="En cours de développement* (seule la partie robot fonctionne)").pack(side="left")
 
     def save(self):
         try:
@@ -87,16 +85,38 @@ class Settings(ctk.CTkToplevel):
             )
             return
         
-        try:
-            for i, c in enumerate(["x", "y", "z", "a", "b", "c"]):
+        for i, c in enumerate(["x", "y", "z", "a", "b", "c"]):
+            try:
                 float(self.origin_coords[i])
-        except:
-            messagebox.showerror(
-                title="Erreur", 
-                icon="error", 
-                message=f"Port invalide : {self.port_entry.get()}"
-            )
-            return
+            except:
+                messagebox.showerror(
+                    title="Erreur", 
+                    icon="error", 
+                    message=f"Coordonée origine invalide pour {c} : {self.origin_coords[i]}"
+                )
+                return
+        
+        for i, c in enumerate(["x_offset", "y_offset", "z_offset"]):
+            try:
+                float(self.approach_coords[i])
+            except:
+                messagebox.showerror(
+                    title="Erreur", 
+                    icon="error", 
+                    message=f"Offset d'approche invalide pour {c} : {self.approach_coords[i]}"
+                )
+                return
+
+        for i, c in enumerate(["x_offset", "y_offset", "z_offset"]):
+            try:
+                float(self.clearance_coords[i])
+            except:
+                messagebox.showerror(
+                    title="Erreur", 
+                    icon="error", 
+                    message=f"Offset de dégagement invalide pour {c} : {self.clearance_coords[i]}"
+                )
+                return
         
         Password(self, self.password_callback).mainloop()
 
@@ -106,6 +126,13 @@ class Settings(ctk.CTkToplevel):
         
         self.config["robot"]["ip"] = self.ip_entry.get()
         self.config["robot"]["port"] = float(self.port_entry.get())
+        
+        for i, c in enumerate(["x", "y", "z", "a", "b", "c"]):
+            self.config['default_coords']['origin'][c] = float(self.origin_coords[i].get())
+        
+        for i, c in enumerate(["x_offset", "y_offset", "z_offset"]):
+            self.config['default_coords']['approach_point'][c] = float(self.approach_coords[i].get())
+            self.config['default_coords']['clearance_point'][c] = float(self.clearance_coords[i].get())
         
         with open(resource_path("config.json"), "w") as f:
             json.dump(self.config, f, indent=4)

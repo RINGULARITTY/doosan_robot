@@ -9,6 +9,7 @@ from tkinter import TclError
 from tcp_ip_advance.computer import TCPClient
 from path_changer import resource_path
 from window_tools import center_right_window
+from material_builder import Materials
 
 def rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
@@ -129,7 +130,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 pass
 
             point1 = Coordinate(*self.robot.get_current_posx()[0])
-            self.add_text(f"Coordonées du point : {point1.str_pos()}")
+            self.add_text(f"Coordonnées du point : {point1.str_pos()}")
 
             if nature_choice == Movement.CIRCULAR and i != 0:
                 self.add_text("- Placer la machine au deuxième point voulu puis appuyez sur le bouton vert.")
@@ -142,7 +143,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 while self.robot.get_digital_input(1):
                     pass
                 point2 = Coordinate(*self.robot.get_current_posx()[0])
-                self.add_text(f"Coordonées du deuxième point : {point2.str_pos()}")
+                self.add_text(f"Coordonnées du deuxième point : {point2.str_pos()}")
             
             configuration_choice = 0
             self.add_text("- Choisissez une configuration (vert = PA, bleu1 = PB)")
@@ -161,18 +162,24 @@ class NewTrajectory(ctk.CTkToplevel):
             while self.robot.get_digital_input(1) or self.robot.get_digital_input(2):
                 pass
             
+            wield_width = 0
             if nature_choice != Movement.PASS:
-                wield_width_available = [0, 3, 4, 5, 6, 8, 6, 8, 10, 12]
-                while True:
-                    wield_width = ctk.CTkInputDialog(text=f"Entrez la taille du cordon {wield_width_available}", title="Taille du cordon").get_input()
-                    try:
-                        wield_width = int(wield_width)
-                        assert wield_width in wield_width_available
-                        break
-                    except:
-                        self.add_text(f"Taille de cordon invalide : {wield_width}")
-            else:
-                wield_width = 0
+                def validate_entry():
+                    wield_width = combo_wield.get()
+                    popup.destroy()
+
+                popup = ctk.CTkToplevel(self)
+                popup.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
+                popup.grab_set()
+                center_right_window(popup, 250, 150)
+                popup.title("Taille du cordon")
+
+                ctk.CTkLabel(popup, text="Taille du cordon").pack(pady=10)
+                combo_wield = ctk.CTkComboBox(popup, values=Materials.WIELD_WIDTHS)
+                combo_wield.set(Materials.WIELD_WIDTHS[0])
+                combo_wield.pack(pady=10)
+
+                ctk.CTkButton(self.frame, text="Ok", command=validate_entry).pack(pady=5)
 
             if nature_choice == Movement.CIRCULAR:
                 self.add_text(f"Mouvement créé : {Movement.TRANSLATIONS[nature_choice]}, {configuration_choice}, cordon={wield_width}, {point1.str_pos()}, {point2.str_pos()}")
@@ -247,6 +254,7 @@ class NewTrajectory(ctk.CTkToplevel):
                 return
 
         popup = ctk.CTkToplevel(self)
+        popup.after(200, lambda: self.iconbitmap(resource_path("icon.ico")))
         popup.grab_set()
         center_right_window(popup, 350, 150)
         popup.title("Sauvegarde")

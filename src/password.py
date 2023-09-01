@@ -26,7 +26,7 @@ class Password(ctk.CTkToplevel):
         self.result.pack(pady=5)
     
     def check_password(self):
-        if self.entry.get() != "0":
+        if self.entry.get() != "admin":
             self.result.configure(text="Mot de passe invalide")
             return
 

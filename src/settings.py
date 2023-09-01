@@ -3,6 +3,7 @@ from path_changer import resource_path
 from window_tools import center_right_window
 import json
 from password import Password
+from tkinter import messagebox
 
 class Settings(ctk.CTkToplevel):
     def __init__(self, master):
@@ -17,8 +18,8 @@ class Settings(ctk.CTkToplevel):
         font = ctk.CTkFont("Arial", 20, weight="bold")
         ctk.CTkLabel(self, text="PARAMETRES", font=font, text_color="#327DFF").pack(pady=10)
         
-        with open(resource_path("config.json")) as f:
-            config = json.load(f)
+        with open(resource_path("config.json"), 'r') as f:
+            self.config = json.load(f)
         
         self.frame1 = ctk.CTkFrame(self)
         self.frame1.pack(pady=10)
@@ -27,12 +28,12 @@ class Settings(ctk.CTkToplevel):
         
         ctk.CTkLabel(self.frame1, text="Ip").pack(side="left", padx=5)
         self.ip_entry = ctk.CTkEntry(self.frame1)
-        self.ip_entry.insert(0, config["robot"]["ip"])
+        self.ip_entry.insert(0, self.config["robot"]["ip"])
         self.ip_entry.pack(side="left", padx=10)
         
         ctk.CTkLabel(self.frame1, text="Port").pack(side="left", padx=5)
         self.port_entry = ctk.CTkEntry(self.frame1)
-        self.port_entry.insert(0, f"{config['robot']['port']}")
+        self.port_entry.insert(0, f"{self.config['robot']['port']}")
         self.port_entry.pack(side="left", padx=10)
     
         self.frame2 = ctk.CTkFrame(self)
@@ -44,7 +45,7 @@ class Settings(ctk.CTkToplevel):
         for c in ["x", "y", "z", "a", "b", "c"]:
             ctk.CTkLabel(self.frame2, text=c).pack(side="left", padx=5)
             self.origin_coords.append(ctk.CTkEntry(self.frame2, width=65))
-            self.origin_coords[-1].insert(0, f"{config['default_coords']['origin'][c]}")
+            self.origin_coords[-1].insert(0, f"{self.config['default_coords']['origin'][c]}")
             self.origin_coords[-1].pack(side="left", padx=10)
         
         self.frame3 = ctk.CTkFrame(self)
@@ -56,7 +57,7 @@ class Settings(ctk.CTkToplevel):
         for c in ["x_offset", "y_offset", "z_offset"]:
             ctk.CTkLabel(self.frame3, text=c).pack(side="left", padx=5)
             self.approach_coords.append(ctk.CTkEntry(self.frame3, width=65))
-            self.approach_coords[-1].insert(0, f"{config['default_coords']['approach_point'][c]}")
+            self.approach_coords[-1].insert(0, f"{self.config['default_coords']['approach_point'][c]}")
             self.approach_coords[-1].pack(side="left", padx=10)
         
         self.frame4 = ctk.CTkFrame(self)
@@ -68,18 +69,31 @@ class Settings(ctk.CTkToplevel):
         for c in ["x_offset", "y_offset", "z_offset"]:
             ctk.CTkLabel(self.frame4, text=c).pack(side="left", padx=5)
             self.clearance_coords.append(ctk.CTkEntry(self.frame4, width=65))
-            self.clearance_coords[-1].insert(0, f"{config['default_coords']['clearance_point'][c]}")
+            self.clearance_coords[-1].insert(0, f"{self.config['default_coords']['clearance_point'][c]}")
             self.clearance_coords[-1].pack(side="left", padx=10)
         
         ctk.CTkButton(self, text="Sauvegarder", command=self.save).pack()
 
-        ctk.CTkLabel(self, text="En cours de développement*").pack(side="left")
+        ctk.CTkLabel(self, text="En cours de développement* (seule la partie robot fonctionne)").pack(side="left")
 
     def save(self):
+        try:
+            int(self.port_entry.get())
+        except:
+            messagebox.showerror(
+                title="Erreur", 
+                icon="error", 
+                message=f"Port invalide : {self.port_entry.get()}"
+            )
+            return
         Password(self, self.password_callback).mainloop()
 
     def password_callback(self, res):
         if not res:
             return
         
+        self.config["robot"]["ip"] = self.ip_entry.get()
+        self.config["robot"]["port"] = float(self.port_entry.get())
         
+        with open(resource_path("config.json"), "w") as f:
+            json.dump(self.config, f, indent=4)

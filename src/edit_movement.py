@@ -138,9 +138,7 @@ class EditMovement(ctk.CTkToplevel):
                 ce.insert(0, "0")
                 
         
-        self.coords[0][0].focus()
-                
-                
+        self.coords[0][0].focus()     
         
     def password_callback(self, res):
         if res:

@@ -9,19 +9,28 @@ import json
 from path_changer import resource_path
 from window_tools import center_right_window
 import shutil
+import textwrap
+from settings import Settings
 
 class MainWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         self.title("Trajectoires")
-        center_right_window(self, 575, 700)
+        center_right_window(self, 600, 700)
 
         font = ctk.CTkFont("Arial", 20, weight="bold")
         ctk.CTkLabel(self, text="TRAJECTOIRES", font=font, text_color="#327DFF").pack(pady=10)
 
-        self.robot_connection = ctk.CTkLabel(self, text="Connexion au robot...", font=("Arial", 10))
-        self.robot_connection.pack(pady=5)
+        self.frame = ctk.CTkFrame(self)
+        self.frame.pack(side="top", pady=10, fill="both", expand=False)
+        
+        ctk.CTkButton(self.frame, text="Paramètres", command=self.start_settings).pack(side="left", padx=5)
+        ctk.CTkButton(self.frame, text="Connexion au robot", command=self.start_robot_connection).pack(side="left", padx=5)
+        
+        font = ctk.CTkFont("Arial", 10, weight="bold")
+        self.robot_connection = ctk.CTkLabel(self.frame, text="Robot non conecté", font=font, text_color="#E60F00")
+        self.robot_connection.pack(side="left", pady=5)
 
         ctk.CTkLabel(self, text="Choisissez une trajectoire existante").pack(pady=5)
 
@@ -37,10 +46,12 @@ class MainWindow(ctk.CTk):
         self.add_button.pack(pady=5, ipadx=10)
 
         self.robot = None
-        self.after(500, self.start_robot_connection())
 
     def set_text_log(self, text):
         self.robot_connection.configure(text=text)
+
+    def start_settings(self):
+        Settings(self).mainloop()
     
     def start_robot_connection(self):
         with open(resource_path("./config.json"), "r") as f:
@@ -50,11 +61,11 @@ class MainWindow(ctk.CTk):
         try:
             self.robot = TCPClient(ip, port)
         except Exception as ex:
-            self.set_text_log(f"Erreur connexion robot : {ex}")
+            self.set_text_log('\n'.join(textwrap.wrap(f"Erreur connexion robot : {ex}", 55)))
             return
         response = self.robot.hi()
         if not response:
-            self.set_text_log(f"Erreur dialogue robot : {response}")
+            self.set_text_log('\n'.join(textwrap.wrap(f"Erreur dialogue robot : {response}", 55)))
             return
         self.set_text_log(f"Robot connecté")
 

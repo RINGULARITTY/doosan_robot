@@ -2,5 +2,25 @@
     "robot": {
         "ip": "127.0.0.1",
         "port": 20002
+    },
+    "default_coords": {
+        "origin": {
+            "x": -4.49,
+            "y": 369.3,
+            "z": 65.08,
+            "a": 90,
+            "b": -180,
+            "c": 0
+        },
+        "approach_point": {
+            "x_offset": 0,
+            "y_offset": 0,
+            "z_offset": -50
+        },
+        "clearance_point": {
+            "x_offset": 0,
+            "y_offset": 0,
+            "z_offset": -50
+        }
     }
 }

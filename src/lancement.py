@@ -51,7 +51,7 @@ class Run(ctk.CTkToplevel):
         material_choices = [Materials.NO_WIELD] + material_choices
         self.material_choice = ctk.CTkComboBox(self, values=material_choices, width=400)
         self.material_choice.pack(pady=10)
-        self.material_choice.set("Sans soudure")
+        self.material_choice.set(Materials.NO_WIELD)
         
         self.start_btn = ctk.CTkButton(self, text="Lancer", command=self.run_btn)
         self.start_btn.pack(pady=15)
@@ -132,7 +132,7 @@ class Run(ctk.CTkToplevel):
         self.add_text(f"{'-'*20}\n")
         
         wield = Materials.NO_WIELD if self.material_choice.get() == Materials.NO_WIELD else {v: k for k, v in Materials.TRANSLATIONS.items()}[self.material_choice.get()]
-        if wield != "Sans Soudure":
+        if wield != Materials.NO_WIELD:
             material = self.materials.get_material_from_name(wield)
         
         ACTIONS = {
